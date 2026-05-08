@@ -74,6 +74,7 @@ export default function EnsaioModal({ open, onClose, ensaio, onSaved }) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="asfalto">Asfalto</SelectItem>
+                  <SelectItem value="agregado">Agregado</SelectItem>
                   <SelectItem value="solos">Solos</SelectItem>
                   <SelectItem value="concreto">Concreto</SelectItem>
                   <SelectItem value="outros">Outros</SelectItem>
