@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { Link } from 'react-router-dom';
-import { Users, FlaskConical, FileText, Clock, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react';
+import { Users, FlaskConical, FileText, Clock, CheckCircle, AlertCircle, TrendingUp, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -60,10 +60,11 @@ export default function Dashboard() {
                 <div className="p-4 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
                   <Users className="w-8 h-8 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="text-lg font-bold text-foreground">Clientes</p>
                   <p className="text-sm text-muted-foreground mt-0.5">{loading ? '—' : stats.clientes} cadastrados</p>
                 </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </CardContent>
             </Card>
           </Link>
@@ -75,10 +76,11 @@ export default function Dashboard() {
                 <div className="p-4 rounded-xl bg-blue-50 group-hover:bg-blue-100 transition-colors">
                   <FlaskConical className="w-8 h-8 text-blue-600" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="text-lg font-bold text-foreground">Ensaios</p>
                   <p className="text-sm text-muted-foreground mt-0.5">{loading ? '—' : stats.ensaios} no catálogo</p>
                 </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-blue-600 transition-colors" />
               </CardContent>
             </Card>
           </Link>
@@ -93,10 +95,11 @@ export default function Dashboard() {
               <div className="p-3 rounded-lg bg-purple-50 group-hover:bg-purple-100 transition-colors">
                 <FileText className="w-6 h-6 text-purple-600" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-base font-semibold text-foreground">Fichas de Serviço (FAS)</p>
                 <p className="text-sm text-muted-foreground">{loading ? '—' : stats.fas} fichas registradas</p>
               </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-600 transition-colors" />
             </CardContent>
           </Card>
         </Link>
