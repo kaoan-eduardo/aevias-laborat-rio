@@ -16,7 +16,7 @@ const NAV_ITEMS = [
   { path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'gestor', 'tecnico'] },
   { path: '/fas', label: 'Fichas de Serviço (FAS)', icon: FileText, roles: ['admin', 'gestor', 'auxiliar'] },
   { path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'gestor', 'tecnico', 'auxiliar'] },
-  { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['auxiliar', 'gestor'] },
+  { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'auxiliar', 'gestor'] },
 ];
 
 const BOTTOM_NAV_ITEMS = [

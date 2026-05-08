@@ -18,7 +18,7 @@ export default function RecebimentoAmostras() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const role = user?.role || 'auxiliar';
-  const canAccess = role === 'auxiliar' || role === 'gestor';
+  const canAccess = role === 'admin' || role === 'auxiliar' || role === 'gestor';
 
   const load = async () => {
     setLoading(true);
