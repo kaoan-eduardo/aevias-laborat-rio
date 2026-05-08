@@ -1,0 +1,46 @@
+{
+  "name": "Ensaio",
+  "type": "object",
+  "properties": {
+    "nome": {
+      "type": "string",
+      "description": "Nome do ensaio"
+    },
+    "norma": {
+      "type": "string",
+      "description": "Norma utilizada (ex: ABNT NBR 6467)"
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "asfalto",
+        "solos",
+        "concreto",
+        "outros"
+      ],
+      "description": "Categoria do ensaio"
+    },
+    "unidade_padrao": {
+      "type": "string",
+      "description": "Unidade padr\u00e3o de medi\u00e7\u00e3o"
+    },
+    "prazo_padrao_dias": {
+      "type": "number",
+      "description": "Prazo padr\u00e3o em dias \u00fateis"
+    },
+    "descricao": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o do ensaio"
+    },
+    "ativo": {
+      "type": "boolean",
+      "default": true,
+      "description": "Ensaio ativo no cat\u00e1logo"
+    }
+  },
+  "required": [
+    "nome",
+    "norma",
+    "categoria"
+  ]
+}

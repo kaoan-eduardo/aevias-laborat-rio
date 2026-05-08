@@ -1,0 +1,115 @@
+{
+  "name": "FAS",
+  "type": "object",
+  "properties": {
+    "numero_fas": {
+      "type": "string",
+      "description": "N\u00famero da FAS gerado automaticamente (ex: FAS-2026-0001)"
+    },
+    "numero_proposta": {
+      "type": "string",
+      "description": "N\u00famero da proposta comercial"
+    },
+    "cliente_id": {
+      "type": "string",
+      "description": "ID do cliente vinculado"
+    },
+    "razao_social": {
+      "type": "string",
+      "description": "Raz\u00e3o social do cliente (preenchida automaticamente)"
+    },
+    "cnpj": {
+      "type": "string",
+      "description": "CNPJ do cliente (preenchido automaticamente)"
+    },
+    "responsavel": {
+      "type": "string",
+      "description": "Respons\u00e1vel pelo servi\u00e7o"
+    },
+    "email_envio": {
+      "type": "string",
+      "description": "Email para envio de resultados"
+    },
+    "exige_art": {
+      "type": "boolean",
+      "default": false,
+      "description": "Exige ART (Anota\u00e7\u00e3o de Responsabilidade T\u00e9cnica)"
+    },
+    "objetivo": {
+      "type": "string",
+      "description": "Objetivo do servi\u00e7o"
+    },
+    "itens": {
+      "type": "array",
+      "description": "Itens de ensaio da FAS",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ensaio_id": {
+            "type": "string"
+          },
+          "ensaio_nome": {
+            "type": "string"
+          },
+          "norma": {
+            "type": "string"
+          },
+          "quantidade": {
+            "type": "number"
+          },
+          "unidade": {
+            "type": "string"
+          },
+          "prazo_dias": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "declaracao_confidencialidade": {
+      "type": "boolean",
+      "default": false,
+      "description": "Declara\u00e7\u00e3o de confidencialidade aceita"
+    },
+    "exige_simbolo": {
+      "type": "boolean",
+      "default": false,
+      "description": "Exige s\u00edmbolo de acredita\u00e7\u00e3o"
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es gerais"
+    },
+    "nome_solicitante": {
+      "type": "string",
+      "description": "Nome do solicitante"
+    },
+    "data_solicitacao": {
+      "type": "string",
+      "format": "date",
+      "description": "Data da solicita\u00e7\u00e3o"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "aguardando_aprovacao",
+        "aprovada",
+        "em_andamento",
+        "concluida",
+        "cancelada"
+      ],
+      "default": "rascunho",
+      "description": "Status da FAS"
+    },
+    "codigo_amostra": {
+      "type": "string",
+      "description": "C\u00f3digo an\u00f4nimo da amostra para laboratoristas"
+    }
+  },
+  "required": [
+    "numero_proposta",
+    "cliente_id",
+    "objetivo"
+  ]
+}
