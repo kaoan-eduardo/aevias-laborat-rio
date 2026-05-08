@@ -179,7 +179,7 @@ export default function Layout() {
           </button>
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-primary" />
-            <span className="font-bold text-foreground text-sm">LabControl</span>
+            <span className="font-bold text-foreground text-sm">Controle Laboratório</span>
           </div>
         </header>
 
