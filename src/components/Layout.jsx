@@ -44,10 +44,9 @@ export default function Layout() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Shield className="w-5 h-5 text-sidebar-primary" />
-              <span className="font-bold text-sidebar-foreground text-base tracking-wide">LabControl</span>
+              <span className="font-bold text-sidebar-foreground text-base tracking-wide">AELaboratório</span>
             </div>
-            <p className="text-xs text-sidebar-foreground/50 font-mono-data">ISO 17025 · ISO 9001</p>
-          </div>
+                     </div>
         ) : (
           <Shield className="w-5 h-5 text-sidebar-primary mx-auto" />
         )}
