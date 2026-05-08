@@ -71,7 +71,7 @@ export default function Layout() {
             )}>
             
               <Icon className="w-4 h-4 flex-shrink-0" />
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && <span className="text-[#ffffff] bg-[#aa8888]">{item.label}</span>}
             </Link>);
 
       })}
