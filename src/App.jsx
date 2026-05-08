@@ -13,6 +13,7 @@ import FAS from '@/pages/FAS';
 import NovaFAS from '@/pages/NovaFAS';
 import DetalhesFAS from '@/pages/DetalhesFAS';
 import Usuarios from '@/pages/Usuarios';
+import Materiais from '@/pages/Materiais';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -47,6 +48,7 @@ const AuthenticatedApp = () => {
         <Route path="/fas/nova" element={<NovaFAS />} />
         <Route path="/fas/:id" element={<DetalhesFAS />} />
         <Route path="/usuarios" element={<Usuarios />} />
+        <Route path="/materiais" element={<Materiais />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

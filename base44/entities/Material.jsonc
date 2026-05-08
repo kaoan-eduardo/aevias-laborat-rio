@@ -1,0 +1,13 @@
+{
+  "name": "Material",
+  "type": "object",
+  "properties": {
+    "nome": {
+      "type": "string",
+      "description": "Nome do material"
+    }
+  },
+  "required": [
+    "nome"
+  ]
+}
