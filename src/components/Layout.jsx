@@ -54,7 +54,7 @@ export default function Layout() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-2 py-4 space-y-1 bg-[#404035]">
+      <nav className="flex-1 px-2 py-4 space-y-1 bg-[#404035] text-[#ffffff]">
         {visibleItems.map((item) => {
         const Icon = item.icon;
         const active = location.pathname === item.path || item.path !== '/' && location.pathname.startsWith(item.path);
