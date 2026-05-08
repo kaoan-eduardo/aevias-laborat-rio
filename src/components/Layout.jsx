@@ -15,6 +15,9 @@ const NAV_ITEMS = [
   { path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'gestor', 'auxiliar'] },
   { path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'gestor', 'tecnico'] },
   { path: '/fas', label: 'Fichas de Serviço (FAS)', icon: FileText, roles: ['admin', 'gestor', 'auxiliar'] },
+];
+
+const BOTTOM_NAV_ITEMS = [
   { path: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['admin'] },
 ];
 
@@ -33,6 +36,7 @@ export default function Layout() {
 
   const role = user?.role || 'auxiliar';
   const visibleItems = NAV_ITEMS.filter(item => item.roles.includes(role));
+  const visibleBottomItems = BOTTOM_NAV_ITEMS.filter(item => item.roles.includes(role));
   const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['auxiliar'];
 
   const handleLogout = () => base44.auth.logout();
@@ -76,6 +80,32 @@ export default function Layout() {
           );
         })}
       </nav>
+
+      {/* Bottom Nav */}
+      {visibleBottomItems.length > 0 && (
+        <div className="px-2 pb-2 space-y-1">
+          {visibleBottomItems.map(item => {
+            const Icon = item.icon;
+            const active = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150',
+                  active
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
+                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                )}
+              >
+                <Icon className="w-4 h-4 flex-shrink-0" />
+                {!collapsed && <span>{item.label}</span>}
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       {/* User */}
       <div className="px-3 py-4 border-t border-sidebar-border">
