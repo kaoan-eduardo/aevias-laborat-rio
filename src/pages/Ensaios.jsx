@@ -10,6 +10,7 @@ import EnsaioModal from '@/components/ensaios/EnsaioModal';
 
 const CATEGORIA_CONFIG = {
   asfalto: { label: 'Asfalto', color: 'bg-amber-100 text-amber-800' },
+  agregado: { label: 'Agregado', color: 'bg-amber-100 text-gray-800' },
   solos: { label: 'Solos', color: 'bg-emerald-100 text-emerald-800' },
   concreto: { label: 'Concreto', color: 'bg-blue-100 text-blue-700' },
   outros: { label: 'Outros', color: 'bg-gray-100 text-gray-600' },
