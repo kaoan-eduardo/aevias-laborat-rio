@@ -74,7 +74,7 @@ export default function Ensaios() {
           />
         </div>
         <div className="flex gap-2">
-          {['todos', 'asfalto', 'solos', 'concreto', 'outros'].map(cat => (
+          {['todos','agregado', 'asfalto', 'solos', 'concreto', 'outros'].map(cat => (
             <button
               key={cat}
               onClick={() => setCategoriaFilter(cat)}
