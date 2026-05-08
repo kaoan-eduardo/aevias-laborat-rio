@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import {
   Users, FlaskConical, FileText, LayoutDashboard,
-  ChevronLeft, ChevronRight, LogOut, Menu, X, Shield
+  ChevronLeft, ChevronRight, LogOut, Menu, X, Shield, UserCog
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'gestor', 'auxiliar'] },
   { path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'gestor', 'tecnico'] },
   { path: '/fas', label: 'Fichas de Serviço (FAS)', icon: FileText, roles: ['admin', 'gestor', 'auxiliar'] },
+  { path: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['admin'] },
 ];
 
 const ROLE_LABELS = {
