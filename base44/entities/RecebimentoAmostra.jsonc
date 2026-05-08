@@ -1,0 +1,99 @@
+{
+  "name": "RecebimentoAmostra",
+  "type": "object",
+  "properties": {
+    "numero_protocolo": {
+      "type": "string",
+      "description": "N\u00famero sequencial do protocolo (ex: 0001/26)"
+    },
+    "cliente_id": {
+      "type": "string",
+      "description": "ID do cliente"
+    },
+    "cliente_nome": {
+      "type": "string",
+      "description": "Nome do cliente"
+    },
+    "data_registro": {
+      "type": "string",
+      "format": "date",
+      "description": "Data do registro"
+    },
+    "numero_projeto": {
+      "type": "string",
+      "description": "N\u00famero do projeto"
+    },
+    "data_entrada": {
+      "type": "string",
+      "format": "date",
+      "description": "Data da entrada da amostra"
+    },
+    "finalidade": {
+      "type": "string",
+      "description": "Tipo de ensaio/finalidade"
+    },
+    "numero_fas": {
+      "type": "string",
+      "description": "N\u00famero da FAS associada"
+    },
+    "observacoes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es gerais"
+    },
+    "responsavel_amostragem": {
+      "type": "string",
+      "description": "Nome do respons\u00e1vel pela amostragem"
+    },
+    "amostras": {
+      "type": "array",
+      "description": "Lista de amostras recebidas",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID \u00fanico da amostra"
+          },
+          "material_id": {
+            "type": "string",
+            "description": "ID do material"
+          },
+          "material_nome": {
+            "type": "string",
+            "description": "Nome do material"
+          },
+          "procedencia": {
+            "type": "string",
+            "description": "Proced\u00eancia da amostra"
+          },
+          "quantidade": {
+            "type": "number",
+            "description": "Quantidade"
+          },
+          "observacao_recebimento": {
+            "type": "string",
+            "description": "Observa\u00e7\u00e3o do recebimento"
+          },
+          "data_coleta": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de coleta"
+          },
+          "peso_kg": {
+            "type": "number",
+            "description": "Peso em kg"
+          },
+          "quantidade_suficiente": {
+            "type": "boolean",
+            "description": "Quantidade suficiente para an\u00e1lise"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "numero_protocolo",
+    "cliente_id",
+    "data_entrada"
+  ]
+}

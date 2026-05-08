@@ -14,6 +14,8 @@ import NovaFAS from '@/pages/NovaFAS';
 import DetalhesFAS from '@/pages/DetalhesFAS';
 import Usuarios from '@/pages/Usuarios';
 import Materiais from '@/pages/Materiais';
+import RecebimentoAmostras from '@/pages/RecebimentoAmostras';
+import DetalhesRecebimento from '@/pages/DetalhesRecebimento';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -49,6 +51,8 @@ const AuthenticatedApp = () => {
         <Route path="/fas/:id" element={<DetalhesFAS />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/materiais" element={<Materiais />} />
+        <Route path="/recebimento" element={<RecebimentoAmostras />} />
+        <Route path="/recebimento/:id" element={<DetalhesRecebimento />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
