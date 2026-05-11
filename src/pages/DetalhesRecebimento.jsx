@@ -140,12 +140,28 @@ export default function DetalhesRecebimento() {
     if (!canConfirm) return;
     setSaving(true);
     const fasEscolhida = possuiFas ? fasList.find(f => f.id === fasId) : null;
-    await base44.entities.RecebimentoAmostra.update(recebimento.id, {
-      fas_id: possuiFas ? fasId : null,
-      numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
-      ensaios_selecionados: ensaiosSelecionados,
-      status: 'concluido'
-    });
+
+    const updates = [
+      base44.entities.RecebimentoAmostra.update(recebimento.id, {
+        fas_id: possuiFas ? fasId : null,
+        numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
+        ensaios_selecionados: ensaiosSelecionados,
+        status: 'concluido'
+      })
+    ];
+
+    // Se vinculou uma FAS, marca como material_recebido
+    if (fasEscolhida) {
+      const andamento = (fasEscolhida.andamento || []).map(a =>
+        a.atividade === 'Recebimento do Material' ? { ...a, data: new Date().toISOString().split('T')[0], concluida: true } : a
+      );
+      updates.push(
+        base44.entities.FAS.update(fasEscolhida.id, { status: 'material_recebido', andamento })
+      );
+    }
+
+    await Promise.all(updates);
+
     setRecebimento(r => ({
       ...r,
       fas_id: possuiFas ? fasId : null,
