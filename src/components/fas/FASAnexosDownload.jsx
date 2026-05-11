@@ -1,28 +1,40 @@
+import { PDFDocument } from 'pdf-lib';
+
 /**
- * Download sequencial do PDF principal + anexos
+ * Combina PDF principal com anexos em um único documento
  */
 export async function baixarPDFComAnexos(pdfBlob, anexos, nomeBase) {
-  // Primeiro, salva o PDF principal
-  const linkPdf = document.createElement('a');
-  linkPdf.href = URL.createObjectURL(pdfBlob);
-  linkPdf.download = `${nomeBase}.pdf`;
-  document.body.appendChild(linkPdf);
-  linkPdf.click();
-  document.body.removeChild(linkPdf);
-  URL.revokeObjectURL(linkPdf.href);
+  const { PDFDocument } = await import('pdf-lib');
+  
+  // Carrega o PDF principal
+  const pdfPrincipalBuffer = await pdfBlob.arrayBuffer();
+  const pdfDoc = await PDFDocument.load(pdfPrincipalBuffer);
 
-  // Depois, baixa cada anexo em sequência
+  // Adiciona anexos ao documento
   if (anexos && anexos.length > 0) {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
     for (const anexo of anexos) {
-      const link = document.createElement('a');
-      link.href = anexo.url;
-      link.download = anexo.nome;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      await new Promise(resolve => setTimeout(resolve, 300));
+      try {
+        const resposta = await fetch(anexo.url);
+        const arrayBuffer = await resposta.arrayBuffer();
+        const anexoPdf = await PDFDocument.load(arrayBuffer);
+        const paginasAnexo = await pdfDoc.copyPages(anexoPdf, anexoPdf.getPageIndices());
+        
+        paginasAnexo.forEach(pagina => {
+          pdfDoc.addPage(pagina);
+        });
+      } catch (erro) {
+        console.warn(`Não foi possível incorporar anexo: ${anexo.nome}`, erro);
+      }
     }
   }
+
+  // Salva e faz download do PDF combinado
+  const pdfCombinado = await pdfDoc.save();
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(new Blob([pdfCombinado], { type: 'application/pdf' }));
+  link.download = `${nomeBase}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
 }
