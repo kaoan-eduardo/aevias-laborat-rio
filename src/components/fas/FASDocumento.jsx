@@ -79,7 +79,7 @@ export default function FASDocumento({ fas, onClose }) {
         {/* A4 document */}
         <div
           ref={docRef}
-          style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '20px 24px', boxSizing: 'border-box' }}
+          style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '20px 24px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}
         >
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1.5px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
@@ -203,7 +203,7 @@ export default function FASDocumento({ fas, onClose }) {
           <div style={{ border: '1px solid #ccc', minHeight: '36px', padding: '4px 6px', marginBottom: '8px' }}>&nbsp;</div>
 
           {/* Rodapé assinatura */}
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px', marginTop: 'auto' }}>
             <tbody>
               <tr>
                 <td style={{ border: '1px solid #ccc', padding: '3px 6px', width: '120px', fontWeight: 'bold', background: '#f5f5f5' }}>Solicitante:</td>
@@ -216,10 +216,8 @@ export default function FASDocumento({ fas, onClose }) {
             </tbody>
           </table>
 
-
-
           {/* Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888', marginTop: '8px' }}>
             <span>FORM 045 - REV 06 - 09/06/2025</span>
             <span>Página 1 de 1</span>
           </div>
