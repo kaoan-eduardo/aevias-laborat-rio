@@ -95,7 +95,7 @@ export default function FASDocumento({ fas, onClose }) {
               {[
                 ['Contratante', fas.razao_social || ''],
                 ['CNPJ', fas.cnpj || ''],
-                ['Responsável', `${fas.responsavel || ''}\n*A quem direcionar o documento`],
+                ['Responsável', `${fas.responsavel || ''}`],
                 ['E-mail para envio:', fas.email_envio || ''],
               ].map(([label, value], i) => (
                 <tr key={i}>
