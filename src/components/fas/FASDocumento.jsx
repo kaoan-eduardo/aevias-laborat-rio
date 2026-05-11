@@ -114,9 +114,9 @@ export default function FASDocumento({ fas, onClose }) {
                 </tr>
               ))}
               <tr>
-                <td style={{ border: '1px solid #ccc', padding: '3px 6px', fontWeight: 'bold', background: '#f5f5f5' }}>Anotação de Responsabilidade Técnica (ART):</td>
+                <td style={{ border: '1px solid #ccc', padding: '1px 1px', fontWeight: 'bold', background: '#f5f5f5' }}>Anotação de Responsabilidade Técnica (ART):</td>
                 <td style={{ border: '1px solid #ccc', padding: '3px 8px', textAlign: 'center' }}>
-                  <span style={{ border: '1px solid #aaa', padding: '1px 12px', background: '#e9e9e9' }}>{sim_nao(fas.exige_art)}</span>
+                  <span style={{ border: '1px solid #aaa', padding: '12px 12px', background: '#e9e9e9' }}>{sim_nao(fas.exige_art)}</span>
                 </td>
               </tr>
             </tbody>
