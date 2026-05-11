@@ -45,13 +45,31 @@
       "type": "string",
       "description": "Observa\u00e7\u00f5es gerais"
     },
+    "fas_id": {
+      "type": "string",
+      "description": "ID da FAS vinculada (preenchido pelo gestor)"
+    },
     "numero_fas": {
       "type": "string",
-      "description": "N\u00ba da FAS ou Proposta Comercial (preenchido pelo gestor)"
+      "description": "N\u00ba da FAS vinculada (preenchido pelo gestor)"
     },
-    "ensaios_realizados": {
-      "type": "string",
-      "description": "Ensaios a serem realizados (preenchido pelo gestor)"
+    "ensaios_selecionados": {
+      "type": "array",
+      "description": "Lista de ensaios a realizar (preenchido pelo gestor)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ensaio_id": {
+            "type": "string"
+          },
+          "ensaio_nome": {
+            "type": "string"
+          },
+          "norma": {
+            "type": "string"
+          }
+        }
+      }
     },
     "amostras": {
       "type": "array",
