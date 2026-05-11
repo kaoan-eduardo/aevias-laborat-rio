@@ -1,34 +1,44 @@
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, X } from 'lucide-react';
+import { Download, X, Loader2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { baixarAnexosJuntos, AnexosPreview } from './FASAnexosDownload';
+import { baixarPDFComAnexos } from './FASAnexosDownload';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
-  const [downloadingAnexos, setDownloadingAnexos] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const handleDownloadPDF = async () => {
-    const element = docRef.current;
-    const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff' });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-    const imgW = pageW;
-    const imgH = (canvas.height * imgW) / canvas.width;
-    let position = 0;
-    pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
-    while (imgH + position > pageH) {
-      position -= pageH;
-      pdf.addPage();
+    setDownloading(true);
+    try {
+      const element = docRef.current;
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const imgW = pageW;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      let position = 0;
       pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
+      while (imgH + position > pageH) {
+        position -= pageH;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
+      }
+      
+      const nomeBase = `FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}`;
+      const pdfBlob = pdf.output('blob');
+      
+      // Baixa PDF principal + anexos em sequência
+      await baixarPDFComAnexos(pdfBlob, fas.anexos, nomeBase);
+    } finally {
+      setDownloading(false);
     }
-    pdf.save(`FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}.pdf`);
   };
 
   const itens = fas.itens || [];
@@ -45,26 +55,15 @@ export default function FASDocumento({ fas, onClose }) {
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
         <div className="flex gap-2">
-          <Button size="sm" className="gap-2" onClick={handleDownloadPDF}>
-            <Download className="w-4 h-4" />
-            Baixar PDF
+          <Button 
+            size="sm" 
+            className="gap-2" 
+            onClick={handleDownloadPDF}
+            disabled={downloading}
+          >
+            {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            {downloading ? 'Processando...' : 'Baixar PDF Completo'}
           </Button>
-          {fas.anexos && fas.anexos.length > 0 && (
-            <Button 
-              size="sm" 
-              variant="outline"
-              className="gap-2"
-              disabled={downloadingAnexos}
-              onClick={async () => {
-                setDownloadingAnexos(true);
-                await baixarAnexosJuntos(fas.anexos, `FAS-${fas.numero_fas}`);
-                setDownloadingAnexos(false);
-              }}
-            >
-              <Download className="w-4 h-4" />
-              {downloadingAnexos ? 'Baixando...' : 'Baixar Anexos'}
-            </Button>
-          )}
           <Button size="sm" variant="ghost" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
@@ -219,9 +218,9 @@ export default function FASDocumento({ fas, onClose }) {
               <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0', marginTop: '8px' }}>
                 ANEXOS
               </div>
-              <div style={{ border: '1px solid #ccc', minHeight: '40px', padding: '4px 6px', marginBottom: '6px', fontSize: '8px' }}>
+              <div style={{ border: '1px solid #ccc', padding: '4px 6px', marginBottom: '6px', fontSize: '8px' }}>
                 {fas.anexos.map((anexo, idx) => (
-                  <div key={idx} style={{ marginBottom: idx < fas.anexos.length - 1 ? '3px' : 0 }}>
+                  <div key={idx} style={{ marginBottom: '2px' }}>
                     <span style={{ fontWeight: 'bold' }}>Anexo {idx + 1}:</span> {anexo.nome}
                     {anexo.tamanho && (
                       <span style={{ color: '#666', marginLeft: '4px' }}>
@@ -230,6 +229,9 @@ export default function FASDocumento({ fas, onClose }) {
                     )}
                   </div>
                 ))}
+              </div>
+              <div style={{ fontSize: '7px', color: '#888', marginBottom: '6px' }}>
+                * Os anexos estão incorporados neste documento PDF
               </div>
             </>
           )}
