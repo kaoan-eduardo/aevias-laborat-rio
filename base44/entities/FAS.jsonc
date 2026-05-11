@@ -62,6 +62,16 @@
           },
           "prazo_dias": {
             "type": "number"
+          },
+          "exige_simbolo": {
+            "type": "boolean",
+            "default": false,
+            "description": "Exige s\u00edmbolo de acredita\u00e7\u00e3o para este ensaio"
+          },
+          "declaracao_confidencialidade": {
+            "type": "boolean",
+            "default": false,
+            "description": "Declara\u00e7\u00e3o de confidencialidade para este ensaio"
           }
         }
       }
@@ -73,13 +83,11 @@
         "type": "object",
         "properties": {
           "atividade": {
-            "type": "string",
-            "description": "Nome da atividade"
+            "type": "string"
           },
           "data": {
             "type": "string",
-            "format": "date",
-            "description": "Data da atividade"
+            "format": "date"
           },
           "concluida": {
             "type": "boolean",
@@ -87,16 +95,6 @@
           }
         }
       }
-    },
-    "declaracao_confidencialidade": {
-      "type": "boolean",
-      "default": false,
-      "description": "Declara\u00e7\u00e3o de confidencialidade aceita"
-    },
-    "exige_simbolo": {
-      "type": "boolean",
-      "default": false,
-      "description": "Exige s\u00edmbolo de acredita\u00e7\u00e3o"
     },
     "observacoes": {
       "type": "string",

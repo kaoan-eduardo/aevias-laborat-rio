@@ -44,8 +44,6 @@ export default function NovaFAS() {
     exige_art: false,
     objetivo: '',
     itens: [],
-    declaracao_confidencialidade: false,
-    exige_simbolo: false,
     observacoes: '',
     nome_solicitante: user?.full_name || '',
     data_solicitacao: hoje(),
@@ -85,7 +83,7 @@ export default function NovaFAS() {
   const addItem = () => {
     setForm(f => ({
       ...f,
-      itens: [...f.itens, { ensaio_id: '', ensaio_nome: '', norma: '', quantidade: 1, unidade: '', prazo_dias: '' }]
+      itens: [...f.itens, { ensaio_id: '', ensaio_nome: '', norma: '', quantidade: 1, unidade: '', prazo_dias: '', exige_simbolo: false, declaracao_confidencialidade: false }]
     }));
   };
 
@@ -216,18 +214,10 @@ export default function NovaFAS() {
           </div>
 
           <div className="flex flex-wrap gap-6">
-            <div className="flex items-center gap-3">
-              <Switch checked={form.exige_art} onCheckedChange={v => set('exige_art', v)} />
-              <Label>Exige ART</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch checked={form.exige_simbolo} onCheckedChange={v => set('exige_simbolo', v)} />
-              <Label>Exige Símbolo de Acreditação</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch checked={form.declaracao_confidencialidade} onCheckedChange={v => set('declaracao_confidencialidade', v)} />
-              <Label>Declaração de Confidencialidade</Label>
-            </div>
+          <div className="flex items-center gap-3">
+            <Switch checked={form.exige_art} onCheckedChange={v => set('exige_art', v)} />
+            <Label>Exige ART</Label>
+          </div>
           </div>
         </CardContent>
       </Card>
@@ -287,6 +277,16 @@ export default function NovaFAS() {
                     <div className="space-y-1.5">
                       <Label className="text-xs">Prazo (dias úteis)</Label>
                       <Input type="number" value={item.prazo_dias} onChange={e => updateItem(idx, 'prazo_dias', Number(e.target.value))} className="h-9 font-mono-data" />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-6 pt-1">
+                    <div className="flex items-center gap-2">
+                      <Switch checked={!!item.exige_simbolo} onCheckedChange={v => updateItem(idx, 'exige_simbolo', v)} />
+                      <Label className="text-xs">Exige Símbolo de Acreditação</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch checked={!!item.declaracao_confidencialidade} onCheckedChange={v => updateItem(idx, 'declaracao_confidencialidade', v)} />
+                      <Label className="text-xs">Declaração de Confidencialidade</Label>
                     </div>
                   </div>
                 </div>

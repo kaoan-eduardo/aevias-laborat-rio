@@ -264,6 +264,8 @@ export default function DetalhesFAS() {
                   <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Qtd</th>
                   <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Unidade</th>
                   <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Prazo</th>
+                  <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Símbolo Acred.</th>
+                  <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Confidencial.</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -274,6 +276,16 @@ export default function DetalhesFAS() {
                     <td className="px-4 py-3 text-center font-mono-data">{item.quantidade}</td>
                     <td className="px-4 py-3 text-muted-foreground">{item.unidade || '—'}</td>
                     <td className="px-4 py-3 text-center font-mono-data text-muted-foreground">{item.prazo_dias ? `${item.prazo_dias}d` : '—'}</td>
+                    <td className="px-4 py-3 text-center">
+                      <Badge className={item.exige_simbolo ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}>
+                        {item.exige_simbolo ? 'Sim' : 'Não'}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Badge className={item.declaracao_confidencialidade ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}>
+                        {item.declaracao_confidencialidade ? 'Sim' : 'Não'}
+                      </Badge>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -290,8 +302,6 @@ export default function DetalhesFAS() {
         <CardContent>
           <div className="divide-y divide-border">
             <BoolRow label="Exige ART (Anotação de Responsabilidade Técnica)" value={fas.exige_art} />
-            <BoolRow label="Exige Símbolo de Acreditação" value={fas.exige_simbolo} />
-            <BoolRow label="Declaração de Confidencialidade" value={fas.declaracao_confidencialidade} />
           </div>
           {fas.observacoes && (
             <div className="mt-4 pt-4 border-t border-border">
