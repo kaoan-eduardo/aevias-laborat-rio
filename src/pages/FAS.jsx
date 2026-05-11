@@ -103,7 +103,6 @@ export default function FAS() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border bg-muted/50">
-                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Nº FAS</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Nº Proposta</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Cliente</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Solicitante</th>
@@ -116,8 +115,7 @@ export default function FAS() {
                 <tbody className="divide-y divide-border">
                   {filtered.map(fas => (
                     <tr key={fas.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-4 py-3 font-mono-data text-xs font-semibold text-primary">{fas.numero_fas || '—'}</td>
-                      <td className="px-4 py-3 font-mono-data text-xs text-muted-foreground">{fas.numero_proposta}</td>
+                      <td className="px-4 py-3 font-mono-data text-xs font-semibold text-primary">{fas.numero_proposta || '—'}</td>
                       <td className="px-4 py-3">
                         <p className="font-medium text-foreground text-xs">{fas.razao_social}</p>
                         <p className="text-muted-foreground text-xs font-mono-data">{fas.cnpj}</p>
