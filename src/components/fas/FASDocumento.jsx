@@ -8,22 +8,6 @@ const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
-  // Aplica estilos de impressão
-  const printStyles = `
-    @media print {
-      html, body { 
-        overflow: hidden !important; 
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-      }
-      body::-webkit-scrollbar, 
-      html::-webkit-scrollbar { 
-        display: none !important; 
-      }
-      .fixed { position: static !important; }
-    }
-  `;
-
   const handlePrint = () => {
     window.print();
   };
@@ -36,9 +20,8 @@ export default function FASDocumento({ fas, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex flex-col overflow-hidden">
-      <style>{printStyles}</style>
       {/* Top bar */}
-      <div className="flex-shrink-0 flex items-center justify-between px-5 py-3 bg-white border-b shadow-sm print:hidden">
+      <div className="flex-shrink-0 flex items-center justify-between px-5 py-3 bg-white border-b shadow-sm">
         <span className="font-semibold text-foreground text-sm">
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
