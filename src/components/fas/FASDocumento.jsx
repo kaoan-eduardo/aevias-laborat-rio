@@ -9,7 +9,27 @@ export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
   const handlePrint = () => {
-    window.print();
+    const content = docRef.current.outerHTML;
+    const newTab = window.open();
+    newTab.document.write(`
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+          .document { width: 794px; margin: 0 auto; background: white; padding: 8px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        </style>
+      </head>
+      <body>
+        <div class="document">${content}</div>
+      </body>
+      </html>
+    `);
+    newTab.document.close();
   };
 
   const printStyles = `
