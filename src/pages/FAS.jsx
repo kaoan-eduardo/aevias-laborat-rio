@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Plus, Search, FileText, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Search, FileText, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 
-const STATUS_CONFIG = {
-  rascunho: { label: 'Rascunho', color: 'bg-gray-100 text-gray-600' },
-  aguardando_aprovacao: { label: 'Aguard. Aprovação', color: 'bg-yellow-100 text-yellow-700' },
-  aprovada: { label: 'Aprovada', color: 'bg-blue-100 text-blue-700' },
-  em_andamento: { label: 'Em Andamento', color: 'bg-purple-100 text-purple-700' },
-  concluida: { label: 'Concluída', color: 'bg-green-100 text-green-700' },
+export const STATUS_CONFIG = {
+  aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
+  material_recebido: { label: 'Material Recebido', color: 'bg-yellow-100 text-yellow-700' },
+  finalizada: { label: 'Finalizada', color: 'bg-green-100 text-green-700' },
   cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-600' },
 };
 
@@ -25,8 +23,7 @@ export default function FAS() {
   const [statusFilter, setStatusFilter] = useState('todos');
 
   const role = user?.role || 'auxiliar';
-  const canCreate = role === 'admin' || role === 'gestor' || role === 'auxiliar';
-  const canApprove = role === 'admin' || role === 'gestor';
+  const canCreate = role === 'comercial' || role === 'admin';
 
   const load = async () => {
     setLoading(true);
@@ -45,17 +42,12 @@ export default function FAS() {
     return matchSearch && matchStatus;
   });
 
-  const handleApprove = async (fas, newStatus) => {
-    await base44.entities.FAS.update(fas.id, { status: newStatus });
-    load();
-  };
-
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-5">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Fichas de Aprovação de Serviço (FAS)</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Controle e aprovação de serviços laboratoriais</p>
+          <p className="text-sm text-muted-foreground mt-0.5">Controle e andamento de serviços laboratoriais</p>
         </div>
         {canCreate && (
           <Link to="/fas/nova">
@@ -137,7 +129,7 @@ export default function FAS() {
                       <td className="px-4 py-3 text-center font-mono-data text-sm">{fas.itens?.length || 0}</td>
                       <td className="px-4 py-3">
                         <Badge className={STATUS_CONFIG[fas.status]?.color + ' text-xs'}>
-                          {STATUS_CONFIG[fas.status]?.label}
+                          {STATUS_CONFIG[fas.status]?.label || fas.status}
                         </Badge>
                       </td>
                       <td className="px-4 py-3">
@@ -147,16 +139,6 @@ export default function FAS() {
                               <Eye className="w-3.5 h-3.5" />
                             </Button>
                           </Link>
-                          {canApprove && fas.status === 'aguardando_aprovacao' && (
-                            <>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50" onClick={() => handleApprove(fas, 'aprovada')}>
-                                <CheckCircle className="w-3.5 h-3.5" />
-                              </Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => handleApprove(fas, 'cancelada')}>
-                                <XCircle className="w-3.5 h-3.5" />
-                              </Button>
-                            </>
-                          )}
                         </div>
                       </td>
                     </tr>

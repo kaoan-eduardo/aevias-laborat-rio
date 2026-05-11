@@ -2,18 +2,15 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Package, FileCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 
 const STATUS_CONFIG = {
-  rascunho: { label: 'Rascunho', color: 'bg-gray-100 text-gray-600' },
-  aguardando_aprovacao: { label: 'Aguardando Aprovação', color: 'bg-yellow-100 text-yellow-700' },
-  aprovada: { label: 'Aprovada', color: 'bg-blue-100 text-blue-700' },
-  em_andamento: { label: 'Em Andamento', color: 'bg-purple-100 text-purple-700' },
-  concluida: { label: 'Concluída', color: 'bg-green-100 text-green-700' },
+  aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
+  material_recebido: { label: 'Material Recebido', color: 'bg-yellow-100 text-yellow-700' },
+  finalizada: { label: 'Finalizada', color: 'bg-green-100 text-green-700' },
   cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-600' },
 };
 
@@ -33,6 +30,8 @@ const BoolRow = ({ label, value }) => (
   </div>
 );
 
+const hoje = () => new Date().toISOString().split('T')[0];
+
 export default function DetalhesFAS() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,7 +40,7 @@ export default function DetalhesFAS() {
   const [loading, setLoading] = useState(true);
 
   const role = user?.role || 'auxiliar';
-  const canApprove = role === 'admin' || role === 'gestor';
+  const isGestor = role === 'admin' || role === 'gestor';
   const isTecnico = role === 'tecnico';
 
   useEffect(() => {
@@ -53,9 +52,25 @@ export default function DetalhesFAS() {
     load();
   }, [id]);
 
-  const handleStatus = async (newStatus) => {
-    await base44.entities.FAS.update(fas.id, { status: newStatus });
-    setFas(f => ({ ...f, status: newStatus }));
+  const marcarMaterialRecebido = async () => {
+    const andamento = (fas.andamento || []).map(a =>
+      a.atividade === 'Recebimento do Material' ? { ...a, data: hoje(), concluida: true } : a
+    );
+    await base44.entities.FAS.update(fas.id, { status: 'material_recebido', andamento });
+    setFas(f => ({ ...f, status: 'material_recebido', andamento }));
+  };
+
+  const finalizarFAS = async () => {
+    const andamento = (fas.andamento || []).map(a =>
+      a.atividade === 'Envio do Relatório' ? { ...a, data: hoje(), concluida: true } : a
+    );
+    await base44.entities.FAS.update(fas.id, { status: 'finalizada', andamento });
+    setFas(f => ({ ...f, status: 'finalizada', andamento }));
+  };
+
+  const cancelarFAS = async () => {
+    await base44.entities.FAS.update(fas.id, { status: 'cancelada' });
+    setFas(f => ({ ...f, status: 'cancelada' }));
   };
 
   if (loading) {
@@ -70,12 +85,12 @@ export default function DetalhesFAS() {
     <div className="p-6 text-center text-muted-foreground">FAS não encontrada.</div>
   );
 
-  const status = STATUS_CONFIG[fas.status] || STATUS_CONFIG.rascunho;
+  const status = STATUS_CONFIG[fas.status] || STATUS_CONFIG.aberta;
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-5">
       {/* Header */}
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-4 flex-wrap">
         <Button variant="ghost" size="icon" onClick={() => navigate('/fas')}>
           <ArrowLeft className="w-4 h-4" />
         </Button>
@@ -86,29 +101,24 @@ export default function DetalhesFAS() {
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">Proposta: {fas.numero_proposta}</p>
         </div>
-        {/* Approve / Reject actions */}
-        {canApprove && fas.status === 'aguardando_aprovacao' && (
-          <div className="flex gap-2">
-            <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={() => handleStatus('aprovada')}>
-              <CheckCircle className="w-4 h-4" />
-              Aprovar
+
+        {/* Ações do Gestor */}
+        {isGestor && fas.status === 'aberta' && (
+          <div className="flex gap-2 flex-wrap">
+            <Button className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-white" onClick={marcarMaterialRecebido}>
+              <Package className="w-4 h-4" />
+              Confirmar Recebimento
             </Button>
-            <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50" onClick={() => handleStatus('cancelada')}>
+            <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50" onClick={cancelarFAS}>
               <XCircle className="w-4 h-4" />
-              Recusar
+              Cancelar
             </Button>
           </div>
         )}
-        {canApprove && fas.status === 'aprovada' && (
-          <Button variant="outline" className="gap-2" onClick={() => handleStatus('em_andamento')}>
-            <RotateCcw className="w-4 h-4" />
-            Iniciar Andamento
-          </Button>
-        )}
-        {canApprove && fas.status === 'em_andamento' && (
-          <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={() => handleStatus('concluida')}>
-            <CheckCircle className="w-4 h-4" />
-            Concluir FAS
+        {isGestor && fas.status === 'material_recebido' && (
+          <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={finalizarFAS}>
+            <FileCheck className="w-4 h-4" />
+            Enviar Relatório e Finalizar
           </Button>
         )}
       </div>
@@ -126,6 +136,42 @@ export default function DetalhesFAS() {
                 <p className="text-amber-700 text-xs">Identificação anônima para preservar a imparcialidade do ensaio.</p>
               </div>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Andamento das Atividades */}
+      {fas.andamento && fas.andamento.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Andamento das Atividades</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/50">
+                  <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Atividade</th>
+                  <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Data</th>
+                  <th className="px-4 py-2 text-center font-semibold text-muted-foreground">Situação</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {fas.andamento.map((a, idx) => (
+                  <tr key={idx} className={a.concluida ? 'bg-green-50/40' : ''}>
+                    <td className="px-4 py-2.5 font-medium text-foreground">{a.atividade}</td>
+                    <td className="px-4 py-2.5 text-muted-foreground font-mono-data text-xs">
+                      {a.data ? new Date(a.data).toLocaleDateString('pt-BR') : '—'}
+                    </td>
+                    <td className="px-4 py-2.5 text-center">
+                      {a.concluida
+                        ? <Badge className="bg-green-100 text-green-700 text-xs">Concluído</Badge>
+                        : <Badge className="bg-gray-100 text-gray-500 text-xs">Pendente</Badge>
+                      }
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </CardContent>
         </Card>
       )}

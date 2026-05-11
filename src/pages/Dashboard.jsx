@@ -7,11 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 const STATUS_CONFIG = {
-  rascunho: { label: 'Rascunho', color: 'bg-gray-100 text-gray-600' },
-  aguardando_aprovacao: { label: 'Aguardando Aprovação', color: 'bg-yellow-100 text-yellow-700' },
-  aprovada: { label: 'Aprovada', color: 'bg-blue-100 text-blue-700' },
-  em_andamento: { label: 'Em Andamento', color: 'bg-purple-100 text-purple-700' },
-  concluida: { label: 'Concluída', color: 'bg-green-100 text-green-700' },
+  aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
+  material_recebido: { label: 'Material Recebido', color: 'bg-yellow-100 text-yellow-700' },
+  finalizada: { label: 'Finalizada', color: 'bg-green-100 text-green-700' },
   cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-700' },
 };
 

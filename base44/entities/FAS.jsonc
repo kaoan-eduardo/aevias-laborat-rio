@@ -66,6 +66,28 @@
         }
       }
     },
+    "andamento": {
+      "type": "array",
+      "description": "Tabela de andamento das atividades",
+      "items": {
+        "type": "object",
+        "properties": {
+          "atividade": {
+            "type": "string",
+            "description": "Nome da atividade"
+          },
+          "data": {
+            "type": "string",
+            "format": "date",
+            "description": "Data da atividade"
+          },
+          "concluida": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
     "declaracao_confidencialidade": {
       "type": "boolean",
       "default": false,
@@ -92,14 +114,12 @@
     "status": {
       "type": "string",
       "enum": [
-        "rascunho",
-        "aguardando_aprovacao",
-        "aprovada",
-        "em_andamento",
-        "concluida",
+        "aberta",
+        "material_recebido",
+        "finalizada",
         "cancelada"
       ],
-      "default": "rascunho",
+      "default": "aberta",
       "description": "Status da FAS"
     },
     "codigo_amostra": {

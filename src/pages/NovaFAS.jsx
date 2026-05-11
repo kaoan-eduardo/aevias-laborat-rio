@@ -10,7 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 
 const gerarNumeroFAS = (total) => {
   const ano = new Date().getFullYear();
@@ -22,6 +21,8 @@ const gerarCodigoAmostra = () => {
   return 'AM-' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 
+const hoje = () => new Date().toISOString().split('T')[0];
+
 export default function NovaFAS() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ export default function NovaFAS() {
   const [ensaios, setEnsaios] = useState([]);
   const [totalFas, setTotalFas] = useState(0);
   const [saving, setSaving] = useState(false);
+
+  const role = user?.role || '';
+  const canCreate = role === 'comercial' || role === 'admin';
 
   const [form, setForm] = useState({
     numero_proposta: '',
@@ -44,8 +48,8 @@ export default function NovaFAS() {
     exige_simbolo: false,
     observacoes: '',
     nome_solicitante: user?.full_name || '',
-    data_solicitacao: new Date().toISOString().split('T')[0],
-    status: 'rascunho',
+    data_solicitacao: hoje(),
+    status: 'aberta',
   });
 
   useEffect(() => {
@@ -106,19 +110,34 @@ export default function NovaFAS() {
     setForm(f => ({ ...f, itens: f.itens.filter((_, i) => i !== idx) }));
   };
 
-  const handleSave = async (status) => {
+  const handleSave = async () => {
     if (!form.cliente_id || !form.numero_proposta || !form.objetivo) return;
     setSaving(true);
+    const andamentoInicial = [
+      { atividade: 'Abertura da FAS', data: hoje(), concluida: true },
+      { atividade: 'Recebimento do Material', data: null, concluida: false },
+      { atividade: 'Envio do Relatório', data: null, concluida: false },
+    ];
     const payload = {
       ...form,
-      status,
+      status: 'aberta',
       numero_fas: gerarNumeroFAS(totalFas),
       codigo_amostra: gerarCodigoAmostra(),
+      andamento: andamentoInicial,
     };
     await base44.entities.FAS.create(payload);
     setSaving(false);
     navigate('/fas');
   };
+
+  if (!canCreate) {
+    return (
+      <div className="p-6 max-w-xl mx-auto text-center mt-20">
+        <p className="text-muted-foreground text-lg">Apenas o perfil Comercial pode criar novas FAS.</p>
+        <Button variant="outline" className="mt-4" onClick={() => navigate('/fas')}>Voltar</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
@@ -199,7 +218,7 @@ export default function NovaFAS() {
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center gap-3">
               <Switch checked={form.exige_art} onCheckedChange={v => set('exige_art', v)} />
-              <Label>Exige ART (Anotação de Responsabilidade Técnica)</Label>
+              <Label>Exige ART</Label>
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={form.exige_simbolo} onCheckedChange={v => set('exige_simbolo', v)} />
@@ -259,28 +278,15 @@ export default function NovaFAS() {
                   <div className="grid grid-cols-3 gap-3">
                     <div className="space-y-1.5">
                       <Label className="text-xs">Quantidade</Label>
-                      <Input
-                        type="number" value={item.quantidade}
-                        onChange={e => updateItem(idx, 'quantidade', Number(e.target.value))}
-                        className="h-9 font-mono-data"
-                      />
+                      <Input type="number" value={item.quantidade} onChange={e => updateItem(idx, 'quantidade', Number(e.target.value))} className="h-9 font-mono-data" />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-xs">Unidade</Label>
-                      <Input
-                        value={item.unidade}
-                        onChange={e => updateItem(idx, 'unidade', e.target.value)}
-                        className="h-9"
-                        placeholder="amostra"
-                      />
+                      <Input value={item.unidade} onChange={e => updateItem(idx, 'unidade', e.target.value)} className="h-9" placeholder="amostra" />
                     </div>
                     <div className="space-y-1.5">
                       <Label className="text-xs">Prazo (dias úteis)</Label>
-                      <Input
-                        type="number" value={item.prazo_dias}
-                        onChange={e => updateItem(idx, 'prazo_dias', Number(e.target.value))}
-                        className="h-9 font-mono-data"
-                      />
+                      <Input type="number" value={item.prazo_dias} onChange={e => updateItem(idx, 'prazo_dias', Number(e.target.value))} className="h-9 font-mono-data" />
                     </div>
                   </div>
                 </div>
@@ -290,7 +296,7 @@ export default function NovaFAS() {
         </CardContent>
       </Card>
 
-      {/* Dados do Solicitante + Obs */}
+      {/* Complementar */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Informações Complementares</CardTitle>
@@ -308,12 +314,7 @@ export default function NovaFAS() {
           </div>
           <div className="space-y-1.5">
             <Label>Observações</Label>
-            <Textarea
-              value={form.observacoes}
-              onChange={e => set('observacoes', e.target.value)}
-              placeholder="Informações adicionais relevantes..."
-              rows={3}
-            />
+            <Textarea value={form.observacoes} onChange={e => set('observacoes', e.target.value)} placeholder="Informações adicionais relevantes..." rows={3} />
           </div>
         </CardContent>
       </Card>
@@ -322,19 +323,12 @@ export default function NovaFAS() {
       <div className="flex justify-end gap-3 pb-4">
         <Button variant="outline" onClick={() => navigate('/fas')}>Cancelar</Button>
         <Button
-          variant="outline"
-          onClick={() => handleSave('rascunho')}
+          onClick={handleSave}
           disabled={saving || !form.cliente_id || !form.numero_proposta || !form.objetivo}
-        >
-          Salvar como Rascunho
-        </Button>
-        <Button
-          onClick={() => handleSave('aguardando_aprovacao')}
-          disabled={saving || !form.cliente_id || !form.numero_proposta || !form.objetivo || form.itens.length === 0}
           className="gap-2"
         >
           <Send className="w-4 h-4" />
-          {saving ? 'Enviando...' : 'Enviar para Aprovação'}
+          {saving ? 'Salvando...' : 'Abrir FAS'}
         </Button>
       </div>
     </div>

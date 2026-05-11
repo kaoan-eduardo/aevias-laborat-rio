@@ -11,10 +11,10 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
-  { path: '/', label: 'Início', icon: LayoutDashboard, roles: ['admin', 'gestor', 'tecnico', 'auxiliar'] },
-  { path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'gestor', 'auxiliar'] },
+  { path: '/', label: 'Início', icon: LayoutDashboard, roles: ['admin', 'gestor', 'tecnico', 'auxiliar', 'comercial'] },
+  { path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'gestor', 'auxiliar', 'comercial'] },
   { path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'gestor', 'tecnico'] },
-  { path: '/fas', label: 'Fichas de Serviço (FAS)', icon: FileText, roles: ['admin', 'gestor', 'auxiliar'] },
+  { path: '/fas', label: 'Fichas de Serviço (FAS)', icon: FileText, roles: ['admin', 'gestor', 'comercial'] },
   { path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'gestor', 'tecnico', 'auxiliar'] },
   { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'auxiliar', 'gestor'] },
 ];
@@ -28,6 +28,7 @@ const ROLE_LABELS = {
   gestor: { label: 'Gestor/Coord.', color: 'bg-purple-100 text-purple-700' },
   tecnico: { label: 'Técnico/Lab.', color: 'bg-blue-100 text-blue-700' },
   auxiliar: { label: 'Auxiliar', color: 'bg-green-100 text-green-700' },
+  comercial: { label: 'Comercial', color: 'bg-orange-100 text-orange-700' },
 };
 
 export default function Layout() {
