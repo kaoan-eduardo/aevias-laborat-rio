@@ -23,7 +23,7 @@ export default function FAS() {
   const [statusFilter, setStatusFilter] = useState('todos');
 
   const role = user?.role || 'auxiliar';
-  const canCreate = role === 'comercial' || role === 'admin';
+  const canCreate = role === 'comercial' || role === 'admin' || role === 'gestor';
 
   const load = async () => {
     setLoading(true);

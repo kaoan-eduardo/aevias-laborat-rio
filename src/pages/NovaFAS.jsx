@@ -32,7 +32,7 @@ export default function NovaFAS() {
   const [saving, setSaving] = useState(false);
 
   const role = user?.role || '';
-  const canCreate = role === 'comercial' || role === 'admin';
+  const canCreate = role === 'comercial' || role === 'admin' || role === 'gestor';
 
   const [form, setForm] = useState({
     numero_proposta: '',
