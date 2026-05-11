@@ -9,7 +9,27 @@ export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
   const handlePrint = () => {
-    window.print();
+    const content = docRef.current.outerHTML;
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          @media print {
+            body { margin: 0; padding: 0; }
+            html { margin: 0; padding: 0; }
+          }
+        </style>
+      </head>
+      <body>
+        ${content}
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => printWindow.print(), 250);
   };
 
   const printStyles = `
