@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Plus, Search, FileText, Eye, Pencil } from 'lucide-react';
+import { Plus, Search, FileText, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import FASDocumento from '@/components/fas/FASDocumento';
+
 
 export const STATUS_CONFIG = {
   aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
@@ -22,7 +22,6 @@ export default function FAS() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
-  const [fasVisualizando, setFasVisualizando] = useState(null);
 
   const role = user?.role || 'auxiliar';
   const canCreate = role === 'comercial' || role === 'admin' || role === 'gestor';
@@ -135,15 +134,6 @@ export default function FAS() {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center justify-end gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-primary"
-                              title="Visualizar documento"
-                              onClick={() => setFasVisualizando(fas)}
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </Button>
                             <Link to={`/fas/${fas.id}`}>
                               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" title="Editar / Detalhes">
                                 <Pencil className="w-3.5 h-3.5" />
@@ -161,9 +151,7 @@ export default function FAS() {
         </Card>
       </div>
 
-      {fasVisualizando && (
-        <FASDocumento fas={fasVisualizando} onClose={() => setFasVisualizando(null)} />
-      )}
+
     </>
   );
 }

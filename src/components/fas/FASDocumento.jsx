@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -10,7 +10,7 @@ const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
-  const handleDownload = async () => {
+  const handleSalveFAS = async () => {
     const element = docRef.current;
     const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff' });
     const imgData = canvas.toDataURL('image/png');
@@ -43,9 +43,8 @@ export default function FASDocumento({ fas, onClose }) {
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
         <div className="flex gap-2">
-          <Button size="sm" className="gap-2" onClick={handleDownload}>
-            <Download className="w-4 h-4" />
-            Baixar PDF
+          <Button size="sm" className="gap-2" onClick={handleSalveFAS}>
+            Salvar FAS como PDF
           </Button>
           <Button size="sm" variant="ghost" onClick={onClose}>
             <X className="w-4 h-4" />
