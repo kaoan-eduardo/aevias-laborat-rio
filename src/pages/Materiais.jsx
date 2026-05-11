@@ -24,7 +24,9 @@ export default function Materiais() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { 
+    load(); 
+  }, []); // Carrega materiais uma única vez ao montar o componente
 
   const filtered = materiais.filter(m =>
     m.nome?.toLowerCase().includes(search.toLowerCase())

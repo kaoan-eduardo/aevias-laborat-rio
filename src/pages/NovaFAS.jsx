@@ -11,18 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-const gerarNumeroFAS = (total) => {
-  const ano = new Date().getFullYear();
-  return `FAS-${ano}-${String(total + 1).padStart(4, '0')}`;
-};
-
-const gerarCodigoAmostra = () => {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  return 'AM-' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-};
-
-const hoje = () => new Date().toISOString().split('T')[0];
+import { gerarNumeroFAS, gerarCodigoAmostra, gerarAndamentoInicial, obterDataHoje } from '@/utils/fasHelpers';
 
 export default function NovaFAS() {
   const { user } = useAuth();
@@ -48,7 +37,7 @@ export default function NovaFAS() {
     anexos: [],
     observacoes: '',
     nome_solicitante: user?.full_name || '',
-    data_solicitacao: hoje(),
+    data_solicitacao: obterDataHoje(),
     status: 'aberta',
   });
 
@@ -113,17 +102,12 @@ export default function NovaFAS() {
   const handleSave = async () => {
     if (!form.cliente_id || !form.numero_proposta || !form.objetivo) return;
     setSaving(true);
-    const andamentoInicial = [
-      { atividade: 'Abertura da FAS', data: hoje(), concluida: true },
-      { atividade: 'Recebimento do Material', data: null, concluida: false },
-      { atividade: 'Envio do Relatório', data: null, concluida: false },
-    ];
     const payload = {
       ...form,
       status: 'aberta',
       numero_fas: gerarNumeroFAS(totalFas),
       codigo_amostra: gerarCodigoAmostra(),
-      andamento: andamentoInicial,
+      andamento: gerarAndamentoInicial(obterDataHoje()),
     };
     await base44.entities.FAS.create(payload);
     setSaving(false);

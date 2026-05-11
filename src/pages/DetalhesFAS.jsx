@@ -12,6 +12,7 @@ import {
   AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
   AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
+import { atualizarAndamento, obterDataHoje } from '@/utils/fasHelpers';
 
 const STATUS_CONFIG = {
   aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
@@ -36,8 +37,6 @@ const BoolRow = ({ label, value }) => (
   </div>
 );
 
-const hoje = () => new Date().toISOString().split('T')[0];
-
 export default function DetalhesFAS() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -57,20 +56,16 @@ export default function DetalhesFAS() {
       setLoading(false);
     };
     load();
-  }, [id]);
+  }, [id]); // Carrega FAS quando ID mudar (navegação)
 
   const marcarMaterialRecebido = async () => {
-    const andamento = (fas.andamento || []).map(a =>
-      a.atividade === 'Recebimento do Material' ? { ...a, data: hoje(), concluida: true } : a
-    );
+    const andamento = atualizarAndamento(fas.andamento, 'Recebimento do Material', obterDataHoje());
     await base44.entities.FAS.update(fas.id, { status: 'material_recebido', andamento });
     setFas(f => ({ ...f, status: 'material_recebido', andamento }));
   };
 
   const finalizarFAS = async () => {
-    const andamento = (fas.andamento || []).map(a =>
-      a.atividade === 'Envio do Relatório' ? { ...a, data: hoje(), concluida: true } : a
-    );
+    const andamento = atualizarAndamento(fas.andamento, 'Envio do Relatório', obterDataHoje());
     await base44.entities.FAS.update(fas.id, { status: 'finalizada', andamento });
     setFas(f => ({ ...f, status: 'finalizada', andamento }));
   };
