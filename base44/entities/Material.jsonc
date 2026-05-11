@@ -14,7 +14,8 @@
         "SOLO",
         "AGREGADO",
         "LIGANTES",
-        "MRAF"
+        "MRAF",
+        "OUTROS"
       ],
       "description": "Categoria do material"
     }
