@@ -6,6 +6,15 @@
       "type": "string",
       "description": "N\u00famero sequencial do protocolo (ex: 0001/26)"
     },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendente_gestor",
+        "concluido"
+      ],
+      "default": "pendente_gestor",
+      "description": "Status do preenchimento do protocolo"
+    },
     "cliente_id": {
       "type": "string",
       "description": "ID do cliente"
@@ -28,21 +37,21 @@
       "format": "date",
       "description": "Data da entrada da amostra"
     },
-    "finalidade": {
+    "responsavel_amostragem": {
       "type": "string",
-      "description": "Tipo de ensaio/finalidade"
-    },
-    "numero_fas": {
-      "type": "string",
-      "description": "N\u00famero da FAS associada"
+      "description": "Nome do respons\u00e1vel pela amostragem"
     },
     "observacoes": {
       "type": "string",
       "description": "Observa\u00e7\u00f5es gerais"
     },
-    "responsavel_amostragem": {
+    "numero_fas": {
       "type": "string",
-      "description": "Nome do respons\u00e1vel pela amostragem"
+      "description": "N\u00ba da FAS ou Proposta Comercial (preenchido pelo gestor)"
+    },
+    "ensaios_realizados": {
+      "type": "string",
+      "description": "Ensaios a serem realizados (preenchido pelo gestor)"
     },
     "amostras": {
       "type": "array",
@@ -51,41 +60,32 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "ID \u00fanico da amostra"
+            "type": "string"
           },
           "material_id": {
-            "type": "string",
-            "description": "ID do material"
+            "type": "string"
           },
           "material_nome": {
-            "type": "string",
-            "description": "Nome do material"
+            "type": "string"
           },
           "procedencia": {
-            "type": "string",
-            "description": "Proced\u00eancia da amostra"
+            "type": "string"
           },
           "quantidade": {
-            "type": "number",
-            "description": "Quantidade"
+            "type": "number"
           },
           "observacao_recebimento": {
-            "type": "string",
-            "description": "Observa\u00e7\u00e3o do recebimento"
+            "type": "string"
           },
           "data_coleta": {
             "type": "string",
-            "format": "date",
-            "description": "Data de coleta"
+            "format": "date"
           },
           "peso_kg": {
-            "type": "number",
-            "description": "Peso em kg"
+            "type": "number"
           },
           "quantidade_suficiente": {
-            "type": "boolean",
-            "description": "Quantidade suficiente para an\u00e1lise"
+            "type": "boolean"
           }
         }
       }

@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Plus, Search, Package, Eye, ArrowLeft } from 'lucide-react';
+import { Plus, Search, Package, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import NovoRecebimento from '@/components/recebimento/NovoRecebimento';
+
+const STATUS_CONFIG = {
+  pendente_gestor: { label: 'Pendente Gestor', color: 'bg-yellow-100 text-yellow-700' },
+  concluido: { label: 'Concluído', color: 'bg-green-100 text-green-700' },
+};
 
 export default function RecebimentoAmostras() {
   const { user } = useAuth();
@@ -18,7 +23,7 @@ export default function RecebimentoAmostras() {
   const [modalOpen, setModalOpen] = useState(false);
 
   const role = user?.role || 'auxiliar';
-  const canAccess = role === 'admin' || role === 'auxiliar' || role === 'gestor';
+  const canCreate = role === 'auxiliar' || role === 'admin' || role === 'gestor';
 
   const load = async () => {
     setLoading(true);
@@ -29,19 +34,13 @@ export default function RecebimentoAmostras() {
 
   useEffect(() => { load(); }, []);
 
-  if (!canAccess) {
-    return (
-      <div className="p-6 text-center text-muted-foreground">
-        Acesso restrito. Apenas gestores e auxiliares podem acessar esta página.
-      </div>
-    );
-  }
-
   const filtered = recebimentos.filter(r =>
     r.numero_protocolo?.toLowerCase().includes(search.toLowerCase()) ||
     r.cliente_nome?.toLowerCase().includes(search.toLowerCase()) ||
     r.numero_projeto?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const pendentes = filtered.filter(r => r.status === 'pendente_gestor').length;
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-5">
@@ -50,13 +49,23 @@ export default function RecebimentoAmostras() {
           <h1 className="text-2xl font-bold text-foreground">Recebimento de Amostras</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Registro de protocolos de entrada de amostras</p>
         </div>
-        <Button onClick={() => setModalOpen(true)} className="gap-2">
-          <Plus className="w-4 h-4" />
-          Novo Protocolo
-        </Button>
+        {canCreate && (
+          <Button onClick={() => setModalOpen(true)} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Novo Protocolo
+          </Button>
+        )}
       </div>
 
-      {/* Search */}
+      {/* Alerta para gestor */}
+      {(role === 'gestor' || role === 'admin') && pendentes > 0 && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 flex items-center gap-3">
+          <span className="text-yellow-700 text-sm font-medium">
+            ⚠️ {pendentes} protocolo{pendentes > 1 ? 's' : ''} aguardando seu preenchimento de ensaios e Nº FAS.
+          </span>
+        </div>
+      )}
+
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
@@ -67,7 +76,6 @@ export default function RecebimentoAmostras() {
         />
       </div>
 
-      {/* Table */}
       <Card>
         <CardContent className="p-0">
           {loading ? (
@@ -87,8 +95,9 @@ export default function RecebimentoAmostras() {
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Protocolo</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Cliente</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Projeto</th>
-                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Data de Entrada</th>
+                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Data Entrada</th>
                     <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Amostras</th>
+                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Status</th>
                     <th className="px-4 py-3 text-right font-semibold text-muted-foreground">Ação</th>
                   </tr>
                 </thead>
@@ -102,13 +111,13 @@ export default function RecebimentoAmostras() {
                         {r.data_entrada ? new Date(r.data_entrada).toLocaleDateString('pt-BR') : '—'}
                       </td>
                       <td className="px-4 py-3 text-center font-mono-data">{r.amostras?.length || 0}</td>
+                      <td className="px-4 py-3">
+                        <Badge className={STATUS_CONFIG[r.status]?.color + ' text-xs'}>
+                          {STATUS_CONFIG[r.status]?.label || r.status}
+                        </Badge>
+                      </td>
                       <td className="px-4 py-3 text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8"
-                          onClick={() => navigate(`/recebimento/${r.id}`)}
-                        >
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/recebimento/${r.id}`)}>
                           <Eye className="w-3.5 h-3.5" />
                         </Button>
                       </td>
