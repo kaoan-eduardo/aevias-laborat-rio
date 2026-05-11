@@ -1,6 +1,7 @@
 import { useRef } from 'react';
+import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Printer, X } from 'lucide-react';
+import { Download, X } from 'lucide-react';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
@@ -8,28 +9,21 @@ const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
-  const handlePrint = () => {
-    const content = docRef.current.outerHTML;
-    const printWindow = window.open('', '', 'width=800,height=600');
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          @media print {
-            body { margin: 0; padding: 0; }
-            html { margin: 0; padding: 0; }
-          }
-        </style>
-      </head>
-      <body>
-        ${content}
-      </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => printWindow.print(), 250);
+  const handlePrint = async () => {
+    try {
+      const response = await base44.functions.invoke('generateFASPDF', { fas });
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `FAS-${fas.numero_fas || 'documento'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+    }
   };
 
   const printStyles = `
@@ -57,8 +51,8 @@ export default function FASDocumento({ fas, onClose }) {
         </span>
         <div className="flex gap-2">
           <Button size="sm" className="gap-2" onClick={handlePrint}>
-            <Printer className="w-4 h-4" />
-            Imprimir PDF
+            <Download className="w-4 h-4" />
+            Baixar PDF
           </Button>
           <Button size="sm" variant="ghost" onClick={onClose}>
             <X className="w-4 h-4" />
