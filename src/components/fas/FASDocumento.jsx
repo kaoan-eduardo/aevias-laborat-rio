@@ -72,7 +72,7 @@ export default function FASDocumento({ fas, onClose }) {
       </div>
 
       {/* Scroll area */}
-      <div className="flex-1 overflow-auto bg-gray-200 flex justify-center py-6 px-4">
+      <div className="flex-1 overflow-auto bg-gray-200 flex flex-col items-center py-6 px-4">
         {/* A4 document */}
         <div
           ref={docRef}
@@ -225,7 +225,7 @@ export default function FASDocumento({ fas, onClose }) {
         {/* Renderiza anexos em sequência como imagens */}
         {fas.anexos && fas.anexos.length > 0 && (
           fas.anexos.map((anexo, idx) => (
-            <div key={`anexo-${idx}`} style={{ marginTop: '20px' }}>
+            <div key={`anexo-${idx}`} style={{ marginTop: '20px', width: '794px' }}>
               <FASPDFRenderer pdfUrl={anexo.url} pageWidth={794} />
             </div>
           ))
