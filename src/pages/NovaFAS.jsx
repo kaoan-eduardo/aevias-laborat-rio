@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Trash2, ArrowLeft, Send } from 'lucide-react';
+import FASAnexos from '@/components/fas/FASAnexos';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -44,6 +45,7 @@ export default function NovaFAS() {
     exige_art: false,
     objetivo: '',
     itens: [],
+    anexos: [],
     observacoes: '',
     nome_solicitante: user?.full_name || '',
     data_solicitacao: hoje(),
@@ -318,6 +320,13 @@ export default function NovaFAS() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Anexos */}
+      <FASAnexos
+        anexos={form.anexos || []}
+        isComercial={true}
+        onChange={(novosAnexos) => set('anexos', novosAnexos)}
+      />
 
       {/* Actions */}
       <div className="flex justify-end gap-3 pb-4">

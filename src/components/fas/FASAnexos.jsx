@@ -4,6 +4,7 @@ import { Paperclip, Upload, Trash2, FileText, Loader2, ExternalLink } from 'luci
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+// fasId é opcional: se não fornecido, opera em modo local (sem salvar no banco)
 export default function FASAnexos({ fasId, anexos = [], isComercial, onChange }) {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef(null);
@@ -24,7 +25,9 @@ export default function FASAnexos({ fasId, anexos = [], isComercial, onChange })
       });
     }
 
-    await base44.entities.FAS.update(fasId, { anexos: novosAnexos });
+    if (fasId) {
+      await base44.entities.FAS.update(fasId, { anexos: novosAnexos });
+    }
     onChange(novosAnexos);
     setUploading(false);
     e.target.value = '';
@@ -32,7 +35,9 @@ export default function FASAnexos({ fasId, anexos = [], isComercial, onChange })
 
   const handleDelete = async (idx) => {
     const novosAnexos = anexos.filter((_, i) => i !== idx);
-    await base44.entities.FAS.update(fasId, { anexos: novosAnexos });
+    if (fasId) {
+      await base44.entities.FAS.update(fasId, { anexos: novosAnexos });
+    }
     onChange(novosAnexos);
   };
 
