@@ -10,6 +10,47 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
+function ClienteInfo({ clienteId, clienteNome }) {
+  const [cliente, setCliente] = useState(null);
+
+  useEffect(() => {
+    if (!clienteId) return;
+    base44.entities.Cliente.filter({ id: clienteId }).then(res => setCliente(res[0] || null));
+  }, [clienteId]);
+
+  if (!cliente) return <p className="text-sm text-foreground">{clienteNome || '—'}</p>;
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="col-span-2 sm:col-span-3">
+        <p className="text-sm font-semibold text-foreground">{cliente.razao_social}</p>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-0.5">CNPJ</p>
+        <p className="text-sm font-mono-data">{cliente.cnpj || '—'}</p>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-0.5">Responsável</p>
+        <p className="text-sm">{cliente.responsavel || '—'}</p>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-0.5">Telefone</p>
+        <p className="text-sm">{cliente.telefone || '—'}</p>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-0.5">E-mail</p>
+        <p className="text-sm">{cliente.email || '—'}</p>
+      </div>
+      {cliente.endereco && (
+        <div className="col-span-2 sm:col-span-3">
+          <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-0.5">Endereço</p>
+          <p className="text-sm">{cliente.endereco}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const InfoRow = ({ label, value, mono }) => (
   <div>
     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-0.5">{label}</p>
@@ -312,15 +353,20 @@ export default function DetalhesRecebimento() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Informações do Protocolo</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <CardContent className="space-y-4">
+          {/* Cliente */}
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Cliente</p>
+            <ClienteInfo clienteId={recebimento.cliente_id} clienteNome={recebimento.cliente_nome} />
+          </div>
+          <div className="border-t border-border pt-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
             <InfoRow label="Data do Registro" value={recebimento.data_registro ? new Date(recebimento.data_registro).toLocaleDateString('pt-BR') : null} />
             <InfoRow label="Data da Entrada" value={recebimento.data_entrada ? new Date(recebimento.data_entrada).toLocaleDateString('pt-BR') : null} />
             <InfoRow label="Número do Projeto" value={recebimento.numero_projeto} />
             <InfoRow label="Responsável Amostragem" value={recebimento.responsavel_amostragem} />
           </div>
           {recebimento.observacoes && (
-            <div className="mt-4 pt-4 border-t border-border">
+            <div className="pt-2 border-t border-border">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Observações</p>
               <p className="text-sm text-foreground">{recebimento.observacoes}</p>
             </div>
