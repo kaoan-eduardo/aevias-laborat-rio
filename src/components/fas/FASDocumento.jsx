@@ -11,8 +11,16 @@ export default function FASDocumento({ fas, onClose }) {
   // Aplica estilos de impressão
   const printStyles = `
     @media print {
-      body { overflow: hidden; scrollbar-width: none; }
-      body::-webkit-scrollbar { display: none; }
+      html, body { 
+        overflow: hidden !important; 
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      body::-webkit-scrollbar, 
+      html::-webkit-scrollbar { 
+        display: none !important; 
+      }
+      .fixed { position: static !important; }
     }
   `;
 
