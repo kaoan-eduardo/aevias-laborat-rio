@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, X } from 'lucide-react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { Printer, X } from 'lucide-react';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
@@ -10,23 +8,12 @@ const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
-  const handleDownload = async () => {
+  const handlePrint = () => {
     const element = docRef.current;
-    const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff' });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-    const imgW = pageW;
-    const imgH = (canvas.height * imgW) / canvas.width;
-    let position = 0;
-    pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
-    while (imgH + position > pageH) {
-      position -= pageH;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
-    }
-    pdf.save(`FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}.pdf`);
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(element.outerHTML);
+    printWindow.document.close();
+    printWindow.onload = () => printWindow.print();
   };
 
   const itens = fas.itens || [];
@@ -43,9 +30,9 @@ export default function FASDocumento({ fas, onClose }) {
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
         <div className="flex gap-2">
-          <Button size="sm" className="gap-2" onClick={handleDownload}>
-            <Download className="w-4 h-4" />
-            Baixar PDF
+          <Button size="sm" className="gap-2" onClick={handlePrint}>
+            <Printer className="w-4 h-4" />
+            Imprimir PDF
           </Button>
           <Button size="sm" variant="ghost" onClick={onClose}>
             <X className="w-4 h-4" />
