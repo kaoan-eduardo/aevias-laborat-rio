@@ -17,16 +17,16 @@ export default function Materiais() {
   const [salvando, setSalvando] = useState(false);
   const [excluindo, setExcluindo] = useState(null);
 
-  const load = async () => {
-    setLoading(true);
-    const data = await base44.entities.Material.list('-created_date');
-    setMateriais(data);
-    setLoading(false);
-  };
-
   useEffect(() => { 
+    // Carrega materiais uma única vez ao montar o componente
+    const load = async () => {
+      setLoading(true);
+      const data = await base44.entities.Material.list('-created_date');
+      setMateriais(data);
+      setLoading(false);
+    };
     load(); 
-  }, []); // Carrega materiais uma única vez ao montar o componente
+  }, []);
 
   const filtered = materiais.filter(m =>
     m.nome?.toLowerCase().includes(search.toLowerCase())
@@ -47,7 +47,11 @@ export default function Materiais() {
     setNovoNome('');
     setNovaCategoria('');
     setSalvando(false);
-    load();
+    // Recarrega lista de materiais após salvar
+    setLoading(true);
+    const data = await base44.entities.Material.list('-created_date');
+    setMateriais(data);
+    setLoading(false);
   };
 
   const handleEditar = (m) => {
@@ -65,7 +69,11 @@ export default function Materiais() {
   const handleExcluir = async (m) => {
     await base44.entities.Material.delete(m.id);
     setExcluindo(null);
-    load();
+    // Recarrega lista de materiais após excluir
+    setLoading(true);
+    const data = await base44.entities.Material.list('-created_date');
+    setMateriais(data);
+    setLoading(false);
   };
 
   return (

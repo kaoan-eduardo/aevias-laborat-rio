@@ -42,6 +42,7 @@ export default function NovaFAS() {
   });
 
   useEffect(() => {
+    // Carrega clientes, ensaios e total de FAS uma única vez ao montar o componente
     const load = async () => {
       const [cList, eList, fList] = await Promise.all([
         base44.entities.Cliente.list('razao_social'),
