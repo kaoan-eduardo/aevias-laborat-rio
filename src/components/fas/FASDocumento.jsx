@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Download, X, Loader2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import FASPDFRenderer from './FASPDFRenderer';
 import { baixarPDFComAnexos } from './FASAnexosDownload';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
@@ -221,21 +222,12 @@ export default function FASDocumento({ fas, onClose }) {
           </div>
         </div>
 
-        {/* Renderiza anexos em sequência como páginas separadas */}
+        {/* Renderiza anexos em sequência como imagens */}
         {fas.anexos && fas.anexos.length > 0 && (
           fas.anexos.map((anexo, idx) => (
-            <iframe
-              key={`anexo-${idx}`}
-              src={anexo.url}
-              style={{
-                width: '794px',
-                minHeight: '1123px',
-                background: '#fff',
-                border: 'none',
-                marginTop: '20px'
-              }}
-              title={`Anexo: ${anexo.nome}`}
-            />
+            <div key={`anexo-${idx}`} style={{ marginTop: '20px' }}>
+              <FASPDFRenderer pdfUrl={anexo.url} pageWidth={794} />
+            </div>
           ))
         )}
       </div>
