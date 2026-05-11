@@ -1,16 +1,18 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { baixarAnexosJuntos, AnexosPreview } from './FASAnexosDownload';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
+  const [downloadingAnexos, setDownloadingAnexos] = useState(false);
 
-  const handleDownload = async () => {
+  const handleDownloadPDF = async () => {
     const element = docRef.current;
     const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff' });
     const imgData = canvas.toDataURL('image/png');
@@ -43,10 +45,26 @@ export default function FASDocumento({ fas, onClose }) {
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
         <div className="flex gap-2">
-          <Button size="sm" className="gap-2" onClick={handleDownload}>
+          <Button size="sm" className="gap-2" onClick={handleDownloadPDF}>
             <Download className="w-4 h-4" />
             Baixar PDF
           </Button>
+          {fas.anexos && fas.anexos.length > 0 && (
+            <Button 
+              size="sm" 
+              variant="outline"
+              className="gap-2"
+              disabled={downloadingAnexos}
+              onClick={async () => {
+                setDownloadingAnexos(true);
+                await baixarAnexosJuntos(fas.anexos, `FAS-${fas.numero_fas}`);
+                setDownloadingAnexos(false);
+              }}
+            >
+              <Download className="w-4 h-4" />
+              {downloadingAnexos ? 'Baixando...' : 'Baixar Anexos'}
+            </Button>
+          )}
           <Button size="sm" variant="ghost" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
@@ -195,13 +213,34 @@ export default function FASDocumento({ fas, onClose }) {
             </tbody>
           </table>
 
+          {/* Anexos */}
+          {fas.anexos && fas.anexos.length > 0 && (
+            <>
+              <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0', marginTop: '8px' }}>
+                ANEXOS
+              </div>
+              <div style={{ border: '1px solid #ccc', minHeight: '40px', padding: '4px 6px', marginBottom: '6px', fontSize: '8px' }}>
+                {fas.anexos.map((anexo, idx) => (
+                  <div key={idx} style={{ marginBottom: idx < fas.anexos.length - 1 ? '3px' : 0 }}>
+                    <span style={{ fontWeight: 'bold' }}>Anexo {idx + 1}:</span> {anexo.nome}
+                    {anexo.tamanho && (
+                      <span style={{ color: '#666', marginLeft: '4px' }}>
+                        ({(anexo.tamanho / 1024).toFixed(1)} KB)
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
           {/* Footer */}
           <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888' }}>
             <span>FORM 045 - REV 06 - 09/06/2025</span>
             <span>Página 1 de 1</span>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+          </div>
+          </div>
+          </div>
+          );
+          }
