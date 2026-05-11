@@ -41,6 +41,7 @@ export default function DetalhesFAS() {
 
   const role = user?.role || 'auxiliar';
   const isGestor = role === 'admin' || role === 'gestor';
+  const isComercial = role === 'comercial' || role === 'admin';
   const isTecnico = role === 'tecnico';
 
   useEffect(() => {
@@ -103,22 +104,35 @@ export default function DetalhesFAS() {
         </div>
 
         {/* Ações do Gestor */}
-        {isGestor && fas.status === 'aberta' && (
+        {fas.status === 'aberta' && (
           <div className="flex gap-2 flex-wrap">
-            <Button className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-white" onClick={marcarMaterialRecebido}>
-              <Package className="w-4 h-4" />
-              Confirmar Recebimento
-            </Button>
-            <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50" onClick={cancelarFAS}>
-              <XCircle className="w-4 h-4" />
-              Cancelar
-            </Button>
+            {isGestor && (
+              <Button className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-white" onClick={marcarMaterialRecebido}>
+                <Package className="w-4 h-4" />
+                Confirmar Recebimento
+              </Button>
+            )}
+            {isComercial && (
+              <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50" onClick={cancelarFAS}>
+                <XCircle className="w-4 h-4" />
+                Cancelar
+              </Button>
+            )}
           </div>
         )}
         {isGestor && fas.status === 'material_recebido' && (
           <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={finalizarFAS}>
             <FileCheck className="w-4 h-4" />
             Enviar Relatório e Finalizar
+          </Button>
+        )}
+        {isComercial && fas.status === 'cancelada' && (
+          <Button variant="outline" className="gap-2 text-blue-600 border-blue-200 hover:bg-blue-50" onClick={async () => {
+            await base44.entities.FAS.update(fas.id, { status: 'aberta' });
+            setFas(f => ({ ...f, status: 'aberta' }));
+          }}>
+            <CheckCircle className="w-4 h-4" />
+            Reabrir FAS
           </Button>
         )}
       </div>
