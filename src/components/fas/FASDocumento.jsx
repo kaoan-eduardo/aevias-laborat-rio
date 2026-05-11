@@ -17,22 +17,24 @@ export default function FASDocumento({ fas, onClose }) {
     setDownloading(true);
     try {
       const element = docRef.current;
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff' });
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff', allowTaint: true });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const pageW = pdf.internal.pageSize.getWidth();
-      const pageH = pdf.internal.pageSize.getHeight();
-      const imgW = pageW;
-      const imgH = (canvas.height * imgW) / canvas.width;
+      const imgWidth = 210; // A4 width em mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageHeight = 297; // A4 height em mm
       
-      let yOffset = 0;
-      let isFirstPage = true;
+      let position = 0;
       
-      while (yOffset < imgH) {
-        if (!isFirstPage) pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, -yOffset, imgW, imgH);
-        yOffset += pageH;
-        isFirstPage = false;
+      // Primeira página
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      position += pageHeight;
+      
+      // Páginas adicionais se necessário
+      while (position < imgHeight) {
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, -position, imgWidth, imgHeight);
+        position += pageHeight;
       }
       
       const nomeBase = `FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}`;
