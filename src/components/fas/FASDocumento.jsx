@@ -1,56 +1,38 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, X, Loader2 } from 'lucide-react';
+import { Download, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import FASPDFRenderer from './FASPDFRenderer';
-import { baixarPDFComAnexos } from './FASAnexosDownload';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
-  const [downloading, setDownloading] = useState(false);
 
-  const handleDownloadPDF = async () => {
-    setDownloading(true);
-    try {
-      const element = docRef.current;
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff', allowTaint: true });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const imgWidth = 210; // A4 width em mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const pageHeight = 297; // A4 height em mm
-      
-      let position = 0;
-      
-      // Primeira página
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      position += pageHeight;
-      
-      // Páginas adicionais se necessário
-      while (position < imgHeight) {
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, -position, imgWidth, imgHeight);
-        position += pageHeight;
-      }
-      
-      const nomeBase = `FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}`;
-      const pdfBlob = pdf.output('blob');
-      
-      // Baixa PDF principal + anexos em sequência
-      await baixarPDFComAnexos(pdfBlob, fas.anexos, nomeBase);
-    } finally {
-      setDownloading(false);
+  const handleDownload = async () => {
+    const element = docRef.current;
+    const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#fff' });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgW = pageW;
+    const imgH = (canvas.height * imgW) / canvas.width;
+    let position = 0;
+    pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
+    while (imgH + position > pageH) {
+      position -= pageH;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
     }
+    pdf.save(`FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}.pdf`);
   };
 
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
-  // Preenche até ter pelo menos 25 linhas na tabela de ensaios
-  const LINHAS_ENSAIO = 25;
+  // Preenche até ter pelo menos 27 linhas na tabela de ensaios
+  const LINHAS_ENSAIO = 27;
   const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
 
   return (
@@ -61,14 +43,9 @@ export default function FASDocumento({ fas, onClose }) {
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
         <div className="flex gap-2">
-          <Button 
-            size="sm" 
-            className="gap-2" 
-            onClick={handleDownloadPDF}
-            disabled={downloading}
-          >
-            {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-            {downloading ? 'Processando...' : 'Baixar PDF Completo'}
+          <Button size="sm" className="gap-2" onClick={handleDownload}>
+            <Download className="w-4 h-4" />
+            Baixar PDF
           </Button>
           <Button size="sm" variant="ghost" onClick={onClose}>
             <X className="w-4 h-4" />
@@ -77,11 +54,11 @@ export default function FASDocumento({ fas, onClose }) {
       </div>
 
       {/* Scroll area */}
-      <div className="flex-1 overflow-auto bg-gray-200 flex flex-col items-center py-6 px-4">
+      <div className="flex-1 overflow-auto bg-gray-200 flex justify-center py-6 px-4">
         {/* A4 document */}
         <div
           ref={docRef}
-          style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '20px 24px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}
+          style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '20px 24px', boxSizing: 'border-box' }}
         >
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1.5px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
@@ -114,9 +91,9 @@ export default function FASDocumento({ fas, onClose }) {
                 </tr>
               ))}
               <tr>
-                <td style={{ border: '1px solid #ccc', padding: '1px 1px', fontWeight: 'bold', background: '#f5f5f5' }}>Anotação de Responsabilidade Técnica (ART):</td>
+                <td style={{ border: '1px solid #ccc', padding: '3px 6px', fontWeight: 'bold', background: '#f5f5f5' }}>Anotação de Responsabilidade Técnica (ART):</td>
                 <td style={{ border: '1px solid #ccc', padding: '3px 8px', textAlign: 'center' }}>
-                  <span style={{ border: '1px solid #aaa', padding: '12px 12px', background: '#e9e9e9' }}>{sim_nao(fas.exige_art)}</span>
+                  <span style={{ border: '1px solid #aaa', padding: '1px 12px', background: '#e9e9e9' }}>{sim_nao(fas.exige_art)}</span>
                 </td>
               </tr>
             </tbody>
@@ -205,7 +182,7 @@ export default function FASDocumento({ fas, onClose }) {
           <div style={{ border: '1px solid #ccc', minHeight: '36px', padding: '4px 6px', marginBottom: '8px' }}>&nbsp;</div>
 
           {/* Rodapé assinatura */}
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px', marginTop: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px' }}>
             <tbody>
               <tr>
                 <td style={{ border: '1px solid #ccc', padding: '3px 6px', width: '120px', fontWeight: 'bold', background: '#f5f5f5' }}>Solicitante:</td>
@@ -219,20 +196,11 @@ export default function FASDocumento({ fas, onClose }) {
           </table>
 
           {/* Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888', marginTop: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888' }}>
             <span>FORM 045 - REV 06 - 09/06/2025</span>
             <span>Página 1 de 1</span>
           </div>
         </div>
-
-        {/* Renderiza anexos em sequência como imagens */}
-        {fas.anexos && fas.anexos.length > 0 && (
-          fas.anexos.map((anexo, idx) => (
-            <div key={`anexo-${idx}`} style={{ marginTop: '20px', width: '794px' }}>
-              <FASPDFRenderer pdfUrl={anexo.url} pageWidth={794} />
-            </div>
-          ))
-        )}
       </div>
     </div>
   );
