@@ -23,8 +23,8 @@ export default function FASDocumento({ fas, onClose }) {
 
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
-  // Preenche até ter pelo menos 27 linhas na tabela de ensaios
-  const LINHAS_ENSAIO = 27;
+  // Preenche até ter pelo menos 25 linhas na tabela de ensaios
+  const LINHAS_ENSAIO = 25;
   const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
 
   return (
@@ -51,7 +51,7 @@ export default function FASDocumento({ fas, onClose }) {
         {/* A4 document */}
         <div
           ref={docRef}
-          style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '20px 24px', boxSizing: 'border-box' }}
+          style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '8px 12px', boxSizing: 'border-box' }}
         >
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1.5px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
