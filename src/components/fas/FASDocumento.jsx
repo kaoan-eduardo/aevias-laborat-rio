@@ -175,37 +175,6 @@ export default function FASDocumento({ fas, onClose }) {
             </tbody>
           </table>
 
-          {/* Anexos */}
-          {(fas.anexos && fas.anexos.length > 0) && (
-            <>
-              <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0', marginTop: '6px' }}>
-                ANEXOS
-              </div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '6px' }}>
-                <thead>
-                  <tr style={{ background: '#f0f0f0' }}>
-                    <th style={{ border: '1px solid #ccc', padding: '2px 6px', textAlign: 'left' }}>Nome do Arquivo</th>
-                    <th style={{ border: '1px solid #ccc', padding: '2px 6px', width: '80px', textAlign: 'center' }}>Tamanho</th>
-                    <th style={{ border: '1px solid #ccc', padding: '2px 6px', width: '80px', textAlign: 'center' }}>Data Upload</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {fas.anexos.map((anexo, i) => (
-                    <tr key={i} style={{ height: '14px' }}>
-                      <td style={{ border: '1px solid #ccc', padding: '2px 6px' }}>{anexo.nome || ''}</td>
-                      <td style={{ border: '1px solid #ccc', padding: '2px 6px', textAlign: 'center', fontSize: '8px' }}>
-                        {anexo.tamanho ? `${(anexo.tamanho / 1024).toFixed(1)} KB` : '—'}
-                      </td>
-                      <td style={{ border: '1px solid #ccc', padding: '2px 6px', textAlign: 'center', fontSize: '8px' }}>
-                        {anexo.data_upload ? fmt_date(anexo.data_upload) : '—'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </>
-          )}
-
           {/* Considerações */}
           <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0' }}>
             CONSIDERAÇÕES
