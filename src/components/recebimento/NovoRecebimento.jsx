@@ -77,8 +77,16 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
   const handleSalvar = async () => {
     if (!form.cliente_id || !form.data_entrada) return;
     setLoading(true);
+
+    // Se há uma amostra temporária preenchida (não adicionada), inclui automaticamente
+    let amostrasFinais = [...form.amostras];
+    if (amostraTemp.material_id && amostraTemp.procedencia) {
+      amostrasFinais = [...amostrasFinais, { ...amostraTemp, id: Math.random().toString(36).substr(2, 9) }];
+    }
+
     await base44.entities.RecebimentoAmostra.create({
       ...form,
+      amostras: amostrasFinais,
       numero_protocolo: gerarNumeroProtocolo(totalRecebimentos),
       status: 'pendente_gestor'
     });
@@ -173,13 +181,18 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
                     <Label className="text-xs">Peso (kg)</Label>
                     <Input type="number" step="0.01" value={amostraTemp.peso_kg} onChange={e => setAmostraTemp(a => ({ ...a, peso_kg: e.target.value }))} className="mt-1 h-8" />
                   </div>
-                  <div className="flex items-end gap-3">
+                  <div className="flex items-end gap-3 col-span-2 sm:col-span-1">
                     <label className="flex items-center gap-1 text-xs">
                       <input type="checkbox" checked={amostraTemp.quantidade_suficiente} onChange={e => setAmostraTemp(a => ({ ...a, quantidade_suficiente: e.target.checked }))} />
                       Suficiente?
                     </label>
-                    <Button onClick={handleAddAmostra} size="sm" variant="outline" className="gap-1 h-8 text-xs">
-                      <Plus className="w-3 h-3" /> Adicionar
+                    <Button
+                      onClick={handleAddAmostra}
+                      size="sm"
+                      variant={amostraTemp.material_id && amostraTemp.procedencia ? 'default' : 'outline'}
+                      className="gap-1 h-8 text-xs"
+                    >
+                      <Plus className="w-3 h-3" /> Adicionar à lista
                     </Button>
                   </div>
                 </div>
