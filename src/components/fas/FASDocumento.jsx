@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Printer, X } from 'lucide-react';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
@@ -10,25 +8,28 @@ const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
-  const handlePrint = async () => {
-    try {
-      const element = docRef.current;
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-      });
-      
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save(`FAS-${fas.numero_proposta || fas.numero_fas}.pdf`);
-    } catch (error) {
-      console.error('Erro ao gerar PDF:', error);
-    }
+  const handlePrint = () => {
+    const content = docRef.current.outerHTML;
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          @media print {
+            body { margin: 0; padding: 0; }
+            html { margin: 0; padding: 0; }
+          }
+        </style>
+      </head>
+      <body>
+        ${content}
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => printWindow.print(), 250);
   };
 
   const printStyles = `
@@ -57,7 +58,7 @@ export default function FASDocumento({ fas, onClose }) {
         <div className="flex gap-2">
           <Button size="sm" className="gap-2" onClick={handlePrint}>
             <Printer className="w-4 h-4" />
-            Gerar PDF
+            Imprimir PDF
           </Button>
           <Button size="sm" variant="ghost" onClick={onClose}>
             <X className="w-4 h-4" />
