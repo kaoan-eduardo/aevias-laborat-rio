@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Plus, Search, Package, Edit2, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function Materiais() {
@@ -10,6 +11,7 @@ export default function Materiais() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [novoNome, setNovoNome] = useState('');
+  const [novaCategoria, setNovaCategoria] = useState('');
   const [editando, setEditando] = useState(null);
   const [salvando, setSalvando] = useState(false);
 
@@ -29,13 +31,17 @@ export default function Materiais() {
   const handleSalvar = async () => {
     if (!novoNome.trim()) return;
     setSalvando(true);
+    const payload = { nome: novoNome.trim() };
+    if (novaCategoria) payload.categoria = novaCategoria;
+    
     if (editando) {
-      await base44.entities.Material.update(editando.id, { nome: novoNome.trim() });
+      await base44.entities.Material.update(editando.id, payload);
       setEditando(null);
     } else {
-      await base44.entities.Material.create({ nome: novoNome.trim() });
+      await base44.entities.Material.create(payload);
     }
     setNovoNome('');
+    setNovaCategoria('');
     setSalvando(false);
     load();
   };
@@ -43,11 +49,13 @@ export default function Materiais() {
   const handleEditar = (m) => {
     setEditando(m);
     setNovoNome(m.nome);
+    setNovaCategoria(m.categoria || '');
   };
 
   const handleCancelar = () => {
     setEditando(null);
     setNovoNome('');
+    setNovaCategoria('');
   };
 
   const handleExcluir = async (m) => {
@@ -76,6 +84,19 @@ export default function Materiais() {
               onKeyDown={e => e.key === 'Enter' && handleSalvar()}
               className="flex-1"
             />
+            <Select value={novaCategoria} onValueChange={setNovaCategoria}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Categoria..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="CAUQ">CAUQ</SelectItem>
+                <SelectItem value="CONCRETO">CONCRETO</SelectItem>
+                <SelectItem value="SOLO">SOLO</SelectItem>
+                <SelectItem value="AGREGADO">AGREGADO</SelectItem>
+                <SelectItem value="LIGANTES">LIGANTES</SelectItem>
+                <SelectItem value="MRAF">MRAF</SelectItem>
+              </SelectContent>
+            </Select>
             <Button onClick={handleSalvar} disabled={!novoNome.trim() || salvando} className="gap-2">
               <Plus className="w-4 h-4" />
               {editando ? 'Salvar' : 'Adicionar'}
@@ -116,8 +137,11 @@ export default function Materiais() {
             <div className="divide-y divide-border">
               {filtered.map(m => (
                 <div key={m.id} className="flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors">
-                  <span className="text-sm font-medium text-foreground">{m.nome}</span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">{m.nome}</p>
+                    {m.categoria && <p className="text-xs text-muted-foreground">{m.categoria}</p>}
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditar(m)}>
                       <Edit2 className="w-3.5 h-3.5" />
                     </Button>

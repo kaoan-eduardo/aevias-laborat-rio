@@ -5,6 +5,18 @@
     "nome": {
       "type": "string",
       "description": "Nome do material"
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "CAUQ",
+        "CONCRETO",
+        "SOLO",
+        "AGREGADO",
+        "LIGANTES",
+        "MRAF"
+      ],
+      "description": "Categoria do material"
     }
   },
   "required": [
