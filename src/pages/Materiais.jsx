@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function Materiais() {
   const [materiais, setMateriais] = useState([]);
@@ -14,6 +15,7 @@ export default function Materiais() {
   const [novaCategoria, setNovaCategoria] = useState('');
   const [editando, setEditando] = useState(null);
   const [salvando, setSalvando] = useState(false);
+  const [excluindo, setExcluindo] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -60,6 +62,7 @@ export default function Materiais() {
 
   const handleExcluir = async (m) => {
     await base44.entities.Material.delete(m.id);
+    setExcluindo(null);
     load();
   };
 
@@ -145,9 +148,27 @@ export default function Materiais() {
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditar(m)}>
                       <Edit2 className="w-3.5 h-3.5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleExcluir(m)}>
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
+                    <AlertDialog open={excluindo?.id === m.id} onOpenChange={(open) => !open && setExcluindo(null)}>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => setExcluindo(m)}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Tem certeza que deseja excluir o material <strong>{m.nome}</strong>? Esta ação não pode ser desfeita.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => handleExcluir(m)}>
+                            Excluir
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               ))}
