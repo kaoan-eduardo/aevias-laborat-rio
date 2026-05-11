@@ -1,41 +1,44 @@
-import PDFDocument from 'npm:pdfkit@0.13.0';
+import { jsPDF } from 'npm:jspdf@4.2.1';
 
 Deno.serve(async (req) => {
   try {
     const body = await req.json();
     const fas = body.fas;
 
-    const doc = new PDFDocument({
-      bufferPages: true,
-      margin: 20,
-      size: 'A4',
-      autoFirstPage: false
-    });
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 8;
 
-    doc.addPage();
+    let yPos = margin;
 
     // Header
-    doc.fontSize(14).font('Helvetica-Bold').text('AFIRMAEVIAS', 40, 30);
-    doc.fontSize(8).font('Helvetica').text('engenharia nivel', 40, 45);
-    doc.fontSize(7).text('FORM 045 A- REV 00 - 07/07/2025', 40, 54);
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('AFIRMAEVIAS', margin, yPos);
+    
+    doc.setFontSize(7);
+    doc.setFont(undefined, 'normal');
+    doc.text('engenharia nivel', margin, yPos + 5);
+    doc.text('FORM 045 A- REV 00 - 07/07/2025', margin, yPos + 9);
 
-    doc.fontSize(13).font('Helvetica-Bold').text('FORMULÁRIO DE APROVAÇÃO DE SERVIÇO', 200, 40);
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.text('FORMULÁRIO DE APROVAÇÃO DE SERVIÇO', pageWidth / 2, yPos + 3, { align: 'center' });
 
     // Proposta box
-    doc.rect(450, 30, 120, 45).stroke();
-    doc.fontSize(8).font('Helvetica-Bold').text('Proposta Comercial / Rev.', 455, 35);
-    doc.fontSize(10).font('Helvetica-Bold').text(`PC nº ${fas.numero_proposta || '—'}`, 455, 50);
+    doc.setFontSize(7);
+    doc.setFont(undefined, 'bold');
+    doc.rect(155, yPos, 45, 12);
+    doc.text('Proposta Comercial / Rev.', 157, yPos + 2);
+    doc.setFontSize(9);
+    doc.text(`PC nº ${fas.numero_proposta || '—'}`, 157, yPos + 8);
 
-    // Linha
-    doc.moveTo(40, 85).lineTo(550, 85).stroke();
+    yPos += 18;
 
     // Contratante info
-    const infoY = 100;
-    const fieldWidth = 80;
-    const fieldLabelX = 45;
-    const fieldValueX = 130;
-    const rowHeight = 18;
-
+    doc.setFontSize(8);
+    doc.setFont(undefined, 'bold');
     const fields = [
       ['Contratante', fas.razao_social || ''],
       ['CNPJ', fas.cnpj || ''],
@@ -43,111 +46,126 @@ Deno.serve(async (req) => {
       ['E-mail para envio:', fas.email_envio || ''],
     ];
 
-    doc.fontSize(9);
-    fields.forEach((field, idx) => {
-      const y = infoY + idx * rowHeight;
-      doc.font('Helvetica-Bold').text(field[0], fieldLabelX, y);
-      doc.font('Helvetica').text(field[1], fieldValueX, y);
+    fields.forEach(([label, value]) => {
+      doc.text(label + ':', margin, yPos);
+      doc.setFont(undefined, 'normal');
+      doc.text(value, margin + 45, yPos);
+      doc.setFont(undefined, 'bold');
+      yPos += 4;
     });
 
-    // ART
-    doc.font('Helvetica-Bold').text('ART:', fieldLabelX, infoY + fields.length * rowHeight);
-    doc.font('Helvetica').text(fas.exige_art ? 'Sim' : 'Não', fieldValueX, infoY + fields.length * rowHeight);
+    doc.text('ART:', margin, yPos);
+    doc.setFont(undefined, 'normal');
+    doc.text(fas.exige_art ? 'Sim' : 'Não', margin + 45, yPos);
 
-    // Ensaios header
-    const ensaiosY = infoY + (fields.length + 1) * rowHeight + 10;
-    doc.fontSize(9).font('Helvetica-Bold').text('ENSAIOS', 40, ensaiosY);
+    yPos += 7;
 
-    // Ensaios table
-    const tableTop = ensaiosY + 20;
-    const col1 = 45, col2 = 90, col3 = 180, col4 = 250, col5 = 300, col6 = 350, col7 = 400, col8 = 450;
+    // Ensaios Header
+    doc.setFontSize(8);
+    doc.setFont(undefined, 'bold');
+    doc.text('ENSAIOS', margin, yPos);
+
+    yPos += 5;
+
+    // Table header
+    const col1 = margin, col2 = 20, col3 = 55, col4 = 85, col5 = 100, col6 = 125, col7 = 150, col8 = 175;
     const headers = ['Objetivo', 'Serviço', 'Norma', 'Qtd', 'Unidade', 'Prazo', 'Conf.', 'Símb.'];
-    const colWidths = [45, 90, 90, 50, 50, 50, 50, 40];
+    const colX = [col1, col2, col3, col4, col5, col6, col7, col8];
 
-    doc.fontSize(8).font('Helvetica-Bold');
-    let xPos = col1;
-    headers.forEach((header, i) => {
-      doc.text(header, xPos, tableTop, { width: colWidths[i], align: 'center' });
-      xPos += colWidths[i];
+    doc.setFontSize(6);
+    doc.setFont(undefined, 'bold');
+    headers.forEach((h, i) => {
+      doc.text(h, colX[i], yPos);
     });
+
+    yPos += 3;
+    doc.setDrawColor(0);
+    doc.line(margin, yPos, 200, yPos);
+
+    yPos += 2;
 
     // Table rows
     const itens = fas.itens || [];
     const LINHAS_ENSAIO = 25;
     const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
-    const totalLinhas = itens.length + linhasVazias;
 
-    doc.fontSize(7).font('Helvetica');
-    let rowY = tableTop + 15;
-    const rowHeight2 = 12;
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(6);
 
-    for (let i = 0; i < totalLinhas; i++) {
+    for (let i = 0; i < itens.length; i++) {
       const item = itens[i];
-      xPos = col1;
-
-      const cellHeight = rowHeight2;
-      if (item) {
-        doc.text(item.ensaio_nome ? 'ENSAIOS' : '', xPos, rowY, { width: colWidths[0], align: 'center' });
-        xPos += colWidths[0];
-        doc.text(item.ensaio_nome || '', xPos, rowY, { width: colWidths[1] });
-        xPos += colWidths[1];
-        doc.text(item.norma || '', xPos, rowY, { width: colWidths[2] });
-        xPos += colWidths[2];
-        doc.text(String(item.quantidade || '').padStart(2, '0'), xPos, rowY, { width: colWidths[3], align: 'center' });
-        xPos += colWidths[3];
-        doc.text(item.unidade || '', xPos, rowY, { width: colWidths[4], align: 'center' });
-        xPos += colWidths[4];
-        doc.text(item.prazo_dias ? `${item.prazo_dias}d` : '', xPos, rowY, { width: colWidths[5], align: 'center' });
-        xPos += colWidths[5];
-        doc.text(fas.declaracao_confidencialidade ? 'Sim' : 'Não', xPos, rowY, { width: colWidths[6], align: 'center' });
-        xPos += colWidths[6];
-        doc.text(fas.exige_simbolo ? 'Sim' : 'Não', xPos, rowY, { width: colWidths[7], align: 'center' });
-      }
-
-      rowY += cellHeight;
+      doc.text(item.ensaio_nome ? 'ENSAIOS' : '', col1, yPos);
+      doc.text(item.ensaio_nome || '', col2, yPos);
+      doc.text(item.norma || '', col3, yPos);
+      doc.text(String(item.quantidade || '').padStart(2, '0'), col4, yPos);
+      doc.text(item.unidade || '', col5, yPos);
+      doc.text(item.prazo_dias ? `${item.prazo_dias}d` : '', col6, yPos);
+      doc.text(fas.declaracao_confidencialidade ? 'Sim' : 'Não', col7, yPos);
+      doc.text(fas.exige_simbolo ? 'Sim' : 'Não', col8, yPos);
+      yPos += 3;
     }
 
+    // Empty rows
+    for (let i = 0; i < linhasVazias; i++) {
+      yPos += 3;
+    }
+
+    yPos += 3;
+
     // Observações
-    const obsY = rowY + 15;
-    doc.fontSize(9).font('Helvetica-Bold').text('OBSERVAÇÕES DA PROPOSTA', 40, obsY);
-    doc.fontSize(7).font('Helvetica').text(fas.observacoes || '', 40, obsY + 18, { width: 510 });
+    doc.setFontSize(8);
+    doc.setFont(undefined, 'bold');
+    if (yPos > 230) {
+      doc.addPage();
+      yPos = margin;
+    }
+    doc.text('OBSERVAÇÕES DA PROPOSTA', margin, yPos);
+    yPos += 4;
+    
+    doc.setFontSize(7);
+    doc.setFont(undefined, 'normal');
+    const obsText = doc.splitTextToSize(fas.observacoes || '', pageWidth - margin * 2);
+    doc.text(obsText, margin, yPos);
+
+    yPos += 15;
 
     // Andamento
-    const andamentoY = obsY + 80;
-    doc.fontSize(9).font('Helvetica-Bold').text('ANDAMENTO DAS ATIVIDADES', 40, andamentoY);
+    doc.setFontSize(8);
+    doc.setFont(undefined, 'bold');
+    if (yPos > 230) {
+      doc.addPage();
+      yPos = margin;
+    }
+    doc.text('ANDAMENTO DAS ATIVIDADES', margin, yPos);
 
+    yPos += 4;
+    doc.setFontSize(6);
+    doc.setFont(undefined, 'normal');
     const andamento = fas.andamento || [];
-    doc.fontSize(7).font('Helvetica');
-    andamento.slice(0, 3).forEach((a, idx) => {
-      const y = andamentoY + 20 + idx * 12;
+    andamento.forEach(a => {
       const date = a.data ? new Date(a.data).toLocaleDateString('pt-BR') : '';
-      doc.text(date, 40, y, { width: 70 });
-      doc.text(a.atividade || '', 115, y, { width: 400 });
+      doc.text(date, margin, yPos);
+      doc.text(a.atividade || '', margin + 30, yPos);
+      yPos += 3;
     });
 
-    // Rodapé
-    const footerY = 750;
-    doc.fontSize(7).font('Helvetica').text('FORM 045 - REV 06 - 09/06/2025', 40, footerY);
-    doc.text('Página 1 de 1', 500, footerY);
+    // Footer
+    doc.setFontSize(6);
+    doc.setFont(undefined, 'normal');
+    doc.text('FORM 045 - REV 06 - 09/06/2025', margin, pageHeight - 5);
+    doc.text('Página 1 de 1', pageWidth - margin - 20, pageHeight - 5);
 
-    // Generate buffer
-    const pdfBuffer = [];
-    doc.on('data', (chunk) => pdfBuffer.push(chunk));
+    const pdfData = doc.output('arraybuffer');
 
-    return new Promise((resolve) => {
-      doc.on('finish', () => {
-        const buffer = Buffer.concat(pdfBuffer);
-        resolve(new Response(buffer, {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': `attachment; filename="FAS-${fas.numero_fas || 'documento'}.pdf"`,
-          },
-        }));
-      });
-      doc.end();
+    return new Response(pdfData, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="FAS-${fas.numero_fas || 'documento'}.pdf"`,
+      },
     });
   } catch (error) {
+    console.error('Erro ao gerar PDF:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

@@ -14,13 +14,11 @@ export default function FASDocumento({ fas, onClose }) {
       const response = await base44.functions.invoke('generateFASPDF', { fas });
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `FAS-${fas.numero_fas || 'documento'}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `FAS-${fas.numero_fas || 'documento'}.pdf`;
+      a.click();
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
     }
