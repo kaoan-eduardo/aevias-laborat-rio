@@ -12,6 +12,15 @@ export default function FASDocumento({ fas, onClose }) {
     window.print();
   };
 
+  const printStyles = `
+    @media print {
+      html { margin: 0; padding: 0; }
+      body { margin: 0 !important; padding: 0 !important; width: 100vw; overflow: hidden !important; }
+      body::-webkit-scrollbar { display: none !important; width: 0 !important; }
+      * { scrollbar-width: none !important; }
+    }
+  `;
+
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
   // Preenche até ter pelo menos 27 linhas na tabela de ensaios
@@ -20,8 +29,9 @@ export default function FASDocumento({ fas, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex flex-col overflow-hidden">
+      <style>{printStyles}</style>
       {/* Top bar */}
-      <div className="flex-shrink-0 flex items-center justify-between px-5 py-3 bg-white border-b shadow-sm">
+      <div className="flex-shrink-0 flex items-center justify-between px-5 py-3 bg-white border-b shadow-sm print:hidden">
         <span className="font-semibold text-foreground text-sm">
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
