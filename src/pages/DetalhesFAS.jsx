@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, XCircle, Package, FileCheck, AlertTriangle } from 'lucide-react';
+import FASAnexos from '@/components/fas/FASAnexos';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -293,6 +294,14 @@ export default function DetalhesFAS() {
           )}
         </CardContent>
       </Card>
+
+      {/* Anexos */}
+      <FASAnexos
+        fasId={fas.id}
+        anexos={fas.anexos || []}
+        isComercial={isComercial}
+        onChange={(novosAnexos) => setFas(f => ({ ...f, anexos: novosAnexos }))}
+      />
 
       {/* Condições */}
       <Card>

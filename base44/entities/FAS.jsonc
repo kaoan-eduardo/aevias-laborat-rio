@@ -65,13 +65,11 @@
           },
           "exige_simbolo": {
             "type": "boolean",
-            "default": false,
-            "description": "Exige s\u00edmbolo de acredita\u00e7\u00e3o para este ensaio"
+            "default": false
           },
           "declaracao_confidencialidade": {
             "type": "boolean",
-            "default": false,
-            "description": "Declara\u00e7\u00e3o de confidencialidade para este ensaio"
+            "default": false
           }
         }
       }
@@ -92,6 +90,27 @@
           "concluida": {
             "type": "boolean",
             "default": false
+          }
+        }
+      }
+    },
+    "anexos": {
+      "type": "array",
+      "description": "Arquivos PDF anexados \u00e0 FAS",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "tamanho": {
+            "type": "number"
+          },
+          "data_upload": {
+            "type": "string"
           }
         }
       }
