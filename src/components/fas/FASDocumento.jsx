@@ -212,37 +212,33 @@ export default function FASDocumento({ fas, onClose }) {
             </tbody>
           </table>
 
-          {/* Anexos */}
-          {fas.anexos && fas.anexos.length > 0 && (
-            <>
-              <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0', marginTop: '8px' }}>
-                ANEXOS
-              </div>
-              <div style={{ border: '1px solid #ccc', padding: '4px 6px', marginBottom: '6px', fontSize: '8px' }}>
-                {fas.anexos.map((anexo, idx) => (
-                  <div key={idx} style={{ marginBottom: '2px' }}>
-                    <span style={{ fontWeight: 'bold' }}>Anexo {idx + 1}:</span> {anexo.nome}
-                    {anexo.tamanho && (
-                      <span style={{ color: '#666', marginLeft: '4px' }}>
-                        ({(anexo.tamanho / 1024).toFixed(1)} KB)
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div style={{ fontSize: '7px', color: '#888', marginBottom: '6px' }}>
-                * Os anexos estão incorporados neste documento PDF
-              </div>
-            </>
-          )}
+
 
           {/* Footer */}
           <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888' }}>
             <span>FORM 045 - REV 06 - 09/06/2025</span>
             <span>Página 1 de 1</span>
           </div>
-          </div>
-          </div>
-          </div>
-          );
-          }
+        </div>
+
+        {/* Renderiza anexos em sequência como páginas separadas */}
+        {fas.anexos && fas.anexos.length > 0 && (
+          fas.anexos.map((anexo, idx) => (
+            <iframe
+              key={`anexo-${idx}`}
+              src={anexo.url}
+              style={{
+                width: '794px',
+                minHeight: '1123px',
+                background: '#fff',
+                border: 'none',
+                marginTop: '20px'
+              }}
+              title={`Anexo: ${anexo.nome}`}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
