@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+// SidebarContent is defined outside Layout to avoid remounting on every render
 import { useAuth } from '@/lib/AuthContext';
 import {
   Users, FlaskConical, FileText, LayoutDashboard,
@@ -31,30 +32,17 @@ const ROLE_LABELS = {
   comercial: { label: 'Comercial', color: 'bg-orange-100 text-orange-700' },
 };
 
-export default function Layout() {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomItems, roleInfo, user, handleLogout }) {
   const location = useLocation();
-  const { user } = useAuth();
-
-  const role = user?.role || 'auxiliar';
-  const visibleItems = NAV_ITEMS.filter(item => item.roles.includes(role));
-  const visibleBottomItems = BOTTOM_NAV_ITEMS.filter(item => item.roles.includes(role));
-  const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['auxiliar'];
-
-  const handleLogout = () => base44.auth.logout();
-
-  const SidebarContent = () => (
+  return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="px-4 py-5 border-b border-sidebar-border">
         {!collapsed ? (
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Shield className="w-5 h-5 text-sidebar-primary" />
-              <span className="font-bold text-sidebar-foreground text-base tracking-wide">AELaboratório</span>
-            </div>
-                     </div>
+          <div className="flex items-center gap-2 mb-1">
+            <Shield className="w-5 h-5 text-sidebar-primary" />
+            <span className="font-bold text-sidebar-foreground text-base tracking-wide">AELaboratório</span>
+          </div>
         ) : (
           <Shield className="w-5 h-5 text-sidebar-primary mx-auto" />
         )}
@@ -144,6 +132,21 @@ export default function Layout() {
       </div>
     </div>
   );
+}
+
+export default function Layout() {
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { user } = useAuth();
+
+  const role = user?.role || 'auxiliar';
+  const visibleItems = NAV_ITEMS.filter(item => item.roles.includes(role));
+  const visibleBottomItems = BOTTOM_NAV_ITEMS.filter(item => item.roles.includes(role));
+  const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['auxiliar'];
+
+  const handleLogout = () => base44.auth.logout();
+
+  const sidebarProps = { collapsed, setMobileOpen, visibleItems, visibleBottomItems, roleInfo, user, handleLogout };
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -154,7 +157,7 @@ export default function Layout() {
           collapsed ? 'w-16' : 'w-60'
         )}
       >
-        <SidebarContent />
+        <SidebarContent {...sidebarProps} />
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="absolute top-1/2 -translate-y-1/2 -right-3 bg-sidebar border border-sidebar-border rounded-full p-1 text-sidebar-foreground/50 hover:text-sidebar-foreground z-10"
@@ -168,7 +171,7 @@ export default function Layout() {
         <div className="md:hidden fixed inset-0 z-40 flex">
           <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
           <aside className="relative z-50 w-64 bg-sidebar flex flex-col">
-            <SidebarContent />
+            <SidebarContent {...sidebarProps} />
           </aside>
         </div>
       )}
