@@ -25,13 +25,14 @@ export default function FASDocumento({ fas, onClose }) {
       const imgW = pageW;
       const imgH = (canvas.height * imgW) / canvas.width;
       
-      pdf.addImage(imgData, 'PNG', 0, 0, imgW, imgH);
-      let yPos = imgH;
+      let yOffset = 0;
+      let isFirstPage = true;
       
-      while (yPos > pageH) {
-        pdf.addPage();
-        yPos -= pageH;
-        pdf.addImage(imgData, 'PNG', 0, -yPos, imgW, imgH);
+      while (yOffset < imgH) {
+        if (!isFirstPage) pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, -yOffset, imgW, imgH);
+        yOffset += pageH;
+        isFirstPage = false;
       }
       
       const nomeBase = `FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}`;
