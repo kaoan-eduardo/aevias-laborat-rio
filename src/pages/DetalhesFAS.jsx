@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, XCircle, Package, FileCheck } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Package, FileCheck, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 
 const STATUS_CONFIG = {
   aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
@@ -103,38 +108,61 @@ export default function DetalhesFAS() {
           <p className="text-sm text-muted-foreground mt-0.5">Proposta: {fas.numero_proposta}</p>
         </div>
 
-        {/* Ações do Gestor */}
-        {fas.status === 'aberta' && (
-          <div className="flex gap-2 flex-wrap">
-            {isGestor && (
-              <Button className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-white" onClick={marcarMaterialRecebido}>
-                <Package className="w-4 h-4" />
-                Confirmar Recebimento
-              </Button>
-            )}
-            {isComercial && (
-              <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50" onClick={cancelarFAS}>
-                <XCircle className="w-4 h-4" />
-                Cancelar
-              </Button>
-            )}
-          </div>
-        )}
-        {isGestor && fas.status === 'material_recebido' && (
-          <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={finalizarFAS}>
-            <FileCheck className="w-4 h-4" />
-            Enviar Relatório e Finalizar
-          </Button>
-        )}
-        {isComercial && fas.status === 'cancelada' && (
-          <Button variant="outline" className="gap-2 text-blue-600 border-blue-200 hover:bg-blue-50" onClick={async () => {
-            await base44.entities.FAS.update(fas.id, { status: 'aberta' });
-            setFas(f => ({ ...f, status: 'aberta' }));
-          }}>
-            <CheckCircle className="w-4 h-4" />
-            Reabrir FAS
-          </Button>
-        )}
+        {/* Ações */}
+        <div className="flex gap-2 flex-wrap">
+          {isGestor && fas.status === 'aberta' && (
+            <Button className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-white" onClick={marcarMaterialRecebido}>
+              <Package className="w-4 h-4" />
+              Confirmar Recebimento
+            </Button>
+          )}
+          {isGestor && fas.status === 'material_recebido' && (
+            <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={finalizarFAS}>
+              <FileCheck className="w-4 h-4" />
+              Enviar Relatório e Finalizar
+            </Button>
+          )}
+          {isComercial && fas.status === 'cancelada' && (
+            <Button variant="outline" className="gap-2 text-blue-600 border-blue-200 hover:bg-blue-50" onClick={async () => {
+              await base44.entities.FAS.update(fas.id, { status: 'aberta' });
+              setFas(f => ({ ...f, status: 'aberta' }));
+            }}>
+              <CheckCircle className="w-4 h-4" />
+              Reabrir FAS
+            </Button>
+          )}
+          {isComercial && fas.status !== 'cancelada' && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50">
+                  <XCircle className="w-4 h-4" />
+                  Cancelar FAS
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                    Confirmar cancelamento
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem certeza que deseja cancelar a FAS <strong>{fas.numero_fas || fas.numero_proposta}</strong>?
+                    Esta ação poderá ser revertida reabrindo a FAS posteriormente.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Voltar</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                    onClick={cancelarFAS}
+                  >
+                    Sim, cancelar FAS
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+        </div>
       </div>
 
       {/* Anonimato para Técnico */}
