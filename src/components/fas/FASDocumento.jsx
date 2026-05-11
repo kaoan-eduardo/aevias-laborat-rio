@@ -9,11 +9,7 @@ export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
   const handlePrint = () => {
-    const element = docRef.current;
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(element.outerHTML);
-    printWindow.document.close();
-    printWindow.onload = () => printWindow.print();
+    window.print();
   };
 
   const itens = fas.itens || [];
