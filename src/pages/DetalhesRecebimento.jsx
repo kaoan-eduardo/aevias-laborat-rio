@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trash2, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Trash2, CheckCircle, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -35,8 +36,10 @@ export default function DetalhesRecebimento() {
   const [loading, setLoading] = useState(true);
   const [fasList, setFasList] = useState([]);
   const [ensaios, setEnsaios] = useState([]);
+  const [possuiFas, setPossuiFas] = useState(null); // null=não respondido, true, false
   const [fasId, setFasId] = useState('');
   const [ensaiosSelecionados, setEnsaiosSelecionados] = useState([]);
+  const [ensaioSearch, setEnsaioSearch] = useState('');
   const [saving, setSaving] = useState(false);
 
   const role = user?.role || 'auxiliar';
@@ -78,25 +81,44 @@ export default function DetalhesRecebimento() {
     });
   };
 
+  const handleFasChange = (id) => {
+    setFasId(id);
+    const fasEscolhida = fasList.find(f => f.id === id);
+    if (fasEscolhida?.itens?.length > 0) {
+      // Pré-seleciona ensaios da FAS escolhida
+      const preSelected = fasEscolhida.itens
+        .filter(item => item.ensaio_id)
+        .map(item => ({ ensaio_id: item.ensaio_id, ensaio_nome: item.ensaio_nome, norma: item.norma }));
+      setEnsaiosSelecionados(preSelected);
+    }
+  };
+
+  const canConfirm = ensaiosSelecionados.length > 0 && (possuiFas === false || (possuiFas === true && fasId));
+
   const handleSalvarGestor = async () => {
-    if (!fasId || ensaiosSelecionados.length === 0) return;
+    if (!canConfirm) return;
     setSaving(true);
-    const fasEscolhida = fasList.find(f => f.id === fasId);
+    const fasEscolhida = possuiFas ? fasList.find(f => f.id === fasId) : null;
     await base44.entities.RecebimentoAmostra.update(recebimento.id, {
-      fas_id: fasId,
+      fas_id: possuiFas ? fasId : null,
       numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
       ensaios_selecionados: ensaiosSelecionados,
       status: 'concluido'
     });
     setRecebimento(r => ({
       ...r,
-      fas_id: fasId,
+      fas_id: possuiFas ? fasId : null,
       numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
       ensaios_selecionados: ensaiosSelecionados,
       status: 'concluido'
     }));
     setSaving(false);
   };
+
+  const ensaiosFiltrados = ensaios.filter(e =>
+    e.nome?.toLowerCase().includes(ensaioSearch.toLowerCase()) ||
+    e.norma?.toLowerCase().includes(ensaioSearch.toLowerCase())
+  );
 
   const handleDeleteAmostra = async (amostraId) => {
     const updatedAmostras = recebimento.amostras.filter(a => a.id !== amostraId);
@@ -142,55 +164,117 @@ export default function DetalhesRecebimento() {
             <p className="text-xs text-yellow-700">Complete os campos abaixo para concluir o protocolo.</p>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* FAS em aberto do cliente */}
-            <div>
-              <Label className="text-xs">FAS em Aberto *</Label>
-              {fasList.length === 0 ? (
-                <p className="mt-1 text-xs text-muted-foreground italic">Nenhuma FAS em aberto para este cliente.</p>
-              ) : (
-                <Select value={fasId} onValueChange={setFasId}>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Selecione a FAS..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {fasList.map(f => (
-                      <SelectItem key={f.id} value={f.id}>
-                        {f.numero_fas || f.numero_proposta} — {f.objetivo?.slice(0, 40) || ''}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
 
-            {/* Ensaios — checkboxes */}
+            {/* Pergunta: Possui FAS? */}
             <div>
-              <Label className="text-xs">Ensaios a Realizar * ({ensaiosSelecionados.length} selecionados)</Label>
-              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-48 overflow-y-auto border rounded-md p-3 bg-white">
-                {ensaios.map(e => {
-                  const checked = ensaiosSelecionados.some(s => s.ensaio_id === e.id);
-                  return (
-                    <label key={e.id} className="flex items-start gap-2 cursor-pointer py-1 hover:bg-muted/30 rounded px-1">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleEnsaio(e)}
-                        className="mt-0.5 flex-shrink-0"
-                      />
-                      <span className="text-xs text-foreground leading-tight">
-                        <span className="font-medium">{e.nome}</span>
-                        {e.norma && <span className="text-muted-foreground"> · {e.norma}</span>}
-                      </span>
-                    </label>
-                  );
-                })}
+              <Label className="text-sm font-medium">Esta amostra possui FAS vinculada?</Label>
+              <div className="flex gap-3 mt-2">
+                <button
+                  onClick={() => { setPossuiFas(true); setFasId(''); setEnsaiosSelecionados([]); }}
+                  className={`px-5 py-2 rounded-md text-sm font-medium border transition-colors ${possuiFas === true ? 'bg-primary text-primary-foreground border-primary' : 'bg-white text-foreground border-border hover:border-primary/50'}`}
+                >
+                  Sim
+                </button>
+                <button
+                  onClick={() => { setPossuiFas(false); setFasId(''); setEnsaiosSelecionados([]); }}
+                  className={`px-5 py-2 rounded-md text-sm font-medium border transition-colors ${possuiFas === false ? 'bg-primary text-primary-foreground border-primary' : 'bg-white text-foreground border-border hover:border-primary/50'}`}
+                >
+                  Não
+                </button>
               </div>
             </div>
 
-            <div className="flex justify-end">
+            {/* Select da FAS (só se possuiFas = true) */}
+            {possuiFas === true && (
+              <div>
+                <Label className="text-xs">FAS em Aberto para este cliente *</Label>
+                {fasList.length === 0 ? (
+                  <p className="mt-1 text-xs text-muted-foreground italic">Nenhuma FAS em aberto para este cliente.</p>
+                ) : (
+                  <Select value={fasId} onValueChange={handleFasChange}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Selecione a FAS..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fasList.map(f => (
+                        <SelectItem key={f.id} value={f.id}>
+                          {f.numero_fas || f.numero_proposta}
+                          {f.objetivo ? ` — ${f.objetivo.slice(0, 50)}` : ''}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+            )}
+
+            {/* Seletor de Ensaios com busca — aparece após responder ou sempre se possuiFas=false */}
+            {possuiFas !== null && (
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <Label className="text-xs">
+                    Ensaios a Realizar *
+                    {ensaiosSelecionados.length > 0 && (
+                      <span className="ml-1 text-primary font-semibold">({ensaiosSelecionados.length} selecionados)</span>
+                    )}
+                  </Label>
+                  {ensaiosSelecionados.length > 0 && (
+                    <button onClick={() => setEnsaiosSelecionados([])} className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1">
+                      <X className="w-3 h-3" /> Limpar
+                    </button>
+                  )}
+                </div>
+
+                {/* Chips dos selecionados */}
+                {ensaiosSelecionados.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {ensaiosSelecionados.map(e => (
+                      <span key={e.ensaio_id} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full">
+                        {e.ensaio_nome}
+                        <button onClick={() => setEnsaiosSelecionados(prev => prev.filter(s => s.ensaio_id !== e.ensaio_id))}>
+                          <X className="w-2.5 h-2.5" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Busca */}
+                <div className="relative mb-2">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                  <Input
+                    value={ensaioSearch}
+                    onChange={e => setEnsaioSearch(e.target.value)}
+                    placeholder="Filtrar ensaios por nome ou norma..."
+                    className="pl-8 h-8 text-xs"
+                  />
+                </div>
+
+                {/* Lista de ensaios */}
+                <div className="border rounded-md bg-white max-h-52 overflow-y-auto divide-y divide-border">
+                  {ensaiosFiltrados.length === 0 ? (
+                    <p className="p-3 text-xs text-muted-foreground text-center">Nenhum ensaio encontrado.</p>
+                  ) : ensaiosFiltrados.map(e => {
+                    const checked = ensaiosSelecionados.some(s => s.ensaio_id === e.id);
+                    return (
+                      <label key={e.id} className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${checked ? 'bg-primary/5' : 'hover:bg-muted/40'}`}>
+                        <input type="checkbox" checked={checked} onChange={() => toggleEnsaio(e)} className="flex-shrink-0 accent-primary" />
+                        <span className="flex-1 min-w-0">
+                          <span className={`text-xs font-medium ${checked ? 'text-primary' : 'text-foreground'}`}>{e.nome}</span>
+                          {e.norma && <span className="text-xs text-muted-foreground ml-1.5">{e.norma}</span>}
+                        </span>
+                        {checked && <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end pt-1">
               <Button
                 onClick={handleSalvarGestor}
-                disabled={!fasId || ensaiosSelecionados.length === 0 || saving}
+                disabled={!canConfirm || saving}
                 className="gap-2 bg-yellow-600 hover:bg-yellow-700"
               >
                 <CheckCircle className="w-4 h-4" />
