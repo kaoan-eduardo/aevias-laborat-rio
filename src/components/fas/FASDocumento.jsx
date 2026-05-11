@@ -26,6 +26,23 @@ export default function FASDocumento({ fas, onClose }) {
       pdf.addPage();
       pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
     }
+
+    // Adicionar anexos como páginas adicionais
+    const anexos = fas.anexos || [];
+    for (let i = 0; i < anexos.length; i++) {
+      pdf.addPage();
+      const anexo = anexos[i];
+      pdf.setFontSize(10);
+      pdf.text(`Anexo ${i + 1}: ${anexo.nome}`, 15, 15);
+      pdf.setFontSize(8);
+      pdf.text(`Data: ${new Date(anexo.data_upload).toLocaleDateString('pt-BR')}`, 15, 22);
+      
+      // Renderizar imagem de preview do PDF (simulado com texto)
+      pdf.setFontSize(9);
+      pdf.text('[Documento em anexo - Abra o arquivo original para visualização completa]', 15, 35);
+      pdf.text(anexo.url, 15, 42, { maxWidth: 180 });
+    }
+
     pdf.save(`FAS-${fas.numero_proposta || fas.numero_fas || 'documento'}.pdf`);
   };
 
@@ -198,10 +215,93 @@ export default function FASDocumento({ fas, onClose }) {
           {/* Footer */}
           <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888' }}>
             <span>FORM 045 - REV 06 - 09/06/2025</span>
-            <span>Página 1 de 1</span>
+            <span>Página 1{(fas.anexos && fas.anexos.length > 0) ? ` de ${1 + fas.anexos.length}` : ''}</span>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+          </div>
+
+          {/* Anexos - Páginas adicionais */}
+          {fas.anexos && fas.anexos.length > 0 && (
+          <div style={{ marginTop: '24px', pageBreakBefore: 'always' }}>
+            {fas.anexos.map((anexo, idx) => (
+              <div
+                key={idx}
+                style={{
+                  width: '794px',
+                  minHeight: '1123px',
+                  background: '#fff',
+                  fontFamily: 'Arial, sans-serif',
+                  fontSize: '10px',
+                  color: '#000',
+                  padding: '20px 24px',
+                  boxSizing: 'border-box',
+                  pageBreakBefore: idx > 0 ? 'always' : 'auto',
+                  marginTop: idx > 0 ? '24px' : '0',
+                }}
+              >
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1.5px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
+                  <div>
+                    <div style={{ fontWeight: 'bold', fontSize: '13px', letterSpacing: '1px', color: '#1a1a1a' }}>AFIRMAEVIAS</div>
+                    <div style={{ fontSize: '7px', color: '#666' }}>e n g e n h a r i a  n i v e l</div>
+                  </div>
+                  <div style={{ textAlign: 'center', flex: 1, padding: '0 16px' }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '11px' }}>ANEXO DO FAS</div>
+                  </div>
+                </div>
+
+                {/* Dados do Anexo */}
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '12px' }}>
+                  <tbody>
+                    <tr>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 6px', width: '120px', fontWeight: 'bold', background: '#f5f5f5' }}>FAS Associado:</td>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 8px' }}>{fas.numero_fas || fas.numero_proposta || '—'}</td>
+                    </tr>
+                    <tr>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 6px', fontWeight: 'bold', background: '#f5f5f5' }}>Nome do Anexo:</td>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 8px' }}>{anexo.nome || '—'}</td>
+                    </tr>
+                    <tr>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 6px', fontWeight: 'bold', background: '#f5f5f5' }}>Data de Upload:</td>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 8px' }}>{fmt_date(anexo.data_upload)}</td>
+                    </tr>
+                    <tr>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 6px', fontWeight: 'bold', background: '#f5f5f5' }}>Tamanho:</td>
+                      <td style={{ border: '1px solid #ccc', padding: '4px 8px' }}>
+                        {anexo.tamanho ? `${(anexo.tamanho / 1024 / 1024).toFixed(2)} MB` : '—'}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                {/* Referência ao arquivo */}
+                <div style={{ background: '#f9f9f9', border: '1px dashed #ccc', padding: '8px 6px', marginBottom: '12px', fontSize: '9px' }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Referência do Arquivo:</div>
+                  <div style={{ wordBreak: 'break-all', color: '#0066cc', fontSize: '8px' }}>{anexo.url}</div>
+                </div>
+
+                {/* Espaço para assinatura */}
+                <div style={{ marginTop: '40px' }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '10px', marginBottom: '20px' }}>Recebimento e Arquivamento:</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '40px' }}>
+                    <div style={{ textAlign: 'center', width: '180px' }}>
+                      <div style={{ borderTop: '1px solid #000', paddingTop: '4px', fontSize: '9px' }}>Responsável</div>
+                    </div>
+                    <div style={{ textAlign: 'center', width: '180px' }}>
+                      <div style={{ borderTop: '1px solid #000', paddingTop: '4px', fontSize: '9px' }}>Data</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', marginTop: '60px', fontSize: '7px', color: '#888' }}>
+                  <span>FORM 045 - ANEXO - 09/06/2025</span>
+                  <span>Página {idx + 2} de {1 + fas.anexos.length}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          )}
+          </div>
+          </div>
+          );
+          }
