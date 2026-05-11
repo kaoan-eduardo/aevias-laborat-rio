@@ -24,7 +24,7 @@ export default function FASDocumento({ fas, onClose }) {
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
   // Preenche até ter pelo menos 25 linhas na tabela de ensaios
-  const LINHAS_ENSAIO = 25;
+  const LINHAS_ENSAIO = 15;
   const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
 
   return (
