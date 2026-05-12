@@ -53,7 +53,7 @@ export default function EquipamentoModal({ open, onClose, equipamento, onSaved }
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label className="text-xs">Identificação Interna *</Label>
-              <Input value={form.identificacao_interna} onChange={e => set('identificacao_interna', e.target.value)} placeholder="Ex: EQ-001" className="font-mono-data" />
+              <Input value={form.identificacao_interna} onChange={e => set('identificacao_interna', e.target.value)} placeholder="Ex: LC-001" className="font-mono-data" />
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs">Nome *</Label>
