@@ -35,6 +35,12 @@ export function buildFASHtml(fas) {
     `<tr style="height:14px"><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td></tr>`
   ).join('');
 
+  const anexos = fas.anexos || [];
+  const anexosHtml = anexos.map(anexo => `
+  <div style="page-break-before:always;width:794px;height:1123px;margin:0 auto;">
+    <iframe src="${anexo.url}" style="width:100%;height:100%;border:none;" title="${anexo.nome || 'Anexo'}"></iframe>
+  </div>`).join('');
+
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -44,7 +50,7 @@ export function buildFASHtml(fas) {
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: Arial, sans-serif; font-size:9px; color:#000; background:#f0f0f0; padding:20px; }
     .doc { width:794px; min-height:1123px; background:#fff; padding:8px 12px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
-    @media print { body { background:#fff; padding:0; } .doc { box-shadow:none; } }
+    @media print { body { background:#fff; padding:0; } .doc { box-shadow:none; } iframe { width:100%; height:1123px; border:none; } }
   </style>
 </head>
 <body>
@@ -120,6 +126,7 @@ export function buildFASHtml(fas) {
     <span>Página 1 de 1</span>
   </div>
 </div>
+${anexosHtml}
 </body>
 </html>`;
 }
