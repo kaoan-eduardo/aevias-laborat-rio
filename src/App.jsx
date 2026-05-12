@@ -16,6 +16,7 @@ import Usuarios from '@/pages/Usuarios';
 import Materiais from '@/pages/Materiais';
 import RecebimentoAmostras from '@/pages/RecebimentoAmostras';
 import DetalhesRecebimento from '@/pages/DetalhesRecebimento';
+import FASImpressao from '@/pages/FASImpressao';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -53,6 +54,7 @@ const AuthenticatedApp = () => {
         <Route path="/materiais" element={<Materiais />} />
         <Route path="/recebimento" element={<RecebimentoAmostras />} />
         <Route path="/recebimento/:id" element={<DetalhesRecebimento />} />
+        <Route path="/fas/:id/impressao" element={<FASImpressao />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -5,7 +5,7 @@ import { Printer, X } from 'lucide-react';
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 
-function buildFASHtml(fas) {
+export function buildFASHtml(fas) {
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
   const LINHAS_ENSAIO = 25;
@@ -125,6 +125,10 @@ function buildFASHtml(fas) {
 }
 
 export function openFASInNewTab(fas) {
+  if (fas.id) {
+    window.open(`/fas/${fas.id}/impressao`, '_blank');
+    return;
+  }
   const html = buildFASHtml(fas);
   const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
