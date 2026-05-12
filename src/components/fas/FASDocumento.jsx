@@ -5,53 +5,152 @@ import { Printer, X } from 'lucide-react';
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 
+function buildFASHtml(fas) {
+  const itens = fas.itens || [];
+  const andamento = fas.andamento || [];
+  const LINHAS_ENSAIO = 25;
+  const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
+
+  const itensRows = itens.map(item => `
+    <tr>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${item.ensaio_nome ? 'ENSAIOS' : ''}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px">${item.ensaio_nome || ''}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px">${item.norma || ''}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${item.quantidade ? String(item.quantidade).padStart(2,'0') : ''}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${item.unidade || ''}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${item.prazo_dias ? item.prazo_dias + ' Dias Úteis' : ''}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${sim_nao(fas.declaracao_confidencialidade)}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${sim_nao(fas.exige_simbolo)}</td>
+    </tr>`).join('');
+
+  const emptyRows = Array.from({length: linhasVazias}).map(() =>
+    `<tr style="height:14px">${Array.from({length:8}).map(()=>'<td style="border:1px solid #ccc;padding:2px 4px">&nbsp;</td>').join('')}</tr>`
+  ).join('');
+
+  const andamentoRows = andamento.map(a =>
+    `<tr style="height:14px"><td style="border:1px solid #ccc;padding:2px 6px">${a.data ? fmt_date(a.data) : ''}</td><td style="border:1px solid #ccc;padding:2px 6px">${a.atividade || ''}</td></tr>`
+  ).join('');
+
+  const emptyAndamento = Array.from({length: Math.max(0, 5 - andamento.length)}).map(() =>
+    `<tr style="height:14px"><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td></tr>`
+  ).join('');
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: Arial, sans-serif; font-size:9px; color:#000; background:#f0f0f0; padding:20px; }
+    .doc { width:794px; min-height:1123px; background:#fff; padding:8px 12px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    @media print { body { background:#fff; padding:0; } .doc { box-shadow:none; } }
+  </style>
+</head>
+<body>
+<div class="doc">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #000;padding-bottom:6px;margin-bottom:8px">
+    <div>
+      <div style="font-weight:bold;font-size:13px;letter-spacing:1px;color:#1a1a1a">AFIRMAEVIAS</div>
+      <div style="font-size:7px;color:#666">e n g e n h a r i a &nbsp; n i v e l</div>
+      <div style="font-size:7px;margin-top:4px;color:#888">FORM 045 A- REV 00 - 07/07/2025</div>
+    </div>
+    <div style="text-align:center;flex:1;padding:0 16px">
+      <div style="font-weight:bold;font-size:13px">FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
+    </div>
+    <div style="border:1px solid #000;padding:6px 10px;text-align:center;min-width:140px">
+      <div style="font-size:8px;font-weight:bold">Proposta Comercial / Rev.</div>
+      <div style="font-weight:bold;font-size:10px;margin-top:2px">PC n° ${fas.numero_proposta || '—'}</div>
+    </div>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:4px">
+    <tbody>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">Contratante</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.razao_social || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">CNPJ</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.cnpj || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">Responsável</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.responsavel || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">E-mail para envio:</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.email_envio || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;font-weight:bold;background:#f5f5f5">Anotação de Responsabilidade Técnica (ART):</td><td style="border:1px solid #ccc;padding:3px 8px;text-align:center"><span style="border:1px solid #aaa;padding:1px 12px;background:#e9e9e9">${sim_nao(fas.exige_art)}</span></td></tr>
+    </tbody>
+  </table>
+
+  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0;margin-top:6px">ENSAIOS</div>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
+    <thead>
+      <tr style="background:#f0f0f0">
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Objetivo</th>
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Serviço</th>
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Norma</th>
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Quantidade</th>
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Unidade</th>
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Prazo</th>
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Decl. De Conf.</th>
+        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Símbolo</th>
+      </tr>
+    </thead>
+    <tbody>${itensRows}${emptyRows}</tbody>
+  </table>
+
+  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0">OBSERVAÇÕES DA PROPOSTA</div>
+  <div style="border:1px solid #ccc;min-height:60px;padding:4px 6px;margin-bottom:6px;font-size:9px">${fas.observacoes || ''}</div>
+
+  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0">ANDAMENTO DAS ATIVIDADES</div>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
+    <thead>
+      <tr style="background:#f0f0f0">
+        <th style="border:1px solid #ccc;padding:2px 6px;width:120px;text-align:left">Data</th>
+        <th style="border:1px solid #ccc;padding:2px 6px;text-align:left">Descrição</th>
+      </tr>
+    </thead>
+    <tbody>${andamentoRows}${emptyAndamento}</tbody>
+  </table>
+
+  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0">CONSIDERAÇÕES</div>
+  <div style="border:1px solid #ccc;min-height:36px;padding:4px 6px;margin-bottom:8px">&nbsp;</div>
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:8px">
+    <tbody>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5">Solicitante:</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.nome_solicitante || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;font-weight:bold;background:#f5f5f5">Data:</td><td style="border:1px solid #ccc;padding:3px 8px">${fmt_date(fas.data_solicitacao)}</td></tr>
+    </tbody>
+  </table>
+
+  <div style="display:flex;justify-content:space-between;border-top:1px solid #ccc;padding-top:4px;font-size:7px;color:#888">
+    <span>FORM 045 - REV 06 - 09/06/2025</span>
+    <span>Página 1 de 1</span>
+  </div>
+</div>
+</body>
+</html>`;
+}
+
+export function openFASInNewTab(fas) {
+  const html = buildFASHtml(fas);
+  const newTab = window.open('');
+  newTab.document.write(html);
+  newTab.document.close();
+}
+
 export default function FASDocumento({ fas, onClose }) {
   const docRef = useRef(null);
 
   const handlePrint = () => {
-    const content = docRef.current.outerHTML;
-    const newTab = window.open();
-    newTab.document.write(`
-      <!DOCTYPE html>
-      <html lang="pt-BR">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-          .document { width: 794px; margin: 0 auto; background: white; padding: 8px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        </style>
-      </head>
-      <body>
-        <div class="document">${content}</div>
-      </body>
-      </html>
-    `);
+    const html = buildFASHtml(fas);
+    const newTab = window.open('');
+    newTab.document.write(html);
     newTab.document.close();
+    setTimeout(() => newTab.print(), 500);
   };
-
-  const printStyles = `
-    @media print {
-      html { margin: 0; padding: 0; }
-      body { margin: 0 !important; padding: 0 !important; width: 100vw; overflow: hidden !important; }
-      body::-webkit-scrollbar { display: none !important; width: 0 !important; }
-      * { scrollbar-width: none !important; }
-    }
-  `;
 
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
-  // Preenche até ter pelo menos 25 linhas na tabela de ensaios
   const LINHAS_ENSAIO = 25;
   const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex flex-col overflow-hidden">
-      <style>{printStyles}</style>
       {/* Top bar */}
-      <div className="flex-shrink-0 flex items-center justify-between px-5 py-3 bg-white border-b shadow-sm print:hidden">
+      <div className="flex-shrink-0 flex items-center justify-between px-5 py-3 bg-white border-b shadow-sm">
         <span className="font-semibold text-foreground text-sm">
           Visualizar FAS — {fas.numero_proposta || fas.numero_fas}
         </span>
@@ -68,7 +167,7 @@ export default function FASDocumento({ fas, onClose }) {
 
       {/* Scroll area */}
       <div className="flex-1 overflow-auto bg-gray-200 flex justify-center py-6 px-4">
-        {/* A4 document */}
+        {/* A4 document preview */}
         <div
           ref={docRef}
           style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '8px 12px', boxSizing: 'border-box' }}
@@ -95,7 +194,7 @@ export default function FASDocumento({ fas, onClose }) {
               {[
                 ['Contratante', fas.razao_social || ''],
                 ['CNPJ', fas.cnpj || ''],
-                ['Responsável', `${fas.responsavel || ''}`],
+                ['Responsável', fas.responsavel || ''],
                 ['E-mail para envio:', fas.email_envio || ''],
               ].map(([label, value], i) => (
                 <tr key={i}>

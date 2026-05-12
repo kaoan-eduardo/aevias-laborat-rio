@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import FASDocumento from '@/components/fas/FASDocumento';
+import FASDocumento, { openFASInNewTab } from '@/components/fas/FASDocumento';
 
 export const STATUS_CONFIG = {
   aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
@@ -187,7 +187,7 @@ export default function FAS() {
                               size="icon"
                               className="h-8 w-8 text-muted-foreground hover:text-primary"
                               title="Imprimir"
-                              onClick={() => setFasVisualizando(fas)}
+                              onClick={() => openFASInNewTab(fas)}
                             >
                               <Printer className="w-3.5 h-3.5" />
                             </Button>
