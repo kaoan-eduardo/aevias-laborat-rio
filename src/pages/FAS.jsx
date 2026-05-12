@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Plus, Search, FileText, Pencil, Printer } from 'lucide-react';
+import { Plus, Search, FileText, Pencil, Printer, Paperclip } from 'lucide-react';
+import AnexosModal from '@/components/fas/AnexosModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,6 +24,7 @@ export default function FAS() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
+  const [anexosFas, setAnexosFas] = useState(null);
 
   const role = user?.role || 'auxiliar';
   const canCreate = role === 'comercial' || role === 'admin' || role === 'gestor';
@@ -144,6 +146,15 @@ export default function FAS() {
                             >
                               <Printer className="w-3.5 h-3.5" />
                             </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-primary"
+                              title="Anexos"
+                              onClick={() => setAnexosFas(fas)}
+                            >
+                              <Paperclip className="w-3.5 h-3.5" />
+                            </Button>
                             <Link to={`/fas/${fas.id}`}>
                               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary" title="Editar / Detalhes">
                                 <Pencil className="w-3.5 h-3.5" />
@@ -162,6 +173,9 @@ export default function FAS() {
       </div>
 
 
+      {anexosFas && (
+        <AnexosModal fas={anexosFas} onClose={() => setAnexosFas(null)} />
+      )}
     </>
   );
 }
