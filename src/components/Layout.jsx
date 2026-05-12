@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import {
   Users, FlaskConical, FileText, LayoutDashboard,
-  ChevronLeft, ChevronRight, LogOut, Menu, X, Shield, UserCog, Package, Inbox
+  ChevronLeft, ChevronRight, LogOut, Menu, X, Shield, UserCog, Package, Inbox, Wrench
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { path: '/fas', label: 'Fichas de Serviço (FAS)', icon: FileText, roles: ['admin', 'gestor', 'comercial', 'auxiliar'] },
   { path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'gestor', 'tecnico', 'auxiliar'] },
   { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'auxiliar', 'gestor'] },
+  { path: '/equipamentos', label: 'Equipamentos', icon: Wrench, roles: ['admin', 'gestor', 'tecnico'] },
 ];
 
 const BOTTOM_NAV_ITEMS = [

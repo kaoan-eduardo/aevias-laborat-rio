@@ -1,0 +1,123 @@
+{
+  "name": "Equipamento",
+  "type": "object",
+  "properties": {
+    "identificacao_interna": {
+      "type": "string",
+      "description": "Identifica\u00e7\u00e3o interna do equipamento (ex: EQ-001)"
+    },
+    "nome": {
+      "type": "string",
+      "description": "Nome do equipamento"
+    },
+    "categoria": {
+      "type": "string",
+      "description": "Categoria do equipamento"
+    },
+    "precisao": {
+      "type": "string",
+      "description": "Precis\u00e3o do equipamento"
+    },
+    "data_calibracao": {
+      "type": "string",
+      "format": "date",
+      "description": "Data da \u00faltima calibra\u00e7\u00e3o"
+    },
+    "validade_calibracao": {
+      "type": "string",
+      "format": "date",
+      "description": "Validade da calibra\u00e7\u00e3o"
+    },
+    "periodicidade_verificacao": {
+      "type": "string",
+      "enum": [
+        "quinzenal",
+        "mensal",
+        "trimestral",
+        "semestral",
+        "anual"
+      ],
+      "description": "Periodicidade da verifica\u00e7\u00e3o interna"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "em_uso",
+        "em_calibracao",
+        "fora_de_uso",
+        "em_manutencao",
+        "em_aquisicao"
+      ],
+      "default": "em_uso",
+      "description": "Status atual do equipamento"
+    },
+    "docs_verificacao_intermediaria": {
+      "type": "array",
+      "description": "Documentos de Verifica\u00e7\u00e3o Interna Intermedi\u00e1ria",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "tamanho": {
+            "type": "number"
+          },
+          "data_upload": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "docs_verificacao_diaria": {
+      "type": "array",
+      "description": "Documentos de Verifica\u00e7\u00e3o Interna Di\u00e1ria",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "tamanho": {
+            "type": "number"
+          },
+          "data_upload": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "docs_certificado_calibracao": {
+      "type": "array",
+      "description": "Documentos de Certificado de Calibra\u00e7\u00e3o",
+      "items": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "tamanho": {
+            "type": "number"
+          },
+          "data_upload": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "identificacao_interna",
+    "nome",
+    "categoria"
+  ]
+}
