@@ -91,7 +91,7 @@ export default function Impressao() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#d1d5db' }}>
+    <div style={{ minHeight: '100vh', background: '#d1d5db', overflowX: 'auto' }}>
       <style>{`
         @media print {
           .no-print { display: none !important; }
@@ -126,7 +126,7 @@ export default function Impressao() {
       </div>
 
       {/* Área de documentos */}
-      <div className="print-area" style={{ padding: '32px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
+      <div className="print-area" style={{ padding: '32px 0', minWidth: 826, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
 
         {/* FAS principal */}
         <div className="doc-wrapper" style={{ width: 794, maxWidth: '100%', background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', overflow: 'hidden' }}>
