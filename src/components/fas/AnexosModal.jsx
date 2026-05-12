@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 export default function AnexosModal({ fas, onClose }) {
   const anexos = fas.anexos || [];
 
-  const handleDownload = (anexo) => {
+  const handleDownload = async (anexo) => {
+    const response = await fetch(anexo.url);
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = anexo.url;
+    link.href = url;
     link.download = anexo.nome;
-    link.target = '_blank';
     link.click();
+    URL.revokeObjectURL(url);
   };
 
   const formatSize = (bytes) => {
