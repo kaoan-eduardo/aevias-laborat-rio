@@ -35,12 +35,6 @@ export function buildFASHtml(fas) {
     `<tr style="height:14px"><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td></tr>`
   ).join('');
 
-  const anexos = fas.anexos || [];
-  const anexosHtml = anexos.map(anexo => `
-  <div style="page-break-before:always;width:794px;height:1123px;margin:0 auto;">
-    <iframe src="${anexo.url}" style="width:100%;height:100%;border:none;" title="${anexo.nome || 'Anexo'}"></iframe>
-  </div>`).join('');
-
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -126,7 +120,6 @@ export function buildFASHtml(fas) {
     <span>Página 1 de 1</span>
   </div>
 </div>
-${anexosHtml}
 </body>
 </html>`;
 }
