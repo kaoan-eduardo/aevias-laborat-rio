@@ -146,7 +146,7 @@ export default function FAS() {
                           {fas.data_solicitacao ? new Date(fas.data_solicitacao).toLocaleDateString('pt-BR') : '—'}
                         </td>
                         <td className="px-4 py-3 text-center font-mono-data text-sm">{fas.itens?.length || 0}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-30">
                           <Badge className={STATUS_CONFIG[fas.status]?.color + ' text-xs'}>
                             {STATUS_CONFIG[fas.status]?.label || fas.status}
                           </Badge>
