@@ -294,8 +294,10 @@ export default function FASDocumento({ fas, onClose }) {
           {/* Considerações */}
           <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0' }}>
             CONSIDERAÇÕES
+           </div>
+          <div style={{ border: '1px solid #ccc', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px' }}>
+            {fas.consideracoes || ''}
           </div>
-          <div style={{ border: '1px solid #ccc', minHeight: '65px', padding: '4px 6px', marginBottom: '8px' }}>&nbsp;</div>
 
           {/* Rodapé assinatura */}
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px' }}>
