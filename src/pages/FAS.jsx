@@ -11,14 +11,26 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 export const STATUS_CONFIG = {
-  aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700', className: 'w-36' },
+  aberta: { 
+    label: 'Aberta', 
+    color: 'bg-blue-100 text-blue-700', 
+    className: 'w-32' // Padronizado
+  },
   material_recebido: { 
     label: 'Mat. Recebido', 
     color: 'bg-yellow-100 text-yellow-700',
-    className: 'w-36' // Alterado de 'w-32' para 'w-36' para garantir que o texto não quebre
+    className: 'w-32' // Padronizado
   },
-  finalizada: { label: 'Finalizada', color: 'bg-green-100 text-green-700', className: 'w-36' },
-  cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-600', className: 'w-36' },
+  finalizada: { 
+    label: 'Finalizada', 
+    color: 'bg-green-100 text-green-700', 
+    className: 'w-32' // Padronizado
+  },
+  cancelada: { 
+    label: 'Cancelada', 
+    color: 'bg-red-100 text-red-600', 
+    className: 'w-32' // Padronizado
+  },
 };
 
 export default function FAS() {
