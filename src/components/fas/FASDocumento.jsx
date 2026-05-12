@@ -126,9 +126,9 @@ function buildFASHtml(fas) {
 
 export function openFASInNewTab(fas) {
   const html = buildFASHtml(fas);
-  const newTab = window.open('');
-  newTab.document.write(html);
-  newTab.document.close();
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
 }
 
 export default function FASDocumento({ fas, onClose }) {
@@ -136,10 +136,10 @@ export default function FASDocumento({ fas, onClose }) {
 
   const handlePrint = () => {
     const html = buildFASHtml(fas);
-    const newTab = window.open('');
-    newTab.document.write(html);
-    newTab.document.close();
-    setTimeout(() => newTab.print(), 500);
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const newTab = window.open(url, '_blank');
+    setTimeout(() => { newTab.print(); }, 800);
   };
 
   const itens = fas.itens || [];
