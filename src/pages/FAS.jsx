@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const STATUS_CONFIG = {
   aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
-  material_recebido: { label: 'Material Recebido', color: 'bg-yellow-100 text-yellow-700' },
+  material_recebido: { label: 'Mat. Recebido', color: 'bg-yellow-100 text-yellow-700' },
   finalizada: { label: 'Finalizada', color: 'bg-green-100 text-green-700' },
   cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-600' },
 };
