@@ -43,11 +43,22 @@ export function buildFASHtml(fas) {
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: Arial, sans-serif; font-size:9px; color:#000; background:#f0f0f0; padding:20px; }
+    .top-bar { width:794px; margin:0 auto 12px auto; display:flex; align-items:center; justify-content:space-between; background:#fff; border-radius:8px; padding:12px 18px; box-shadow:0 1px 4px rgba(0,0,0,0.1); font-size:13px; font-family:Arial,sans-serif; }
+    .top-bar-title { font-weight:700; color:#1a1a1a; font-size:15px; }
+    .top-bar-btn { display:inline-flex; align-items:center; gap:6px; background:#1a1a1a; color:#fff; border:none; border-radius:6px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; }
+    .top-bar-btn svg { width:15px; height:15px; }
     .doc { width:794px; min-height:1123px; background:#fff; padding:8px 12px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
-    @media print { body { background:#fff; padding:0; } .doc { box-shadow:none; } }
+    @media print { body { background:#fff; padding:0; } .top-bar { display:none; } .doc { box-shadow:none; } }
   </style>
 </head>
 <body>
+<div class="top-bar">
+  <span class="top-bar-title">Formulário de Aprovação de Serviço — PC n° ${fas.numero_proposta || '—'}</span>
+  <button class="top-bar-btn" onclick="window.print()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+    Gerar PDF
+  </button>
+</div>
 <div class="doc">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #000;padding-bottom:6px;margin-bottom:8px">
     <div>
