@@ -15,6 +15,7 @@ export default function AnexosModal({ fas, onClose }) {
     URL.revokeObjectURL(url);
   };
 
+  // formatSize duplicada com FASAnexos — TODO: mover para utils se mais reutilizações surgirem
   const formatSize = (bytes) => {
     if (!bytes) return '';
     if (bytes < 1024) return `${bytes} B`;

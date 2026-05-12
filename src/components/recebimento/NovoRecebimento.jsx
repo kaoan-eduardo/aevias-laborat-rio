@@ -8,13 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { gerarNumeroProtocolo, obterDataHoje } from '@/utils/fasHelpers';
 
-const gerarNumeroProtocolo = (total) => {
-  const ano = new Date().getFullYear().toString().slice(-2);
-  return `${String(total + 1).padStart(4, '0')}/${ano}`;
-};
-
-const hoje = () => new Date().toISOString().split('T')[0];
+const hoje = obterDataHoje;
 
 export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimentos }) {
   const [clientes, setClientes] = useState([]);

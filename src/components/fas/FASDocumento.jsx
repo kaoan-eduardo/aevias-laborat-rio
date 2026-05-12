@@ -137,7 +137,7 @@ export function buildFASHtml(fas) {
 
 export function openFASInNewTab(fas) {
   if (fas.id) {
-    window.open(`/fas/${fas.id}/impressao`, '_blank');
+    window.open(`/impressao/fas/${fas.id}`, '_blank');
     return;
   }
   const html = buildFASHtml(fas);
@@ -159,7 +159,7 @@ export default function FASDocumento({ fas, onClose }) {
 
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
-  const LINHAS_ENSAIO = 25;
+  const LINHAS_ENSAIO = 43; // Alinhado com buildFASHtml para consistência visual
   const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
 
   return (

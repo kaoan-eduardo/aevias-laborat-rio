@@ -13,13 +13,9 @@ import {
   AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { atualizarAndamento, obterDataHoje } from '@/utils/fasHelpers';
+import { STATUS_CONFIG } from '@/pages/FAS';
 
-const STATUS_CONFIG = {
-  aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
-  material_recebido: { label: 'Material Recebido', color: 'bg-yellow-100 text-yellow-700' },
-  finalizada: { label: 'Finalizada', color: 'bg-green-100 text-green-700' },
-  cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-600' },
-};
+// STATUS_CONFIG importado de pages/FAS para evitar duplicação
 
 const InfoRow = ({ label, value, mono }) => (
   <div>

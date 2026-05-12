@@ -27,3 +27,8 @@ export const atualizarAndamento = (andamento, atividade, dataAtual) => {
 };
 
 export const obterDataHoje = () => new Date().toISOString().split('T')[0];
+
+export const gerarNumeroProtocolo = (total) => {
+  const ano = new Date().getFullYear().toString().slice(-2);
+  return `${String(total + 1).padStart(4, '0')}/${ano}`;
+};
