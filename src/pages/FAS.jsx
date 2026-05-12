@@ -140,45 +140,7 @@ export default function FAS() {
                               size="icon"
                               className="h-8 w-8 text-muted-foreground hover:text-primary"
                               title="Abrir em nova guia"
-                              onClick={() => {
-                                const docRef = document.createElement('div');
-                                const content = `
-                                  <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1.5px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
-                                    <div>
-                                      <div style="font-weight: bold; font-size: 13px; letter-spacing: 1px; color: #1a1a1a;">AFIRMAEVIAS</div>
-                                      <div style="font-size: 7px; color: #666;">e n g e n h a r i a  n i v e l</div>
-                                      <div style="font-size: 7px; margin-top: 4px; color: #888;">FORM 045 A- REV 00 - 07/07/2025</div>
-                                    </div>
-                                    <div style="text-align: center; flex: 1; padding: 0 16px;">
-                                      <div style="font-weight: bold; font-size: 13px;">FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
-                                    </div>
-                                    <div style="border: 1px solid #000; padding: 6px 10px; text-align: center; min-width: 140px;">
-                                      <div style="font-size: 8px; font-weight: bold;">Proposta Comercial / Rev.</div>
-                                      <div style="font-weight: bold; font-size: 10px; margin-top: 2px;">PC n° ${fas.numero_proposta || '—'}</div>
-                                    </div>
-                                  </div>
-                                `;
-                                const newTab = window.open();
-                                newTab.document.write(`
-                                  <!DOCTYPE html>
-                                  <html lang="pt-BR">
-                                  <head>
-                                    <meta charset="UTF-8">
-                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                    <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
-                                    <style>
-                                      * { margin: 0; padding: 0; box-sizing: border-box; }
-                                      body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-                                      .document { width: 794px; height: 1123px; margin: 0 auto; background: white; padding: 8px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-family: Arial, sans-serif; font-size: 9px; color: #000; }
-                                    </style>
-                                  </head>
-                                  <body>
-                                    <div class="document">${content}</div>
-                                  </body>
-                                  </html>
-                                `);
-                                newTab.document.close();
-                              }}
+                              onClick={() => openFASInNewTab(fas)}
                             >
                               <Eye className="w-3.5 h-3.5" />
                             </Button>
