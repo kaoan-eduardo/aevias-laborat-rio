@@ -4,53 +4,6 @@ import { base44 } from '@/api/base44Client';
 import { buildFASHtml } from '@/components/fas/FASDocumento';
 import * as pdfjsLib from 'pdfjs-dist';
 
-const DOC_WIDTH = 794;
-
-function ScaledPage({ children, extraClass = '', extraTop = 0 }) {
-  const [scale, setScale] = useState(1);
-  const wrapRef = useRef(null);
-
-  useEffect(() => {
-    function calc() {
-      const available = window.innerWidth - 32; // 16px padding each side
-      setScale(Math.min(1, available / DOC_WIDTH));
-    }
-    calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
-  }, []);
-
-  const scaledHeight = DOC_WIDTH * scale; // placeholder height (overridden below for iframes)
-
-  return (
-    <div
-      className={extraClass}
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: extraTop,
-        marginBottom: 0,
-      }}
-    >
-      <div
-        ref={wrapRef}
-        style={{
-          width: DOC_WIDTH * scale,
-          overflow: 'visible',
-        }}
-      >
-        <div style={{
-          transformOrigin: 'top left',
-          transform: `scale(${scale})`,
-          width: DOC_WIDTH,
-        }}>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url
@@ -92,15 +45,15 @@ function PdfAnexo({ url, nome }) {
   }, [url]);
 
   if (error) return (
-    <div style={{ width: 794, margin: '0 auto', padding: '16px', fontFamily: 'Arial', fontSize: '11px', color: '#c00', background: '#fff1f1', border: '1px solid #fcc' }}>
+    <div style={{ padding: '16px', fontFamily: 'Arial', fontSize: '11px', color: '#c00', background: '#fff1f1', border: '1px solid #fcc' }}>
       Erro ao carregar "{nome}": {error}
     </div>
   );
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div>
       {loading && (
-        <div style={{ width: 794, margin: '0 auto', padding: '24px', fontFamily: 'Arial', fontSize: '11px', color: '#666', textAlign: 'center', background: '#fff' }}>
+        <div style={{ padding: '24px', fontFamily: 'Arial', fontSize: '11px', color: '#666', textAlign: 'center', background: '#fff' }}>
           Carregando {nome}...
         </div>
       )}
@@ -112,6 +65,7 @@ function PdfAnexo({ url, nome }) {
 export default function Impressao() {
   const { tipo, id } = useParams();
   const [fasHtml, setFasHtml] = useState(null);
+  const [iframeHeight, setIframeHeight] = useState(1123);
   const [anexos, setAnexos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [unknown, setUnknown] = useState(false);
@@ -137,23 +91,21 @@ export default function Impressao() {
   );
 
   return (
-    <>
+    <div style={{ minHeight: '100vh', background: '#d1d5db' }}>
       <style>{`
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { background: #e8ecef; }
         @media print {
-          html, body { background: #fff; }
           .no-print { display: none !important; }
-          .page-break { page-break-before: always; break-before: page; }
+          .print-page { page-break-before: always; break-before: page; }
+          body { background: #fff !important; }
         }
       `}</style>
 
       {/* Barra de controle */}
       <div className="no-print" style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-        background: '#1a3a5c', color: '#fff',
+        position: 'sticky', top: 0, zIndex: 100,
+        background: '#1e3a5f', color: '#fff',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '10px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        padding: '10px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.25)'
       }}>
         <span style={{ fontFamily: 'Arial', fontSize: '13px', fontWeight: 'bold', letterSpacing: '0.5px' }}>
           Visualização para Impressão
@@ -161,7 +113,7 @@ export default function Impressao() {
         <button
           onClick={() => window.print()}
           style={{
-            padding: '7px 22px', background: '#fff', color: '#1a3a5c',
+            padding: '7px 22px', background: '#fff', color: '#1e3a5f',
             border: 'none', borderRadius: '5px', cursor: 'pointer',
             fontWeight: 'bold', fontSize: '13px'
           }}
@@ -170,33 +122,33 @@ export default function Impressao() {
         </button>
       </div>
 
-      {/* Conteúdo */}
-      <div style={{ paddingTop: 56, paddingBottom: 40 }}>
+      {/* Área de documentos */}
+      <div style={{ padding: '32px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
 
-        {/* FAS */}
-        <ScaledPage>
+        {/* FAS principal */}
+        <div style={{ width: 794, background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.15)' }}>
           <iframe
             srcDoc={fasHtml}
-            style={{ width: 794, minHeight: 1123, border: 'none', display: 'block', background: '#fff' }}
+            style={{ width: '100%', height: iframeHeight, border: 'none', display: 'block' }}
             title="FAS"
             scrolling="no"
             onLoad={e => {
               try {
                 const h = e.target.contentDocument?.body?.scrollHeight;
-                if (h) e.target.style.height = h + 'px';
+                if (h && h > 100) setIframeHeight(h);
               } catch (_) {}
             }}
           />
-        </ScaledPage>
+        </div>
 
         {/* Anexos PDF */}
         {anexos.map((anexo, i) => (
-          <ScaledPage key={i} extraClass="page-break" extraTop={32}>
+          <div key={i} className="print-page" style={{ width: 794, background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.15)' }}>
             <PdfAnexo url={anexo.url} nome={anexo.nome} />
-          </ScaledPage>
+          </div>
         ))}
 
       </div>
-    </>
+    </div>
   );
 }
