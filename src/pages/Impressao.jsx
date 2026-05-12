@@ -96,7 +96,10 @@ export default function Impressao() {
         @media print {
           .no-print { display: none !important; }
           .print-page { page-break-before: always; break-before: page; }
-          body { background: #fff !important; }
+          body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+          .print-area { padding: 0 !important; gap: 0 !important; }
+          .doc-wrapper { box-shadow: none !important; width: 100% !important; }
+          .doc-wrapper iframe { width: 100% !important; }
         }
       `}</style>
 
@@ -123,13 +126,13 @@ export default function Impressao() {
       </div>
 
       {/* Área de documentos */}
-      <div style={{ padding: '32px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
+      <div className="print-area" style={{ padding: '32px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
 
         {/* FAS principal */}
-        <div style={{ width: 794, background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.15)' }}>
+        <div className="doc-wrapper" style={{ width: 794, maxWidth: '100%', background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', overflow: 'hidden' }}>
           <iframe
             srcDoc={fasHtml}
-            style={{ width: '100%', height: iframeHeight, border: 'none', display: 'block' }}
+            style={{ width: 794, height: iframeHeight, border: 'none', display: 'block' }}
             title="FAS"
             scrolling="no"
             onLoad={e => {
@@ -143,7 +146,7 @@ export default function Impressao() {
 
         {/* Anexos PDF */}
         {anexos.map((anexo, i) => (
-          <div key={i} className="print-page" style={{ width: 794, background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.15)' }}>
+          <div key={i} className="doc-wrapper print-page" style={{ width: 794, maxWidth: '100%', background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', overflow: 'hidden' }}>
             <PdfAnexo url={anexo.url} nome={anexo.nome} />
           </div>
         ))}
