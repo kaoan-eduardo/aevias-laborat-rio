@@ -254,7 +254,7 @@ export default function FASDocumento({ fas, onClose }) {
           <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0' }}>
             OBSERVAÇÕES DA PROPOSTA
           </div>
-          <div style={{ border: '1px solid #ccc', minHeight: '60px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px' }}>
+          <div style={{ border: '1px solid #ccc', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px' }}>
             {fas.observacoes || ''}
           </div>
 
@@ -295,7 +295,7 @@ export default function FASDocumento({ fas, onClose }) {
           <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0' }}>
             CONSIDERAÇÕES
           </div>
-          <div style={{ border: '1px solid #ccc', minHeight: '36px', padding: '4px 6px', marginBottom: '8px' }}>&nbsp;</div>
+          <div style={{ border: '1px solid #ccc', minHeight: '65px', padding: '4px 6px', marginBottom: '8px' }}>&nbsp;</div>
 
           {/* Rodapé assinatura */}
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px' }}>
