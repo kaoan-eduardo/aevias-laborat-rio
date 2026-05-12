@@ -31,7 +31,7 @@ export function buildFASHtml(fas) {
     `<tr style="height:14px"><td style="border:1px solid #ccc;padding:2px 6px">${a.data ? fmt_date(a.data) : ''}</td><td style="border:1px solid #ccc;padding:2px 6px">${a.atividade || ''}</td></tr>`
   ).join('');
 
-  const emptyAndamento = Array.from({length: Math.max(0, 5 - andamento.length)}).map(() =>
+  const emptyAndamento = Array.from({length: Math.max(0, 3 - andamento.length)}).map(() =>
     `<tr style="height:14px"><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td><td style="border:1px solid #ccc;padding:2px 6px">&nbsp;</td></tr>`
   ).join('');
 
