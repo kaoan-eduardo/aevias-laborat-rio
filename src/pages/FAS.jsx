@@ -114,7 +114,7 @@ export default function FAS() {
                       <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Data</th>
                       <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Ensaios</th>
                       <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Status</th>
-                      <th className="px-15 py-3 text-right font-semibold text-muted-foreground">Ações</th>
+                      <th className="px-0 py-3 text-right font-semibold text-muted-foreground">Ações</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
