@@ -19,8 +19,8 @@ export function buildFASHtml(fas) {
       <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${item.quantidade ? String(item.quantidade).padStart(2,'0') : ''}</td>
       <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${item.unidade || ''}</td>
       <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${item.prazo_dias ? item.prazo_dias + ' Dias Úteis' : ''}</td>
-      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${sim_nao(fas.declaracao_confidencialidade)}</td>
-      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${sim_nao(fas.exige_simbolo)}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${sim_nao(item.declaracao_confidencialidade)}</td>
+      <td style="border:1px solid #ccc;padding:2px 4px;text-align:center">${sim_nao(item.exige_simbolo)}</td>
     </tr>`).join('');
 
   const emptyRows = Array.from({length: linhasVazias}).map(() =>
@@ -236,8 +236,8 @@ export default function FASDocumento({ fas, onClose }) {
                   <td style={{ border: '1px solid #ccc', padding: '2px 4px', textAlign: 'center' }}>{item.quantidade ? String(item.quantidade).padStart(2, '0') : ''}</td>
                   <td style={{ border: '1px solid #ccc', padding: '2px 4px', textAlign: 'center' }}>{item.unidade || ''}</td>
                   <td style={{ border: '1px solid #ccc', padding: '2px 4px', textAlign: 'center' }}>{item.prazo_dias ? `${item.prazo_dias} Dias Úteis` : ''}</td>
-                  <td style={{ border: '1px solid #ccc', padding: '2px 4px', textAlign: 'center' }}>{sim_nao(fas.declaracao_confidencialidade)}</td>
-                  <td style={{ border: '1px solid #ccc', padding: '2px 4px', textAlign: 'center' }}>{sim_nao(fas.exige_simbolo)}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '2px 4px', textAlign: 'center' }}>{sim_nao(item.declaracao_confidencialidade)}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '2px 4px', textAlign: 'center' }}>{sim_nao(item.exige_simbolo)}</td>
                 </tr>
               ))}
               {Array.from({ length: linhasVazias }).map((_, i) => (
