@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Plus, Search, FileText, Eye, Pencil, Printer } from 'lucide-react';
+import { Plus, Search, FileText, Pencil, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import FASDocumento, { openFASInNewTab } from '@/components/fas/FASDocumento';
+import { useNavigate } from 'react-router-dom';
 
 export const STATUS_CONFIG = {
   aberta: { label: 'Aberta', color: 'bg-blue-100 text-blue-700' },
@@ -18,11 +18,11 @@ export const STATUS_CONFIG = {
 
 export default function FAS() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [fasList, setFasList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
-  const [fasVisualizando, setFasVisualizando] = useState(null);
 
   const role = user?.role || 'auxiliar';
   const canCreate = role === 'comercial' || role === 'admin' || role === 'gestor';
@@ -139,17 +139,8 @@ export default function FAS() {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 text-muted-foreground hover:text-primary"
-                              title="Abrir em nova guia"
-                              onClick={() => openFASInNewTab(fas)}
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-primary"
-                              title="Imprimir"
-                              onClick={() => openFASInNewTab(fas)}
+                              title="Visualizar / Imprimir"
+                              onClick={() => window.open(`/impressao/fas/${fas.id}`, '_blank')}
                             >
                               <Printer className="w-3.5 h-3.5" />
                             </Button>
@@ -170,9 +161,7 @@ export default function FAS() {
         </Card>
       </div>
 
-      {fasVisualizando && (
-        <FASDocumento fas={fasVisualizando} onClose={() => setFasVisualizando(null)} />
-      )}
+
     </>
   );
 }
