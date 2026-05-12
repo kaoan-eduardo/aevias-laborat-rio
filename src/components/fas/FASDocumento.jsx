@@ -44,7 +44,7 @@ export function buildFASHtml(fas) {
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: Arial, sans-serif; font-size:9px; color:#000; background:#f0f0f0; padding:20px; }
     .doc { width:794px; min-height:1123px; background:#fff; padding:8px 12px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
-    @media print { body { background:#fff; padding:0; } .doc { box-shadow:none; } iframe { width:100%; height:1123px; border:none; } }
+    @media print { body { background:#fff; padding:0; } .doc { box-shadow:none; } }
   </style>
 </head>
 <body>
