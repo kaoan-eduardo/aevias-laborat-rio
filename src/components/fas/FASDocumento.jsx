@@ -282,7 +282,7 @@ export default function FASDocumento({ fas, onClose }) {
                   <td style={{ border: '1px solid #ccc', padding: '2px 6px' }}>{a.atividade || ''}</td>
                 </tr>
               ))}
-              {Array.from({ length: Math.max(0, 5 - andamento.length) }).map((_, i) => (
+              {Array.from({ length: Math.max(0, 3 - andamento.length) }).map((_, i) => (
                 <tr key={`ea-${i}`} style={{ height: '14px' }}>
                   <td style={{ border: '1px solid #ccc', padding: '2px 6px' }}>&nbsp;</td>
                   <td style={{ border: '1px solid #ccc', padding: '2px 6px' }}>&nbsp;</td>
