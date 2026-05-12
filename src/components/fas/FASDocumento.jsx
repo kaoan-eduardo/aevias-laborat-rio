@@ -8,7 +8,7 @@ const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
 export function buildFASHtml(fas) {
   const itens = fas.itens || [];
   const andamento = fas.andamento || [];
-  const LINHAS_ENSAIO = 45;
+  const LINHAS_ENSAIO = 44;
   const linhasVazias = Math.max(0, LINHAS_ENSAIO - itens.length);
 
   const itensRows = itens.map(item => `
