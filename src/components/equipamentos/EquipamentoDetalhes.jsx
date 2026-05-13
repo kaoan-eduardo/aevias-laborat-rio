@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Pencil, AlertTriangle, CheckCircle, History } from 'lucide-react';
+import { X, Pencil, AlertTriangle, CheckCircle, History, CheckSquare, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -83,6 +83,22 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
               label="Validade da Calibração"
               value={eq.validade_calibracao ? new Date(eq.validade_calibracao).toLocaleDateString('pt-BR') : null}
             />
+          </div>
+        </div>
+
+        {/* Obrigatoriedade de verificações */}
+        <div className="px-6 pb-5 flex flex-col sm:flex-row gap-3">
+          <div className="flex items-center gap-2">
+            {eq.obrigatorio_verificacao_diaria
+              ? <CheckSquare className="w-4 h-4 text-primary" />
+              : <Square className="w-4 h-4 text-muted-foreground" />}
+            <span className="text-sm text-foreground">Verificação diária obrigatória</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {eq.obrigatorio_verificacao_intermediaria
+              ? <CheckSquare className="w-4 h-4 text-primary" />
+              : <Square className="w-4 h-4 text-muted-foreground" />}
+            <span className="text-sm text-foreground">Verificação intermediária obrigatória</span>
           </div>
         </div>
 
