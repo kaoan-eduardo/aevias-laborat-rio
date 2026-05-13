@@ -35,7 +35,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   };
 
   const mesLabel = data.mes_ano
-    ? new Date(data.mes_ano + '-01').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+    ? new Date(data.mes_ano + '-02').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
     : '—';
 
   const diasNoMes = data.mes_ano
