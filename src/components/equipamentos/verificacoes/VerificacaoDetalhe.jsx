@@ -239,18 +239,18 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                 <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-1.5 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {data.tipo === 'balanca' && (
-                    <td className="px-1 py-1.5"><Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-7 text-xs px-1.5" placeholder="g" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-10 text-xs px-1.5" placeholder="g" disabled={isReadOnly} /></td>
                   )}
                   {data.tipo === 'temperatura' && <>
-                    <td className="px-1 py-1.5"><Input value={r.valor_referencia} onChange={e => setReg(i, 'valor_referencia', e.target.value)} className="h-7 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-1.5"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-7 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-1.5"><Input value={r.variacao} onChange={e => setReg(i, 'variacao', e.target.value)} className="h-7 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.valor_referencia} onChange={e => setReg(i, 'valor_referencia', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.variacao} onChange={e => setReg(i, 'variacao', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
                   </>}
                   {data.tipo === 'densidade' && <>
-                    <td className="px-1 py-1.5"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-7 text-xs px-1.5" placeholder="HH:MM" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-1.5"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-7 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-1.5"><Input value={r.densidade_com_amostra} onChange={e => setReg(i, 'densidade_com_amostra', e.target.value)} className="h-7 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-1.5"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-7 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-10 text-xs px-1.5" placeholder="HH:MM" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.densidade_com_amostra} onChange={e => setReg(i, 'densidade_com_amostra', e.target.value)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1.5"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
                   </>}
                   <td className="px-1 py-1.5 text-center">
                     {data.tipo === 'balanca' ? (
@@ -259,7 +259,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                       </span>
                     ) : (
                       <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)} disabled={isReadOnly}>
-                        <SelectTrigger className="h-7 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
+                        <SelectTrigger className="h-10 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="aprovado">Aprovado</SelectItem>
                           <SelectItem value="reprovado">Reprovado</SelectItem>
