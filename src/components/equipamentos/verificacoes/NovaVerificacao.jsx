@@ -51,13 +51,30 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   const [registros, setRegistros] = useState(buildRegistros());
   const [saving, setSaving] = useState(false);
 
+  // Categorias de equipamento por tipo de verificação
+  const CATEGORIAS_POR_TIPO = {
+    balanca: ['Balança', 'balanca', 'balança'],
+    temperatura: ['Estufa', 'estufa', 'Banho Maria', 'banho maria', 'Banho-Maria', 'banho-maria', 'Forno', 'forno'],
+  };
+
   useEffect(() => {
     if (step === 2 && tipo) {
+      if (tipo === 'densidade') {
+        // Densidade não tem LC vinculado, pula direto para step 3 sem equipamento
+        setEquipamento(null);
+        setStep(3);
+        return;
+      }
       setLoadingEq(true);
       base44.entities.Equipamento.filter({ status: 'em_uso', obrigatorio_verificacao_diaria: true }, 'identificacao_interna')
         .then(data => {
-          // Filter by tipo if needed — for now show all eligible equipment
-          setEquipamentos(data);
+          const categoriasPermitidas = CATEGORIAS_POR_TIPO[tipo] || [];
+          const filtrado = data.filter(eq =>
+            categoriasPermitidas.some(cat =>
+              eq.categoria?.toLowerCase() === cat.toLowerCase()
+            )
+          );
+          setEquipamentos(filtrado);
           setLoadingEq(false);
         });
     }
@@ -81,12 +98,13 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     : 31;
 
   const handleSave = async () => {
-    if (!mesAno || !equipamento) return;
+    if (!mesAno) return;
+    if (tipo !== 'densidade' && !equipamento) return;
     setSaving(true);
     await base44.entities.VerificacaoDiaria.create({
-      equipamento_id: equipamento.id,
-      equipamento_identificacao: equipamento.identificacao_interna,
-      equipamento_nome: equipamento.nome,
+      equipamento_id: equipamento?.id || '',
+      equipamento_identificacao: equipamento?.identificacao_interna || '—',
+      equipamento_nome: equipamento?.nome || 'Verificação de Densidade',
       tipo,
       mes_ano: mesAno,
       realizado_por: realizadoPor,
@@ -145,7 +163,9 @@ export default function NovaVerificacao({ onBack, onSaved }) {
           <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-muted rounded animate-pulse" />)}</div>
         ) : equipamentos.length === 0 ? (
           <div className="py-12 text-center border border-dashed rounded-xl">
-            <p className="text-muted-foreground text-sm">Nenhum equipamento em uso com verificação diária obrigatória.</p>
+            <p className="text-muted-foreground text-sm">
+              Nenhum equipamento do tipo {TIPOS.find(t => t.value === tipo)?.label} em uso com verificação diária obrigatória.
+            </p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -174,11 +194,14 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     <div className="p-6 max-w-6xl mx-auto space-y-5">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => setStep(2)}><ChevronLeft className="w-5 h-5" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => setStep(tipo === 'densidade' ? 1 : 2)}><ChevronLeft className="w-5 h-5" /></Button>
           <div>
             <h1 className="text-xl font-bold">Verificação de {TIPOS.find(t => t.value === tipo)?.label}</h1>
             <p className="text-sm text-muted-foreground">
-              Passo 3 de 3 — <span className="font-mono-data font-semibold text-primary">{equipamento?.identificacao_interna}</span> · {equipamento?.nome}
+              {tipo === 'densidade'
+                ? 'Passo 2 de 2 — Verificação sem LC vinculado'
+                : <>Passo 3 de 3 — <span className="font-mono-data font-semibold text-primary">{equipamento?.identificacao_interna}</span> · {equipamento?.nome}</>
+              }
             </p>
           </div>
         </div>
