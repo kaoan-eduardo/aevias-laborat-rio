@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { STATUS_EQUIPAMENTO, PERIODICIDADE_LABELS } from '@/utils/equipamentoHelpers';
 
 const EMPTY_FORM = {
@@ -16,6 +17,8 @@ const EMPTY_FORM = {
   validade_calibracao: '',
   periodicidade_verificacao: '',
   status: 'em_uso',
+  obrigatorio_verificacao_diaria: false,
+  obrigatorio_verificacao_intermediaria: false,
 };
 
 export default function EquipamentoModal({ open, onClose, equipamento, onSaved }) {
@@ -132,6 +135,24 @@ export default function EquipamentoModal({ open, onClose, equipamento, onSaved }
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          {/* Obrigatoriedade de verificações */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-1">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <Checkbox
+                checked={!!form.obrigatorio_verificacao_diaria}
+                onCheckedChange={v => set('obrigatorio_verificacao_diaria', v)}
+              />
+              <span className="text-sm text-foreground">Verificação diária obrigatória</span>
+            </label>
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <Checkbox
+                checked={!!form.obrigatorio_verificacao_intermediaria}
+                onCheckedChange={v => set('obrigatorio_verificacao_intermediaria', v)}
+              />
+              <span className="text-sm text-foreground">Verificação intermediária obrigatória</span>
+            </label>
           </div>
 
           {/* Campos extras quando o status for alterado */}

@@ -51,6 +51,16 @@
       "default": "em_uso",
       "description": "Status atual do equipamento"
     },
+    "obrigatorio_verificacao_diaria": {
+      "type": "boolean",
+      "default": false,
+      "description": "Verifica\u00e7\u00e3o interna di\u00e1ria obrigat\u00f3ria"
+    },
+    "obrigatorio_verificacao_intermediaria": {
+      "type": "boolean",
+      "default": false,
+      "description": "Verifica\u00e7\u00e3o interna intermedi\u00e1ria obrigat\u00f3ria"
+    },
     "historico_status": {
       "type": "array",
       "description": "Hist\u00f3rico de altera\u00e7\u00f5es de status",
