@@ -5,7 +5,9 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			inter: ['Inter', 'sans-serif'],
+  			poppins: ['Poppins', 'sans-serif'],
+  			exo: ['"Exo 2"', 'sans-serif'],
+  			inter: ['Poppins', 'sans-serif'],
   			mono: ['JetBrains Mono', 'monospace'],
   		},
   		borderRadius: {
