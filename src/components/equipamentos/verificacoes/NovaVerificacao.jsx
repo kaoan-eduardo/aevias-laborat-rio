@@ -66,8 +66,9 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     if (step === 3) {
       const now = new Date();
       setMesAno(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
-      setRealizadoPor(user?.full_name || '');
-      setRegistros(buildRegistros());
+      const nome = user?.full_name || '';
+      setRealizadoPor(nome);
+      setRegistros(buildRegistros().map(r => ({ ...r, responsavel: nome })));
       setEqRefCal(equipamento?.data_calibracao || '');
     }
   }, [step, equipamento, user]);
