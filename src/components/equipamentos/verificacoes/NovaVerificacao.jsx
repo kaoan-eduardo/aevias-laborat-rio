@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
+import { currentMonthSP } from '@/lib/dateUtils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -64,8 +65,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
 
   useEffect(() => {
     if (step === 3) {
-      const now = new Date();
-      setMesAno(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
+      setMesAno(currentMonthSP());
       setRealizadoPor(user?.full_name || '');
       setRegistros(buildRegistros());
       setEqRefCal(equipamento?.data_calibracao || '');

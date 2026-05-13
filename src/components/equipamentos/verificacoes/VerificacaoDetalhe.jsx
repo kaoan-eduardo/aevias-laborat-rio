@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { formatMesAno } from '@/lib/dateUtils';
 import { ChevronLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,9 +35,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
     }));
   };
 
-  const mesLabel = data.mes_ano
-    ? new Date(data.mes_ano + '-02').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
-    : '—';
+  const mesLabel = formatMesAno(data.mes_ano);
 
   const diasNoMes = data.mes_ano
     ? new Date(Number(data.mes_ano.split('-')[0]), Number(data.mes_ano.split('-')[1]), 0).getDate()
