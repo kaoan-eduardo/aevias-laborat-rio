@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { X, Pencil, AlertTriangle, CheckCircle } from 'lucide-react';
+import { X, Pencil, AlertTriangle, CheckCircle, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import DocUploadSection from './DocUploadSection';
 import {
@@ -124,6 +123,41 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
             onUpdate={handleDocUpdate}
           />
         </div>
+
+        {/* Histórico de status */}
+        {(eq.historico_status || []).length > 0 && (
+          <>
+            <Separator />
+            <div className="px-6 py-5 space-y-3">
+              <div className="flex items-center gap-2">
+                <History className="w-4 h-4 text-muted-foreground" />
+                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Histórico de Status</h3>
+              </div>
+              <div className="space-y-1.5">
+                {[...(eq.historico_status || [])].sort((a, b) => new Date(b.data) - new Date(a.data)).map((h, i) => {
+                  const cfg = STATUS_EQUIPAMENTO[h.status];
+                  return (
+                    <div key={i} className="flex items-start gap-3 p-2.5 rounded-lg bg-muted/30 border border-border">
+                      <div className="flex-shrink-0 mt-0.5">
+                        <Badge className={`${cfg?.color || 'bg-gray-100 text-gray-600'} text-xs`}>
+                          {cfg?.label || h.status}
+                        </Badge>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-foreground">
+                          {h.data ? new Date(h.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—'}
+                        </p>
+                        {h.observacao && (
+                          <p className="text-xs text-muted-foreground mt-0.5">{h.observacao}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="px-6 py-3 border-t flex justify-end">
           <Button variant="ghost" size="sm" onClick={onClose}>Fechar</Button>
