@@ -18,6 +18,7 @@ import RecebimentoAmostras from '@/pages/RecebimentoAmostras';
 import DetalhesRecebimento from '@/pages/DetalhesRecebimento';
 import Impressao from '@/pages/Impressao';
 import Equipamentos from '@/pages/Equipamentos';
+import Verificacoes from '@/pages/Verificacoes';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -57,6 +58,7 @@ const AuthenticatedApp = () => {
         <Route path="/recebimento/:id" element={<DetalhesRecebimento />} />
         <Route path="/impressao/:tipo/:id" element={<Impressao />} />
         <Route path="/equipamentos" element={<Equipamentos />} />
+        <Route path="/verificacoes" element={<Verificacoes />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

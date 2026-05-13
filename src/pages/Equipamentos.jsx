@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Plus, Search, Wrench, Eye, Pencil, AlertTriangle, ClipboardCheck } from 'lucide-react';
+import { Plus, Search, Wrench, Eye, Pencil, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import EquipamentoModal from '@/components/equipamentos/EquipamentoModal';
 import EquipamentoDetalhes from '@/components/equipamentos/EquipamentoDetalhes';
-import VerificacaoModal from '@/components/equipamentos/verificacoes/VerificacaoModal';
 import { STATUS_EQUIPAMENTO, isCalibracaoVencida, isCalibracaoProxima } from '@/utils/equipamentoHelpers';
 
 export default function Equipamentos() {
@@ -21,11 +20,8 @@ export default function Equipamentos() {
   const [editingEq, setEditingEq] = useState(null);
   const [detalhesEq, setDetalhesEq] = useState(null);
 
-  const [verificacaoEq, setVerificacaoEq] = useState(null);
-
   const role = user?.role || 'auxiliar';
   const canEdit = role === 'admin' || role === 'gestor';
-  const isLaboratorista = role === 'laboratorista' || role === 'auxiliar' || role === 'admin' || role === 'gestor';
 
   const load = async () => {
     setLoading(true);
@@ -48,7 +44,6 @@ export default function Equipamentos() {
   const handleNew = () => { setEditingEq(null); setModalOpen(true); };
   const handleEdit = (eq) => { setEditingEq(eq); setModalOpen(true); setDetalhesEq(null); };
   const handleSaved = () => { setModalOpen(false); setEditingEq(null); load(); };
-  const handleVerificacaoSaved = () => { setVerificacaoEq(null); };
 
   return (
     <>
@@ -152,15 +147,6 @@ export default function Equipamentos() {
                               >
                                 <Eye className="w-3.5 h-3.5" />
                               </Button>
-                              {isLaboratorista && eq.status === 'em_uso' && eq.obrigatorio_verificacao_diaria && (
-                                <Button
-                                  variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-green-600"
-                                  title="Checagem Diária"
-                                  onClick={() => setVerificacaoEq(eq)}
-                                >
-                                  <ClipboardCheck className="w-3.5 h-3.5" />
-                                </Button>
-                              )}
                               {canEdit && (
                                 <Button
                                   variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary"
@@ -199,14 +185,6 @@ export default function Equipamentos() {
         />
       )}
 
-      {verificacaoEq && (
-        <VerificacaoModal
-          open={!!verificacaoEq}
-          onClose={() => setVerificacaoEq(null)}
-          equipamento={verificacaoEq}
-          onSaved={handleVerificacaoSaved}
-        />
-      )}
     </>
   );
 }

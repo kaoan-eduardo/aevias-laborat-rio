@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import {
   Users, FlaskConical, FileText, LayoutDashboard,
-  ChevronLeft, ChevronRight, LogOut, Menu, X, Shield, UserCog, Package, Inbox, Wrench
+  ChevronLeft, ChevronRight, LogOut, Menu, X, Shield, UserCog, Package, Inbox, Wrench, ClipboardCheck
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'gestor', 'tecnico', 'auxiliar'] },
   { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'auxiliar', 'gestor'] },
   { path: '/equipamentos', label: 'Equipamentos', icon: Wrench, roles: ['admin', 'gestor', 'tecnico'] },
+  { path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck, roles: ['admin', 'gestor', 'laboratorista', 'tecnico', 'auxiliar'] },
 ];
 
 const BOTTOM_NAV_ITEMS = [
