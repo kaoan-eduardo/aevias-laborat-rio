@@ -180,6 +180,7 @@ export default function Equipamentos() {
         <EquipamentoDetalhes
           equipamento={detalhesEq}
           canEdit={canEdit}
+          user={user}
           onClose={() => setDetalhesEq(null)}
           onEdit={() => handleEdit(detalhesEq)}
         />
