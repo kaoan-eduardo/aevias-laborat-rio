@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { ChevronLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,13 @@ const RESULTADO_COLOR = {
 export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSaved }) {
   const [data, setData] = useState({ ...verificacao });
   const [saving, setSaving] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    base44.auth.me().then(u => {
+      if (u?.full_name) setUserName(u.full_name);
+    });
+  }, []);
 
   const setReg = (idx, field, value) => {
     setData(prev => ({
@@ -193,7 +200,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     </Select>
                   </td>
                   <td className="px-1 py-1">
-                    <Input value={r.responsavel} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" />
+                    <Input value={r.responsavel || ''} onFocus={() => { if (!r.responsavel && userName) setReg(i, 'responsavel', userName); }} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" />
                   </td>
                 </tr>
               ))}
