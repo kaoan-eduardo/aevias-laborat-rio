@@ -265,23 +265,30 @@ export default function NovaVerificacao({ onBack, onSaved }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Identificação</Label>
-            {tipo === 'balanca' && pesosPadrao.length > 0 ? (
-              <Select
-                value={eqRefId}
-                onValueChange={val => {
-                  const eq = pesosPadrao.find(p => p.identificacao_interna === val);
-                  setEqRefId(val);
-                  setEqRefDesc(eq?.nome || '');
-                  setEqRefCal(eq?.data_calibracao || '');
-                }}
-              >
-                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
-                <SelectContent>
-                  {pesosPadrao.map(p => (
-                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {tipo === 'balanca' ? (
+              pesosPadrao.length > 0 ? (
+                <Select
+                  value={eqRefId}
+                  onValueChange={val => {
+                    const eq = pesosPadrao.find(p => p.identificacao_interna === val);
+                    setEqRefId(val);
+                    setEqRefDesc(eq?.nome || '');
+                    setEqRefCal(eq?.data_calibracao || '');
+                  }}
+                >
+                  <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
+                  <SelectContent>
+                    {pesosPadrao.map(p => (
+                      <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="space-y-1">
+                  <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+                  <p className="text-xs text-amber-600">Nenhum "Conjunto de Peso Padrão" encontrado nos equipamentos.</p>
+                </div>
+              )
             ) : (
               <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
             )}
