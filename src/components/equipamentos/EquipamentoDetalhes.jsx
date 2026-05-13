@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { X, Pencil, AlertTriangle, CheckCircle, History, CheckSquare, Square, Plus } from 'lucide-react';
+import { X, Pencil, AlertTriangle, CheckCircle, History, CheckSquare, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import DocUploadSection from './DocUploadSection';
-import VerificacaoDiariaModal from './VerificacaoDiariaModal';
-import VerificacaoDiariaList from './VerificacaoDiariaList';
 import {
   STATUS_EQUIPAMENTO,
   PERIODICIDADE_LABELS,
@@ -20,27 +18,15 @@ const InfoRow = ({ label, value, mono }) => (
   </div>
 );
 
-export default function EquipamentoDetalhes({ equipamento: initialEquipamento, canEdit, user, onClose, onEdit }) {
+export default function EquipamentoDetalhes({ equipamento: initialEquipamento, canEdit, onClose, onEdit }) {
   const [eq, setEq] = useState(initialEquipamento);
-  const [verificacaoOpen, setVerificacaoOpen] = useState(false);
-  const [verificacaoRefresh, setVerificacaoRefresh] = useState(0);
 
   const status = STATUS_EQUIPAMENTO[eq.status] || STATUS_EQUIPAMENTO.em_uso;
   const vencida = isCalibracaoVencida(eq.validade_calibracao);
   const proxima = isCalibracaoProxima(eq.validade_calibracao);
 
-  // Regras: laboratoristas podem iniciar verificação diária apenas em equipamentos em uso
-  const role = user?.role || 'auxiliar';
-  const isLaboratorista = role === 'laboratorista' || role === 'auxiliar';
-  const podeIniciarVerificacaoDiaria = isLaboratorista && eq.status === 'em_uso' && eq.obrigatorio_verificacao_diaria;
-
   const handleDocUpdate = (field, novosDoc) => {
     setEq(e => ({ ...e, [field]: novosDoc }));
-  };
-
-  const handleVerificacaoSaved = () => {
-    setVerificacaoOpen(false);
-    setVerificacaoRefresh(r => r + 1);
   };
 
   return (
@@ -118,27 +104,6 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
 
         <Separator />
 
-        {/* Verificações Diárias */}
-        <div className="px-6 py-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Verificações Internas Diárias</h3>
-            {podeIniciarVerificacaoDiaria && (
-              <Button size="sm" className="gap-1.5 h-8 text-xs" onClick={() => setVerificacaoOpen(true)}>
-                <Plus className="w-3.5 h-3.5" />
-                Nova Verificação
-              </Button>
-            )}
-          </div>
-          {!eq.obrigatorio_verificacao_diaria && (
-            <p className="text-xs text-muted-foreground">Este equipamento não requer verificação diária.</p>
-          )}
-          {eq.obrigatorio_verificacao_diaria && (
-            <VerificacaoDiariaList equipamentoId={eq.id} refreshKey={verificacaoRefresh} />
-          )}
-        </div>
-
-        <Separator />
-
         {/* Documentos */}
         <div className="px-6 py-5 space-y-6">
           <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Documentos Anexados</h3>
@@ -158,6 +123,17 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
             title="Verificação Interna Intermediária"
             field="docs_verificacao_intermediaria"
             docs={eq.docs_verificacao_intermediaria || []}
+            equipamentoId={eq.id}
+            canEdit={canEdit}
+            onUpdate={handleDocUpdate}
+          />
+
+          <Separator />
+
+          <DocUploadSection
+            title="Verificação Interna Diária"
+            field="docs_verificacao_diaria"
+            docs={eq.docs_verificacao_diaria || []}
             equipamentoId={eq.id}
             canEdit={canEdit}
             onUpdate={handleDocUpdate}
@@ -203,16 +179,6 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
           <Button variant="ghost" size="sm" onClick={onClose}>Fechar</Button>
         </div>
       </div>
-
-      {verificacaoOpen && (
-        <VerificacaoDiariaModal
-          open={verificacaoOpen}
-          onClose={() => setVerificacaoOpen(false)}
-          equipamento={eq}
-          user={user}
-          onSaved={handleVerificacaoSaved}
-        />
-      )}
     </div>
   );
 }
