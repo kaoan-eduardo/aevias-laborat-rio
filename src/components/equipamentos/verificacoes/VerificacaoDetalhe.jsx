@@ -22,6 +22,10 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   const [saving, setSaving] = useState(false);
   const [userName, setUserName] = useState('');
 
+  // Bloqueado para não-gestores quando já foi finalizado (aprovado ou reprovado)
+  const isFinalizado = data.resultado_geral !== 'em_andamento';
+  const isReadOnly = !isGestor && isFinalizado;
+
   useEffect(() => {
     base44.auth.me().then(u => {
       if (u?.full_name) setUserName(u.full_name);
@@ -66,10 +70,15 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
             </p>
           </div>
         </div>
-        <Button onClick={handleSave} disabled={saving} className="gap-2">
-          <Save className="w-4 h-4" />
-          {saving ? 'Salvando...' : 'Salvar'}
-        </Button>
+        {!isReadOnly && (
+          <Button onClick={handleSave} disabled={saving} className="gap-2">
+            <Save className="w-4 h-4" />
+            {saving ? 'Salvando...' : 'Salvar'}
+          </Button>
+        )}
+        {isReadOnly && (
+          <Badge className="bg-green-100 text-green-700 px-3 py-1.5 text-xs">Verificação finalizada — somente leitura</Badge>
+        )}
       </div>
 
       {/* Cabeçalho editável */}
@@ -93,7 +102,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
         )}
         <div className="space-y-1.5">
           <Label className="text-xs">Realizado por</Label>
-          <Input value={data.realizado_por || ''} onChange={e => setData(p => ({ ...p, realizado_por: e.target.value }))} />
+          <Input value={data.realizado_por || ''} onChange={e => setData(p => ({ ...p, realizado_por: e.target.value }))} disabled={isReadOnly} />
         </div>
       </div>
 
@@ -103,15 +112,15 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Identificação</Label>
-            <Input value={data.eq_referencia_identificacao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_identificacao: e.target.value }))} className="text-xs" />
+            <Input value={data.eq_referencia_identificacao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_identificacao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Descrição</Label>
-            <Input value={data.eq_referencia_descricao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_descricao: e.target.value }))} className="text-xs" />
+            <Input value={data.eq_referencia_descricao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_descricao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Data de Calibração</Label>
-            <Input type="date" value={data.eq_referencia_data_calibracao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_data_calibracao: e.target.value }))} className="text-xs" />
+            <Input type="date" value={data.eq_referencia_data_calibracao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_data_calibracao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
           </div>
         </div>
       </div>
@@ -123,11 +132,11 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs">Descrição da solução</Label>
-              <Input value={data.solucao_descricao || ''} onChange={e => setData(p => ({ ...p, solucao_descricao: e.target.value }))} className="text-xs" />
+              <Input value={data.solucao_descricao || ''} onChange={e => setData(p => ({ ...p, solucao_descricao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs">Lote</Label>
-              <Input value={data.solucao_lote || ''} onChange={e => setData(p => ({ ...p, solucao_lote: e.target.value }))} className="text-xs" />
+              <Input value={data.solucao_lote || ''} onChange={e => setData(p => ({ ...p, solucao_lote: e.target.value }))} className="text-xs" disabled={isReadOnly} />
             </div>
           </div>
           <p className="text-xs text-muted-foreground">Variação permitida: Sulfato de Sódio: 1,151–1,174 · Magnésio: 1,295–1,308</p>
@@ -176,21 +185,21 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                 <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {data.tipo === 'balanca' && (
-                    <td className="px-1 py-1"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" /></td>
+                    <td className="px-1 py-1"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" disabled={isReadOnly} /></td>
                   )}
                   {data.tipo === 'temperatura' && <>
-                    <td className="px-1 py-1"><Input value={r.valor_referencia} onChange={e => setReg(i, 'valor_referencia', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                    <td className="px-1 py-1"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                    <td className="px-1 py-1"><Input value={r.variacao} onChange={e => setReg(i, 'variacao', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
+                    <td className="px-1 py-1"><Input value={r.valor_referencia} onChange={e => setReg(i, 'valor_referencia', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1"><Input value={r.variacao} onChange={e => setReg(i, 'variacao', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
                   </>}
                   {data.tipo === 'densidade' && <>
-                    <td className="px-1 py-1"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-6 text-xs px-1.5" placeholder="HH:MM" /></td>
-                    <td className="px-1 py-1"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                    <td className="px-1 py-1"><Input value={r.densidade_com_amostra} onChange={e => setReg(i, 'densidade_com_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
-                    <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
+                    <td className="px-1 py-1"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-6 text-xs px-1.5" placeholder="HH:MM" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1"><Input value={r.densidade_com_amostra} onChange={e => setReg(i, 'densidade_com_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
                   </>}
                   <td className="px-1 py-1 text-center">
-                    <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)}>
+                    <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)} disabled={isReadOnly}>
                       <SelectTrigger className="h-6 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="aprovado">Aprovado</SelectItem>
@@ -199,7 +208,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     </Select>
                   </td>
                   <td className="px-1 py-1">
-                    <Input value={r.responsavel || ''} onFocus={() => { if (!r.responsavel && userName) setReg(i, 'responsavel', userName); }} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" />
+                    <Input value={r.responsavel || ''} onFocus={() => { if (!r.responsavel && userName && !isReadOnly) setReg(i, 'responsavel', userName); }} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" disabled={isReadOnly} />
                   </td>
                 </tr>
               ))}
@@ -211,15 +220,17 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
       {/* Outras informações */}
       <div className="space-y-1.5 max-w-lg">
         <Label className="text-xs">Outras Informações</Label>
-        <Textarea value={data.outras_informacoes || ''} onChange={e => setData(p => ({ ...p, outras_informacoes: e.target.value }))} className="h-20 text-xs" />
+        <Textarea value={data.outras_informacoes || ''} onChange={e => setData(p => ({ ...p, outras_informacoes: e.target.value }))} className="h-20 text-xs" disabled={isReadOnly} />
       </div>
 
       <div className="flex justify-end gap-2 pb-6">
         <Button variant="outline" onClick={onBack}>Voltar</Button>
-        <Button onClick={handleSave} disabled={saving} className="gap-2">
-          <Save className="w-4 h-4" />
-          {saving ? 'Salvando...' : 'Salvar'}
-        </Button>
+        {!isReadOnly && (
+          <Button onClick={handleSave} disabled={saving} className="gap-2">
+            <Save className="w-4 h-4" />
+            {saving ? 'Salvando...' : 'Salvar'}
+          </Button>
+        )}
       </div>
     </div>
   );
