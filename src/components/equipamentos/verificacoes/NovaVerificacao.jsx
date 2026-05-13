@@ -46,6 +46,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   const [eqRefId, setEqRefId] = useState('');
   const [eqRefDesc, setEqRefDesc] = useState('');
   const [eqRefCal, setEqRefCal] = useState('');
+  const [pesosPadrao, setPesosPadrao] = useState([]);
   const [solucaoDesc, setSolucaoDesc] = useState('');
   const [solucaoLote, setSolucaoLote] = useState('');
   const [registros, setRegistros] = useState(buildRegistros());
@@ -85,9 +86,31 @@ export default function NovaVerificacao({ onBack, onSaved }) {
       setMesAno(currentMonthSP());
       setRealizadoPor(user?.full_name || '');
       setRegistros(buildRegistros());
-      setEqRefCal(equipamento?.data_calibracao || '');
+      setEqRefCal('');
+      setEqRefId('');
+      setEqRefDesc('');
+
+      // Para balança: busca equipamentos do tipo Conjunto de Peso Padrão
+      if (tipo === 'balanca') {
+        base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
+          .then(data => {
+            const pesos = data.filter(eq =>
+              eq.categoria?.toLowerCase().includes('peso padrão') ||
+              eq.categoria?.toLowerCase().includes('peso padrao') ||
+              eq.nome?.toLowerCase().includes('peso padrão') ||
+              eq.nome?.toLowerCase().includes('peso padrao') ||
+              eq.categoria?.toLowerCase().includes('conjunto de peso')
+            );
+            setPesosPadrao(pesos);
+            if (pesos.length === 1) {
+              setEqRefId(pesos[0].identificacao_interna || '');
+              setEqRefDesc(pesos[0].nome || '');
+              setEqRefCal(pesos[0].data_calibracao || '');
+            }
+          });
+      }
     }
-  }, [step, equipamento, user]);
+  }, [step, equipamento, user, tipo]);
 
   const setReg = (idx, field, value) => {
     setRegistros(prev => prev.map((r, i) => i === idx ? { ...r, [field]: value } : r));
@@ -242,11 +265,30 @@ export default function NovaVerificacao({ onBack, onSaved }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Identificação</Label>
-            <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+            {tipo === 'balanca' && pesosPadrao.length > 0 ? (
+              <Select
+                value={eqRefId}
+                onValueChange={val => {
+                  const eq = pesosPadrao.find(p => p.identificacao_interna === val);
+                  setEqRefId(val);
+                  setEqRefDesc(eq?.nome || '');
+                  setEqRefCal(eq?.data_calibracao || '');
+                }}
+              >
+                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
+                <SelectContent>
+                  {pesosPadrao.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+            )}
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Descrição</Label>
-            <Input value={eqRefDesc} onChange={e => setEqRefDesc(e.target.value)} placeholder="Descrição" className="text-xs" />
+            <Input value={eqRefDesc} onChange={e => setEqRefDesc(e.target.value)} placeholder="Descrição" className="text-xs" disabled={tipo === 'balanca' && !!eqRefId} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Data de Calibração</Label>
