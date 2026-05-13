@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { formatMesAno } from '@/lib/dateUtils';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ChevronLeft, Save, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { openVerificacaoImpressao } from './VerificacaoDocumento';
 
 const TIPO_LABELS = { balanca: 'Balança', temperatura: 'Temperatura', densidade: 'Densidade' };
 
@@ -70,15 +71,21 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
             </p>
           </div>
         </div>
-        {!isReadOnly && (
-          <Button onClick={handleSave} disabled={saving} className="gap-2">
-            <Save className="w-4 h-4" />
-            {saving ? 'Salvando...' : 'Salvar'}
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => openVerificacaoImpressao(data)} className="gap-2">
+            <Printer className="w-4 h-4" />
+            Imprimir
           </Button>
-        )}
-        {isReadOnly && (
-          <Badge className="bg-green-100 text-green-700 px-3 py-1.5 text-xs">Verificação finalizada — somente leitura</Badge>
-        )}
+          {!isReadOnly && (
+            <Button onClick={handleSave} disabled={saving} className="gap-2">
+              <Save className="w-4 h-4" />
+              {saving ? 'Salvando...' : 'Salvar'}
+            </Button>
+          )}
+          {isReadOnly && (
+            <Badge className="bg-green-100 text-green-700 px-3 py-1.5 text-xs">Verificação finalizada — somente leitura</Badge>
+          )}
+        </div>
       </div>
 
       {/* Cabeçalho editável */}
