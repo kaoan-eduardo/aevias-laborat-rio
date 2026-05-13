@@ -89,12 +89,17 @@ export function buildBalancaHtml(v) {
   const rows = Array.from({ length: 31 }, (_, i) => {
     const r = registros[i] || {};
     const ativo = i < total;
+    const rubricaCell = ativo
+      ? (r.rubrica_url
+          ? `<img src="${r.rubrica_url}" style="height:12px;max-width:80px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${r.responsavel || ''}</span>`
+          : (r.responsavel || ''))
+      : '';
     return `
       <tr style="height:15px;${!ativo ? 'color:#bbb' : ''}">
         <td style="text-align:center;width:30px;${!ativo ? 'color:#ccc' : ''}">${i + 1}</td>
         <td style="width:180px">${ativo ? (r.valor_medido || '') : ''}</td>
         <td style="text-align:center">${ativo ? situacaoCell(r.situacao) : ''}</td>
-        <td>${ativo ? (r.responsavel || '') : ''}</td>
+        <td>${rubricaCell}</td>
       </tr>`;
   }).join('');
 
@@ -194,6 +199,11 @@ export function buildTemperaturaHtml(v) {
   const rows = Array.from({ length: 31 }, (_, i) => {
     const r = registros[i] || {};
     const ativo = i < total;
+    const rubricaCell = ativo
+      ? (r.rubrica_url
+          ? `<img src="${r.rubrica_url}" style="height:12px;max-width:80px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${r.responsavel || ''}</span>`
+          : (r.responsavel || ''))
+      : '';
     return `
       <tr style="height:15px">
         <td style="text-align:center;width:25px;${!ativo ? 'color:#ccc' : ''}">${i + 1}</td>
@@ -201,7 +211,7 @@ export function buildTemperaturaHtml(v) {
         <td style="width:110px">${ativo ? (r.valor_medido || '') : ''}</td>
         <td style="width:80px">${ativo ? (r.variacao || '') : ''}</td>
         <td style="text-align:center">${ativo ? situacaoCell(r.situacao) : ''}</td>
-        <td>${ativo ? (r.responsavel || '') : ''}</td>
+        <td>${rubricaCell}</td>
       </tr>`;
   }).join('');
 
@@ -316,6 +326,11 @@ export function buildDensidadeHtml(v) {
           return `${String(i+1).padStart(2,'0')}/${String(m).padStart(2,'0')}`;
         })()
       : '';
+    const rubricaCell = ativo
+      ? (r.rubrica_url
+          ? `<img src="${r.rubrica_url}" style="height:12px;max-width:80px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${r.responsavel || ''}</span>`
+          : (r.responsavel || ''))
+      : '';
     return `
       <tr style="height:15px">
         <td style="text-align:center;width:50px">${ativo ? diaStr : ''}</td>
@@ -324,7 +339,7 @@ export function buildDensidadeHtml(v) {
         <td style="width:80px;text-align:center">${ativo ? (r.densidade_com_amostra || '') : ''}</td>
         <td style="width:80px;text-align:center">${ativo ? (r.densidade_sem_amostra || '') : ''}</td>
         <td style="text-align:center">${ativo ? situacaoCell(r.situacao) : ''}</td>
-        <td>${ativo ? (r.responsavel || '') : ''}</td>
+        <td>${rubricaCell}</td>
       </tr>`;
   }).join('');
 
