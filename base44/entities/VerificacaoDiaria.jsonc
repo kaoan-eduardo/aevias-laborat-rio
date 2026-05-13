@@ -101,6 +101,10 @@
           },
           "responsavel": {
             "type": "string"
+          },
+          "rubrica_url": {
+            "type": "string",
+            "description": "Data URL da rubrica desenhada pelo respons\u00e1vel"
           }
         }
       }

@@ -37,6 +37,7 @@ function buildRegistros() {
     densidade_sem_amostra: '',
     situacao: '',
     responsavel: '',
+    rubrica_url: '',
   }));
 }
 
