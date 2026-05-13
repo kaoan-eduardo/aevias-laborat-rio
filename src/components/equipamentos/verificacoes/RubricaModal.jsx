@@ -86,7 +86,7 @@ export default function RubricaModal({ nome, onConfirm, onCancel }) {
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50"
       onMouseDown={e => e.stopPropagation()}
     >
-      <div className="bg-white rounded-2xl shadow-2xl p-6 w-[380px] space-y-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-[760px] space-y-4">
         <div className="flex items-center gap-2">
           <PenLine className="w-5 h-5 text-[#566E3D]" />
           <div>
@@ -98,8 +98,8 @@ export default function RubricaModal({ nome, onConfirm, onCancel }) {
         <div className="border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-white">
           <canvas
             ref={canvasRef}
-            width={340}
-            height={130}
+            width={680}
+            height={260}
             className="w-full cursor-crosshair block"
             style={{ touchAction: 'none' }}
             onMouseDown={startDraw}
