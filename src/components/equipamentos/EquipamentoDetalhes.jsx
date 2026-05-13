@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import DocUploadSection from './DocUploadSection';
+import VerificacoesLista from './verificacoes/VerificacoesLista';
 import {
   STATUS_EQUIPAMENTO,
   PERIODICIDADE_LABELS,
@@ -127,17 +128,14 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
             canEdit={canEdit}
             onUpdate={handleDocUpdate}
           />
+        </div>
 
-          <Separator />
+        <Separator />
 
-          <DocUploadSection
-            title="Verificação Interna Diária"
-            field="docs_verificacao_diaria"
-            docs={eq.docs_verificacao_diaria || []}
-            equipamentoId={eq.id}
-            canEdit={canEdit}
-            onUpdate={handleDocUpdate}
-          />
+        {/* Verificações Diárias */}
+        <div className="px-6 py-5 space-y-3">
+          <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Verificações Diárias</h3>
+          <VerificacoesLista equipamentoId={eq.id} />
         </div>
 
         {/* Histórico de status */}
