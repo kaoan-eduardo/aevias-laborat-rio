@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatMesAno } from '@/lib/dateUtils';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { Plus, ChevronLeft, ClipboardCheck, ClipboardList } from 'lucide-react';
@@ -101,9 +102,7 @@ export default function Verificacoes() {
                 </thead>
                 <tbody className="divide-y divide-border">
                   {visibleVerificacoes.map(v => {
-                    const mesLabel = v.mes_ano
-                      ? new Date(v.mes_ano + '-01').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
-                      : '—';
+                    const mesLabel = formatMesAno(v.mes_ano);
                     return (
                       <tr key={v.id} className="hover:bg-muted/30 transition-colors">
                         <td className="px-4 py-3">
