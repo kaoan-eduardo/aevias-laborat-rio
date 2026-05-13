@@ -1,13 +1,23 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { formatMesAno } from '@/lib/dateUtils';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ChevronLeft, Save, PenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import RubricaModal from './RubricaModal';
+
+const BALANCA_MIN = 1991.11;
+const BALANCA_MAX = 2011.72;
+
+function avaliarSituacaoBalanca(valorStr) {
+  const v = parseFloat(String(valorStr).replace(',', '.'));
+  if (isNaN(v) || valorStr === '') return '';
+  return (v >= BALANCA_MIN && v <= BALANCA_MAX) ? 'aprovado' : 'reprovado';
+}
 
 
 const TIPO_LABELS = { balanca: 'Balança', temperatura: 'Temperatura', densidade: 'Densidade' };
@@ -22,6 +32,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   const [data, setData] = useState({ ...verificacao });
   const [saving, setSaving] = useState(false);
   const [userName, setUserName] = useState('');
+  const [rubricaModal, setRubricaModal] = useState(null); // { idx }
 
   // Bloqueado para não-gestores quando já foi finalizado (aprovado ou reprovado)
   const isFinalizado = data.resultado_geral !== 'em_andamento';
@@ -40,6 +51,39 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
     }));
   };
 
+  // Balança: ao digitar resultado, avalia situação automaticamente
+  const setRegBalanca = (idx, valor) => {
+    const situacao = avaliarSituacaoBalanca(valor);
+    setData(prev => ({
+      ...prev,
+      registros: prev.registros.map((r, i) =>
+        i === idx ? { ...r, valor_medido: valor, situacao } : r
+      ),
+    }));
+  };
+
+  const abrirRubrica = (idx) => {
+    if (isReadOnly) return;
+    // pré-preenche nome se ainda não tiver
+    if (!data.registros[idx].responsavel && userName) {
+      setReg(idx, 'responsavel', userName);
+    }
+    setRubricaModal({ idx });
+  };
+
+  const confirmarRubrica = (dataUrl) => {
+    const { idx } = rubricaModal;
+    setData(prev => ({
+      ...prev,
+      registros: prev.registros.map((r, i) =>
+        i === idx
+          ? { ...r, responsavel: r.responsavel || userName, rubrica_url: dataUrl }
+          : r
+      ),
+    }));
+    setRubricaModal(null);
+  };
+
   const mesLabel = formatMesAno(data.mes_ano);
 
   const diasNoMes = data.mes_ano
@@ -55,6 +99,13 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-5">
+      {rubricaModal && (
+        <RubricaModal
+          nome={data.registros[rubricaModal.idx]?.responsavel || userName}
+          onConfirm={confirmarRubrica}
+          onCancel={() => setRubricaModal(null)}
+        />
+      )}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={onBack}><ChevronLeft className="w-5 h-5" /></Button>
@@ -188,7 +239,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                 <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {data.tipo === 'balanca' && (
-                    <td className="px-1 py-1"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-1"><Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" disabled={isReadOnly} /></td>
                   )}
                   {data.tipo === 'temperatura' && <>
                     <td className="px-1 py-1"><Input value={r.valor_referencia} onChange={e => setReg(i, 'valor_referencia', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
@@ -202,16 +253,39 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
                   </>}
                   <td className="px-1 py-1 text-center">
-                    <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)} disabled={isReadOnly}>
-                      <SelectTrigger className="h-6 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="aprovado">Aprovado</SelectItem>
-                        <SelectItem value="reprovado">Reprovado</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {data.tipo === 'balanca' ? (
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
+                        {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
+                      </span>
+                    ) : (
+                      <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)} disabled={isReadOnly}>
+                        <SelectTrigger className="h-6 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="aprovado">Aprovado</SelectItem>
+                          <SelectItem value="reprovado">Reprovado</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </td>
                   <td className="px-1 py-1">
-                    <Input value={r.responsavel || ''} onFocus={() => { if (!r.responsavel && userName && !isReadOnly) setReg(i, 'responsavel', userName); }} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" disabled={isReadOnly} />
+                    {data.tipo === 'balanca' ? (
+                      <button
+                        onClick={() => abrirRubrica(i)}
+                        disabled={isReadOnly || !r.valor_medido}
+                        className={`flex items-center gap-1.5 h-6 px-2 rounded border text-xs transition-all w-full
+                          ${r.rubrica_url
+                            ? 'border-green-300 bg-green-50 text-green-700'
+                            : 'border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary'
+                          } disabled:opacity-40 disabled:cursor-not-allowed`}
+                      >
+                        {r.rubrica_url
+                          ? <><img src={r.rubrica_url} alt="rubrica" className="h-4 object-contain" /><span className="truncate text-[10px]">{r.responsavel}</span></>
+                          : <><PenLine className="w-3 h-3" /><span className="truncate">{r.responsavel || 'Rubricar'}</span></>
+                        }
+                      </button>
+                    ) : (
+                      <Input value={r.responsavel || ''} onFocus={() => { if (!r.responsavel && userName && !isReadOnly) setReg(i, 'responsavel', userName); }} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" disabled={isReadOnly} />
+                    )}
                   </td>
                 </tr>
               ))}

@@ -2,12 +2,22 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { currentMonthSP } from '@/lib/dateUtils';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import RubricaModal from './RubricaModal';
+
+const BALANCA_MIN = 1991.11;
+const BALANCA_MAX = 2011.72;
+
+function avaliarSituacaoBalanca(valorStr) {
+  const v = parseFloat(String(valorStr).replace(',', '.'));
+  if (isNaN(v) || valorStr === '') return '';
+  return (v >= BALANCA_MIN && v <= BALANCA_MAX) ? 'aprovado' : 'reprovado';
+}
 
 const TIPOS = [
   { value: 'balanca', label: 'Balança', desc: 'Verificação de massa com peso padrão' },
@@ -51,6 +61,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   const [solucaoLote, setSolucaoLote] = useState('');
   const [registros, setRegistros] = useState(buildRegistros());
   const [saving, setSaving] = useState(false);
+  const [rubricaModal, setRubricaModal] = useState(null); // { idx }
 
   // Categorias de equipamento por tipo de verificação
   const CATEGORIAS_POR_TIPO = {
@@ -114,6 +125,30 @@ export default function NovaVerificacao({ onBack, onSaved }) {
 
   const setReg = (idx, field, value) => {
     setRegistros(prev => prev.map((r, i) => i === idx ? { ...r, [field]: value } : r));
+  };
+
+  const setRegBalanca = (idx, valor) => {
+    const situacao = avaliarSituacaoBalanca(valor);
+    setRegistros(prev => prev.map((r, i) =>
+      i === idx ? { ...r, valor_medido: valor, situacao } : r
+    ));
+  };
+
+  const abrirRubrica = (idx) => {
+    if (!registros[idx].responsavel && user?.full_name) {
+      setReg(idx, 'responsavel', user.full_name);
+    }
+    setRubricaModal({ idx });
+  };
+
+  const confirmarRubrica = (dataUrl) => {
+    const { idx } = rubricaModal;
+    setRegistros(prev => prev.map((r, i) =>
+      i === idx
+        ? { ...r, responsavel: r.responsavel || user?.full_name || '', rubrica_url: dataUrl }
+        : r
+    ));
+    setRubricaModal(null);
   };
 
   const diasNoMes = mesAno
@@ -215,6 +250,13 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   // ── STEP 3: Formulário de registro ──
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-5">
+      {rubricaModal && (
+        <RubricaModal
+          nome={registros[rubricaModal.idx]?.responsavel || user?.full_name || ''}
+          onConfirm={confirmarRubrica}
+          onCancel={() => setRubricaModal(null)}
+        />
+      )}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => setStep(tipo === 'densidade' ? 1 : 2)}><ChevronLeft className="w-5 h-5" /></Button>
@@ -362,11 +404,11 @@ export default function NovaVerificacao({ onBack, onSaved }) {
             </thead>
             <tbody className="divide-y divide-border">
               {registros.slice(0, diasNoMes).map((r, i) => (
-                <tr key={i} className="hover:bg-muted/20">
+                <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {tipo === 'balanca' && (
                     <td className="px-1 py-1">
-                      <Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" />
+                      <Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" />
                     </td>
                   )}
                   {tipo === 'temperatura' && <>
@@ -381,16 +423,39 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                     <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
                   </>}
                   <td className="px-1 py-1 text-center">
-                    <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)}>
-                      <SelectTrigger className="h-6 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="aprovado">Aprovado</SelectItem>
-                        <SelectItem value="reprovado">Reprovado</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {tipo === 'balanca' ? (
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
+                        {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
+                      </span>
+                    ) : (
+                      <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)}>
+                        <SelectTrigger className="h-6 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="aprovado">Aprovado</SelectItem>
+                          <SelectItem value="reprovado">Reprovado</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </td>
                   <td className="px-1 py-1">
-                    <Input value={r.responsavel} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" />
+                    {tipo === 'balanca' ? (
+                      <button
+                        onClick={() => abrirRubrica(i)}
+                        disabled={!r.valor_medido}
+                        className={`flex items-center gap-1.5 h-6 px-2 rounded border text-xs transition-all w-full
+                          ${r.rubrica_url
+                            ? 'border-green-300 bg-green-50 text-green-700'
+                            : 'border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary'
+                          } disabled:opacity-40 disabled:cursor-not-allowed`}
+                      >
+                        {r.rubrica_url
+                          ? <><img src={r.rubrica_url} alt="rubrica" className="h-4 object-contain" /><span className="truncate text-[10px]">{r.responsavel}</span></>
+                          : <><PenLine className="w-3 h-3" /><span className="truncate">{r.responsavel || 'Rubricar'}</span></>
+                        }
+                      </button>
+                    ) : (
+                      <Input value={r.responsavel} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" />
+                    )}
                   </td>
                 </tr>
               ))}
