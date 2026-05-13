@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { formatMesAno } from '@/lib/dateUtils';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Plus, ChevronLeft, ClipboardCheck, ClipboardList } from 'lucide-react';
+import { Plus, ChevronLeft, ClipboardCheck, ClipboardList, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import NovaVerificacao from '@/components/equipamentos/verificacoes/NovaVerificacao';
 import VerificacaoDetalhe from '@/components/equipamentos/verificacoes/VerificacaoDetalhe';
+import { openVerificacaoImpressao } from '@/components/equipamentos/verificacoes/VerificacaoDocumento';
 
 const RESULTADO_COLOR = {
   em_andamento: 'bg-yellow-100 text-yellow-700',
@@ -118,13 +119,22 @@ export default function Verificacoes() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3 text-center">
-                          <Button
-                            variant="ghost" size="sm" className="text-xs gap-1.5"
-                            onClick={() => { setSelected(v); setView('detalhe'); }}
-                          >
-                            <ClipboardCheck className="w-3.5 h-3.5" />
-                            Abrir
-                          </Button>
+                          <div className="flex items-center justify-center gap-1">
+                            <Button
+                              variant="ghost" size="sm" className="text-xs gap-1.5"
+                              onClick={() => { setSelected(v); setView('detalhe'); }}
+                            >
+                              <ClipboardCheck className="w-3.5 h-3.5" />
+                              Abrir
+                            </Button>
+                            <Button
+                              variant="ghost" size="sm" className="text-xs gap-1.5"
+                              onClick={() => openVerificacaoImpressao(v)}
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                              Imprimir
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     );
