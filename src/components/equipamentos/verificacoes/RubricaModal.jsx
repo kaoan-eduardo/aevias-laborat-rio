@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { PenLine, RotateCcw, Check } from 'lucide-react';
 
@@ -9,31 +10,40 @@ export default function RubricaModal({ nome, onConfirm, onCancel }) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = '#00233B';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   }, []);
+
+  const applyCtxStyle = (ctx) => {
+    ctx.strokeStyle = '#00233B';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  };
 
   const getPos = (e, canvas) => {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const src = e.touches ? e.touches[0] : e;
     return {
-      x: (clientX - rect.left) * scaleX,
-      y: (clientY - rect.top) * scaleY,
+      x: (src.clientX - rect.left) * scaleX,
+      y: (src.clientY - rect.top) * scaleY,
     };
   };
 
   const startDraw = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
+    applyCtxStyle(ctx);
     const pos = getPos(e, canvas);
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
@@ -43,20 +53,25 @@ export default function RubricaModal({ nome, onConfirm, onCancel }) {
 
   const draw = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!drawing) return;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
+    applyCtxStyle(ctx);
     const pos = getPos(e, canvas);
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
   };
 
-  const stopDraw = () => setDrawing(false);
+  const stopDraw = (e) => {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    setDrawing(false);
+  };
 
   const clear = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     setHasDrawn(false);
   };
@@ -66,23 +81,27 @@ export default function RubricaModal({ nome, onConfirm, onCancel }) {
     onConfirm(dataUrl);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-2xl shadow-2xl p-6 w-[360px] space-y-4">
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50"
+      onMouseDown={e => e.stopPropagation()}
+    >
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-[380px] space-y-4">
         <div className="flex items-center gap-2">
           <PenLine className="w-5 h-5 text-[#566E3D]" />
           <div>
             <p className="font-semibold text-[#00233B] text-sm">Rubrica do Responsável</p>
-            <p className="text-xs text-muted-foreground">{nome}</p>
+            <p className="text-xs text-gray-500">{nome}</p>
           </div>
         </div>
 
-        <div className="border-2 border-dashed border-[#EFEBDC] rounded-xl overflow-hidden bg-[#F2F1EF] touch-none">
+        <div className="border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-white">
           <canvas
             ref={canvasRef}
-            width={320}
-            height={120}
-            className="w-full cursor-crosshair"
+            width={340}
+            height={130}
+            className="w-full cursor-crosshair block"
+            style={{ touchAction: 'none' }}
             onMouseDown={startDraw}
             onMouseMove={draw}
             onMouseUp={stopDraw}
@@ -92,7 +111,7 @@ export default function RubricaModal({ nome, onConfirm, onCancel }) {
             onTouchEnd={stopDraw}
           />
         </div>
-        <p className="text-xs text-center text-muted-foreground">Desenhe sua rubrica acima</p>
+        <p className="text-xs text-center text-gray-400">Desenhe sua rubrica acima</p>
 
         <div className="flex gap-2 justify-end">
           <Button variant="ghost" size="sm" onClick={clear} className="gap-1 text-xs">
@@ -101,11 +120,17 @@ export default function RubricaModal({ nome, onConfirm, onCancel }) {
           <Button variant="outline" size="sm" onClick={onCancel} className="text-xs">
             Cancelar
           </Button>
-          <Button size="sm" onClick={confirm} disabled={!hasDrawn} className="gap-1 text-xs bg-[#566E3D] hover:bg-[#566E3D]/90">
+          <Button
+            size="sm"
+            onClick={confirm}
+            disabled={!hasDrawn}
+            className="gap-1 text-xs bg-[#566E3D] hover:bg-[#566E3D]/90 text-white"
+          >
             <Check className="w-3 h-3" /> Confirmar
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
