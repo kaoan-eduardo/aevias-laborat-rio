@@ -122,7 +122,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-[#566E3D]" />
-              <h3 className="font-exo text-lg font-bold text-[#00233B]">Fichas de Serviço Recentes</h3>
+              <h3 className="font-exo text-lg font-bold text-[#00233B]">FAS Recentes</h3>
             </div>
             <Link to="/fas" className="text-sm text-[#566E3D] font-semibold flex items-center gap-1 hover:opacity-70 transition-opacity">
               Ver todas <ChevronRight className="w-4 h-4" />
