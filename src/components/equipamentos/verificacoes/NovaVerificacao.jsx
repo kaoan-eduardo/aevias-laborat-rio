@@ -67,7 +67,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   // Categorias de equipamento por tipo de verificação
   const CATEGORIAS_POR_TIPO = {
     balanca: ['Balança', 'balanca', 'balança'],
-    temperatura: ['Estufa', 'estufa', 'Banho Maria', 'banho maria', 'Banho-Maria', 'banho-maria', 'Forno', 'forno'],
+    temperatura: ['Temperatura', 'temperatura', 'Estufa', 'estufa', 'Banho Maria', 'banho maria', 'Banho-Maria', 'banho-maria', 'Forno', 'forno'],
   };
 
   useEffect(() => {
