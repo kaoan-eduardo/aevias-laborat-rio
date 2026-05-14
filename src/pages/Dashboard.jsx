@@ -78,7 +78,7 @@ export default function Dashboard() {
           style={{ filter: 'saturate(0.3) hue-rotate(190deg) brightness(0.5)' }}
         />
        {/* Overlay gradient com 50% de opacidade na cor final */}
-<div className="absolute right-0 top-0 h-full w-[55%] bg-gradient-to-l from-transparent to-[#00233B]/100" />
+<div className="absolute right-0 top-0 h-full w-[55%] bg-gradient-to-l from-transparent to-[#00233B]/75" />
 
         {/* Content */}
         <div className="relative z-10 p-8 max-w-lg">
