@@ -21,7 +21,7 @@ export default function Clientes() {
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.Cliente.list('-created_date');
+    const data = await base44.entities.Cliente.list('codigo');
     setClientes(data);
     setLoading(false);
   };
