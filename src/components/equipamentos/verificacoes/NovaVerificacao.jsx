@@ -409,86 +409,59 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {tipo === 'balanca' && (
                     <td className="px-1 py-1">
-  <Input 
-    type="number"
-    value={r.valor_medido} 
-    onChange={e => {
-      const medido = e.target.value;
-      const ref = r.valor_referencia;
-      
-      setReg(i, 'valor_medido', medido);
-      
-      // Lógica de cálculo ou limpeza
-      if (medido !== '' && ref !== '') {
-        const diff = Math.abs(parseFloat(ref) - parseFloat(medido));
-        setReg(i, 'variacao', diff.toFixed(2));
-      } else {
-        // Se qualquer um dos dois estiver vazio, limpa a variação no estado
-        setReg(i, 'variacao', '');
-      }
-    }} 
-    className="h-6 text-xs px-1.5" 
-    placeholder="°C" 
-  />
-</td>
+                      <Input
+                        type="number"
+                        value={r.valor_medido}
+                        onChange={e => setRegBalanca(i, e.target.value)}
+                        className="h-6 text-xs px-1.5"
+                        placeholder="g"
+                      />
+                    </td>
                   )}
-{tipo === 'temperatura' && (
-  <>
-    <td className="px-1 py-1">
-      <Input 
-        type="number"
-        value={r.valor_referencia} 
-        onChange={e => {
-      const medido = e.target.value;
-      const ref = r.valor_referencia;
-      
-      setReg(i, 'valor_medido', medido);
-      
-      // Lógica de cálculo ou limpeza
-      if (medido !== '' && ref !== '') {
-        const diff = Math.abs(parseFloat(ref) - parseFloat(medido));
-        setReg(i, 'variacao', diff.toFixed(2));
-      } else {
-        // Se qualquer um dos dois estiver vazio, limpa a variação no estado
-        setReg(i, 'variacao', '');
-      }
-    }} 
-    className="h-6 text-xs px-1.5" 
-    placeholder="°C" 
-  />
-    <td className="px-1 py-1">
-      <Input 
-        type="number"
-        value={r.valor_medido} 
-        onChange={e => {
-          const medido = e.target.value;
-          const ref = r.valor_referencia;
-          
-          // Atualiza o valor medido
-          setReg(i, 'valor_medido', medido);
-          
-          // Calcula a variação automaticamente se ambos os valores existirem
-          if (medido !== '' && ref !== '') {
-            const diff = Math.abs(parseFloat(ref) - parseFloat(medido));
-            // Limitamos as casas decimais para manter a UI limpa
-            setReg(i, 'variacao', diff.toFixed(2));
-          }
-        }} 
-        className="h-6 text-xs px-1.5" 
-        placeholder="°C" 
-      />
-    </td>
-    <td className="px-1 py-1">
-      <Input 
-        value={r.variacao} 
-        readOnly 
-        tabIndex="-1" // Pula o campo no teclado para melhor UX
-        className="h-6 text-xs px-1.5 bg-slate-50 cursor-not-allowed opacity-80" 
-        placeholder="Δ" 
-      />
-    </td>
-  </>
-)}
+                  {tipo === 'temperatura' && <>
+                    <td className="px-1 py-1">
+                      <Input
+                        type="number"
+                        value={r.valor_referencia}
+                        onChange={e => {
+                          const ref = e.target.value;
+                          setReg(i, 'valor_referencia', ref);
+                          if (ref !== '' && r.valor_medido !== '') {
+                            setReg(i, 'variacao', Math.abs(parseFloat(ref) - parseFloat(r.valor_medido)).toFixed(2));
+                          } else {
+                            setReg(i, 'variacao', '');
+                          }
+                        }}
+                        className="h-6 text-xs px-1.5"
+                        placeholder="°C"
+                      />
+                    </td>
+                    <td className="px-1 py-1">
+                      <Input
+                        type="number"
+                        value={r.valor_medido}
+                        onChange={e => {
+                          const medido = e.target.value;
+                          setReg(i, 'valor_medido', medido);
+                          if (medido !== '' && r.valor_referencia !== '') {
+                            setReg(i, 'variacao', Math.abs(parseFloat(r.valor_referencia) - parseFloat(medido)).toFixed(2));
+                          } else {
+                            setReg(i, 'variacao', '');
+                          }
+                        }}
+                        className="h-6 text-xs px-1.5"
+                        placeholder="°C"
+                      />
+                    </td>
+                    <td className="px-1 py-1">
+                      <Input
+                        value={r.variacao}
+                        readOnly
+                        className="h-6 text-xs px-1.5 bg-slate-50 cursor-not-allowed opacity-80"
+                        placeholder="Δ"
+                      />
+                    </td>
+                  </>}
                   {tipo === 'densidade' && <>
                     <td className="px-1 py-1"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-6 text-xs px-1.5" placeholder="HH:MM" /></td>
                     <td className="px-1 py-1"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
