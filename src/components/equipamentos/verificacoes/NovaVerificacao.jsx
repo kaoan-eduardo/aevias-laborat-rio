@@ -438,11 +438,24 @@ export default function NovaVerificacao({ onBack, onSaved }) {
       <Input 
         type="number"
         value={r.valor_referencia} 
-        onChange={e => setReg(i, 'valor_referencia', e.target.value)} 
-        className="h-6 text-xs px-1.5" 
-        placeholder="°C" 
-      />
-    </td>
+        onChange={e => {
+      const medido = e.target.value;
+      const ref = r.valor_referencia;
+      
+      setReg(i, 'valor_medido', medido);
+      
+      // Lógica de cálculo ou limpeza
+      if (medido !== '' && ref !== '') {
+        const diff = Math.abs(parseFloat(ref) - parseFloat(medido));
+        setReg(i, 'variacao', diff.toFixed(2));
+      } else {
+        // Se qualquer um dos dois estiver vazio, limpa a variação no estado
+        setReg(i, 'variacao', '');
+      }
+    }} 
+    className="h-6 text-xs px-1.5" 
+    placeholder="°C" 
+  />
     <td className="px-1 py-1">
       <Input 
         type="number"
