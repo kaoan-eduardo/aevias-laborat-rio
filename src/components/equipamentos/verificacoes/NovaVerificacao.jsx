@@ -412,11 +412,50 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                       <Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" />
                     </td>
                   )}
-                  {tipo === 'temperatura' && <>
-                    <td className="px-1 py-1"><Input value={r.valor_referencia} onChange={e => setReg(i, 'valor_referencia', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                    <td className="px-1 py-1"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                    <td className="px-1 py-1"><Input value={r.variacao} onChange={e => setReg(i, 'variacao', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                  </>}
+{tipo === 'temperatura' && (
+  <>
+    <td className="px-1 py-1">
+      <Input 
+        type="number"
+        value={r.valor_referencia} 
+        onChange={e => setReg(i, 'valor_referencia', e.target.value)} 
+        className="h-6 text-xs px-1.5" 
+        placeholder="°C" 
+      />
+    </td>
+    <td className="px-1 py-1">
+      <Input 
+        type="number"
+        value={r.valor_medido} 
+        onChange={e => {
+          const medido = e.target.value;
+          const ref = r.valor_referencia;
+          
+          // Atualiza o valor medido
+          setReg(i, 'valor_medido', medido);
+          
+          // Calcula a variação automaticamente se ambos os valores existirem
+          if (medido !== '' && ref !== '') {
+            const diff = Math.abs(parseFloat(ref) - parseFloat(medido));
+            // Limitamos as casas decimais para manter a UI limpa
+            setReg(i, 'variacao', diff.toFixed(2));
+          }
+        }} 
+        className="h-6 text-xs px-1.5" 
+        placeholder="°C" 
+      />
+    </td>
+    <td className="px-1 py-1">
+      <Input 
+        value={r.variacao} 
+        readOnly 
+        tabIndex="-1" // Pula o campo no teclado para melhor UX
+        className="h-6 text-xs px-1.5 bg-slate-50 cursor-not-allowed opacity-80" 
+        placeholder="Δ" 
+      />
+    </td>
+  </>
+)}
                   {tipo === 'densidade' && <>
                     <td className="px-1 py-1"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-6 text-xs px-1.5" placeholder="HH:MM" /></td>
                     <td className="px-1 py-1"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
