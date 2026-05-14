@@ -98,9 +98,24 @@ export default function EquipamentoModal({ open, onClose, equipamento, onSaved }
               <Input value={form.nome} onChange={e => set('nome', e.target.value)} placeholder="Nome do equipamento" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs">Categoria *</Label>
-              <Input value={form.categoria} onChange={e => set('categoria', e.target.value)} placeholder="Ex: Medição, Pesagem..." />
-            </div>
+  <Label htmlFor="categoria" className="text-xs font-medium">
+    Categoria *
+  </Label>
+  
+  <Select 
+    value={form.categoria} 
+    onValueChange={(value) => set('categoria', value)}
+  >
+    <SelectTrigger id="categoria" className="w-full">
+      <SelectValue placeholder="Selecione uma categoria" />
+    </SelectTrigger>
+    
+    <SelectContent>
+      <SelectItem value="Temperatura">Temperatura</SelectItem>
+      <SelectItem value="Balança">Balança</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
             <div className="space-y-1.5">
               <Label className="text-xs">Precisão</Label>
               <Input value={form.precisao} onChange={e => set('precisao', e.target.value)} placeholder="Ex: ±0,01 mm" />
