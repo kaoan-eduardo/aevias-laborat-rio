@@ -409,8 +409,28 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {tipo === 'balanca' && (
                     <td className="px-1 py-1">
-                      <Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" />
-                    </td>
+  <Input 
+    type="number"
+    value={r.valor_medido} 
+    onChange={e => {
+      const medido = e.target.value;
+      const ref = r.valor_referencia;
+      
+      setReg(i, 'valor_medido', medido);
+      
+      // Lógica de cálculo ou limpeza
+      if (medido !== '' && ref !== '') {
+        const diff = Math.abs(parseFloat(ref) - parseFloat(medido));
+        setReg(i, 'variacao', diff.toFixed(2));
+      } else {
+        // Se qualquer um dos dois estiver vazio, limpa a variação no estado
+        setReg(i, 'variacao', '');
+      }
+    }} 
+    className="h-6 text-xs px-1.5" 
+    placeholder="°C" 
+  />
+</td>
                   )}
 {tipo === 'temperatura' && (
   <>
