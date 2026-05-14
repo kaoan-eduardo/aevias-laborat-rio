@@ -136,8 +136,12 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
 
   const setRegDensidade = (idx, field, value, currentReg) => {
     const updated = { ...currentReg, [field]: value };
-    if (field === 'temperatura' && value !== '' && !currentReg.horario) {
-      updated.horario = getHorarioSP();
+    if (field === 'temperatura') {
+      if (value !== '' && !currentReg.horario) {
+        updated.horario = getHorarioSP();
+      } else if (value === '') {
+        updated.horario = '';
+      }
     }
     updated.situacao = avaliarSituacaoDensidade(data.solucao_descricao, updated.densidade_com_amostra, updated.densidade_sem_amostra);
     setData(prev => ({

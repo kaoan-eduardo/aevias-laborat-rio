@@ -230,9 +230,12 @@ export default function NovaVerificacao({ onBack, onSaved }) {
 
   const setRegDensidade = (idx, field, value, currentReg) => {
     const updated = { ...currentReg, [field]: value };
-    // Preenche horário automaticamente quando temperatura é digitada
-    if (field === 'temperatura' && value !== '' && !currentReg.horario) {
-      updated.horario = getHorarioSP();
+    if (field === 'temperatura') {
+      if (value !== '' && !currentReg.horario) {
+        updated.horario = getHorarioSP();
+      } else if (value === '') {
+        updated.horario = '';
+      }
     }
     updated.situacao = avaliarSituacaoDensidade(solucaoDesc, updated.densidade_com_amostra, updated.densidade_sem_amostra);
     setRegistros(prev => prev.map((r, i) => i === idx ? updated : r));
