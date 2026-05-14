@@ -107,8 +107,14 @@ export default function Verificacoes() {
                     return (
                       <tr key={v.id} className="hover:bg-muted/30 transition-colors">
                         <td className="px-4 py-3">
-                          <span className="font-mono-data text-xs font-semibold text-primary">{v.equipamento_identificacao}</span>
-                          <span className="ml-2 text-muted-foreground text-xs">{v.equipamento_nome}</span>
+                          {v.tipo === 'densidade' ? (
+                            <span className="text-xs text-foreground font-medium">{v.solucao_descricao || 'Verificação de Densidade'}</span>
+                          ) : (
+                            <>
+                              <span className="font-mono-data text-xs font-semibold text-primary">{v.equipamento_identificacao}</span>
+                              <span className="ml-2 text-muted-foreground text-xs">{v.equipamento_nome}</span>
+                            </>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-xs text-muted-foreground">{TIPO_LABELS[v.tipo] || v.tipo}</td>
                         <td className="px-4 py-3 text-xs capitalize text-muted-foreground">{mesLabel}</td>
