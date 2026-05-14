@@ -54,7 +54,7 @@ export default function Dashboard() {
   const STAT_CARDS = [
     { label: 'Clientes', value: stats.clientes, sub: 'cadastrados', icon: Users, path: '/clientes', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
     { label: 'Ensaios', value: stats.ensaios, sub: 'no catálogo', icon: FlaskConical, path: '/ensaios', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
-    { label: 'Fichas de Serviço (FAS)', value: stats.fas, sub: 'fichas registradas', icon: FileText, path: '/fas', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
+    { label: 'FAS', value: stats.fas, sub: 'fichas registradas', icon: FileText, path: '/fas', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
     { label: 'Amostras recebidas', value: stats.amostras, sub: 'esta semana', icon: Inbox, path: '/recebimento', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
   ];
 
