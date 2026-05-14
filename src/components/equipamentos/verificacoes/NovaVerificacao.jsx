@@ -58,6 +58,26 @@ function avaliarSituacaoTemperatura(refStr, variacaoStr) {
   return variacao <= limite ? 'aprovado' : 'reprovado';
 }
 
+const LIMITES_DENSIDADE = {
+  'Sulfato de Sódio':    { min: 1.151, max: 1.174 },
+  'Sulfato de Magnésio': { min: 1.295, max: 1.308 },
+};
+
+function avaliarSituacaoDensidade(solucao, comAmostra, semAmostra) {
+  const limites = LIMITES_DENSIDADE[solucao];
+  if (!limites) return '';
+  const com = parseFloat(String(comAmostra).replace(',', '.'));
+  const sem = parseFloat(String(semAmostra).replace(',', '.'));
+  if (isNaN(com) || isNaN(sem) || comAmostra === '' || semAmostra === '') return '';
+  const comOk = com >= limites.min && com <= limites.max;
+  const semOk = sem >= limites.min && sem <= limites.max;
+  return (comOk && semOk) ? 'aprovado' : 'reprovado';
+}
+
+function getHorarioSP() {
+  return new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
 const TIPOS = [
   { value: 'balanca', label: 'Balança', desc: 'Verificação de massa com peso padrão' },
   { value: 'temperatura', label: 'Temperatura', desc: 'Verificação de termômetros e fornos' },
@@ -107,6 +127,8 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     balanca: ['Balança', 'balanca', 'balança'],
     temperatura: ['Temperatura', 'temperatura', 'Estufa', 'estufa', 'Banho Maria', 'banho maria', 'Banho-Maria', 'banho-maria', 'Forno', 'forno'],
   };
+
+  const [vidrarias, setVidrarias] = useState([]);
 
   useEffect(() => {
     if (step === 2 && tipo) {
@@ -173,6 +195,13 @@ export default function NovaVerificacao({ onBack, onSaved }) {
             }
           });
       }
+
+      if (tipo === 'densidade') {
+        base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
+          .then(data => {
+            setVidrarias(data.filter(eq => eq.categoria === 'Vidraria'));
+          });
+      }
     }
   }, [step, equipamento, user, tipo]);
 
@@ -197,6 +226,16 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     setRegistros(prev => prev.map((r, i) =>
       i === idx ? { ...r, [field]: value, variacao, situacao } : r
     ));
+  };
+
+  const setRegDensidade = (idx, field, value, currentReg) => {
+    const updated = { ...currentReg, [field]: value };
+    // Preenche horário automaticamente quando temperatura é digitada
+    if (field === 'temperatura' && value !== '' && !currentReg.horario) {
+      updated.horario = getHorarioSP();
+    }
+    updated.situacao = avaliarSituacaoDensidade(solucaoDesc, updated.densidade_com_amostra, updated.densidade_sem_amostra);
+    setRegistros(prev => prev.map((r, i) => i === idx ? updated : r));
   };
 
   const confirmarRubrica = (idx, dataUrl) => {
@@ -384,11 +423,26 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                   ))}
                 </SelectContent>
               </Select>
+            ) : tipo === 'densidade' && vidrarias.length > 0 ? (
+              <Select value={eqRefId} onValueChange={val => {
+                const eq = vidrarias.find(p => p.identificacao_interna === val);
+                setEqRefId(val);
+                setEqRefDesc(eq?.nome || '');
+                setEqRefCal(eq?.data_calibracao || '');
+              }}>
+                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione a vidraria" /></SelectTrigger>
+                <SelectContent>
+                  {vidrarias.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             ) : (
               <div className="space-y-1">
                 <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
                 {tipo === 'balanca' && <p className="text-xs text-amber-600">Nenhum "Conjunto de Peso Padrão" encontrado.</p>}
                 {tipo === 'temperatura' && <p className="text-xs text-amber-600">Nenhum termômetro encontrado nos equipamentos.</p>}
+                {tipo === 'densidade' && <p className="text-xs text-amber-600">Nenhuma vidraria encontrada nos equipamentos.</p>}
               </div>
             )}
           </div>
@@ -411,7 +465,13 @@ export default function NovaVerificacao({ onBack, onSaved }) {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs">Descrição da solução</Label>
-              <Input value={solucaoDesc} onChange={e => setSolucaoDesc(e.target.value)} placeholder="Ex: Sulfato de Sódio" className="text-xs" />
+              <Select value={solucaoDesc} onValueChange={setSolucaoDesc}>
+                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione a solução" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Sulfato de Sódio">Sulfato de Sódio</SelectItem>
+                  <SelectItem value="Sulfato de Magnésio">Sulfato de Magnésio</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs">Lote</Label>
@@ -487,25 +547,15 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                     </td>
                   </>}
                   {tipo === 'densidade' && <>
-                    <td className="px-1 py-1"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-6 text-xs px-1.5" placeholder="HH:MM" /></td>
-                    <td className="px-1 py-1"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                    <td className="px-1 py-1"><Input value={r.densidade_com_amostra} onChange={e => setReg(i, 'densidade_com_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
-                    <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
+                    <td className="px-1 py-1"><Input value={r.horario} onChange={e => setRegDensidade(i, 'horario', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="HH:MM" /></td>
+                    <td className="px-1 py-1"><Input value={r.temperatura} onChange={e => setRegDensidade(i, 'temperatura', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
+                    <td className="px-1 py-1"><Input value={r.densidade_com_amostra} onChange={e => setRegDensidade(i, 'densidade_com_amostra', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
+                    <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setRegDensidade(i, 'densidade_sem_amostra', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
                   </>}
                   <td className="px-1 py-1 text-center">
-                    {(tipo === 'balanca' || tipo === 'temperatura') ? (
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
-                        {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
-                      </span>
-                    ) : (
-                      <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)}>
-                        <SelectTrigger className="h-6 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="aprovado">Aprovado</SelectItem>
-                          <SelectItem value="reprovado">Reprovado</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
+                      {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
+                    </span>
                   </td>
                   <td className="px-1 py-1">
                     <RubricaButton

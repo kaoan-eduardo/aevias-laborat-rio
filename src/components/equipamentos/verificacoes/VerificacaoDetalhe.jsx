@@ -45,6 +45,24 @@ function avaliarSituacaoTemperatura(refStr, variacaoStr) {
 
 const TIPO_LABELS = { balanca: 'Balança', temperatura: 'Temperatura', densidade: 'Densidade' };
 
+const LIMITES_DENSIDADE = {
+  'Sulfato de Sódio':    { min: 1.151, max: 1.174 },
+  'Sulfato de Magnésio': { min: 1.295, max: 1.308 },
+};
+
+function avaliarSituacaoDensidade(solucao, comAmostra, semAmostra) {
+  const limites = LIMITES_DENSIDADE[solucao];
+  if (!limites) return '';
+  const com = parseFloat(String(comAmostra).replace(',', '.'));
+  const sem = parseFloat(String(semAmostra).replace(',', '.'));
+  if (isNaN(com) || isNaN(sem) || comAmostra === '' || semAmostra === '') return '';
+  return (com >= limites.min && com <= limites.max && sem >= limites.min && sem <= limites.max) ? 'aprovado' : 'reprovado';
+}
+
+function getHorarioSP() {
+  return new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
 const RESULTADO_COLOR = {
   em_andamento: 'bg-yellow-100 text-yellow-700',
   aprovado: 'bg-green-100 text-green-700',
@@ -56,6 +74,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   const [saving, setSaving] = useState(false);
   const [userName, setUserName] = useState('');
   const [termometros, setTermometros] = useState([]);
+  const [vidrarias, setVidrarias] = useState([]);
 
   const isFinalizado = data.resultado_geral !== 'em_andamento';
   const isReadOnly = !isGestor && isFinalizado;
@@ -75,6 +94,11 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
             eq.nome?.toLowerCase().includes('termometro')
           ));
         });
+    }
+
+    if (verificacao.tipo === 'densidade') {
+      base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
+        .then(all => setVidrarias(all.filter(eq => eq.categoria === 'Vidraria')));
     }
   }, []);
 
@@ -107,6 +131,18 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
       registros: prev.registros.map((r, i) =>
         i === idx ? { ...r, [field]: value, variacao, situacao } : r
       ),
+    }));
+  };
+
+  const setRegDensidade = (idx, field, value, currentReg) => {
+    const updated = { ...currentReg, [field]: value };
+    if (field === 'temperatura' && value !== '' && !currentReg.horario) {
+      updated.horario = getHorarioSP();
+    }
+    updated.situacao = avaliarSituacaoDensidade(data.solucao_descricao, updated.densidade_com_amostra, updated.densidade_sem_amostra);
+    setData(prev => ({
+      ...prev,
+      registros: prev.registros.map((r, i) => i === idx ? updated : r),
     }));
   };
 
@@ -213,6 +249,23 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                   ))}
                 </SelectContent>
               </Select>
+            ) : data.tipo === 'densidade' && vidrarias.length > 0 && !isReadOnly ? (
+              <Select value={data.eq_referencia_identificacao || ''} onValueChange={val => {
+                const eq = vidrarias.find(p => p.identificacao_interna === val);
+                setData(p => ({
+                  ...p,
+                  eq_referencia_identificacao: val,
+                  eq_referencia_descricao: eq?.nome || p.eq_referencia_descricao,
+                  eq_referencia_data_calibracao: eq?.data_calibracao || p.eq_referencia_data_calibracao,
+                }));
+              }}>
+                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione a vidraria" /></SelectTrigger>
+                <SelectContent>
+                  {vidrarias.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             ) : (
               <Input value={data.eq_referencia_identificacao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_identificacao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
             )}
@@ -236,7 +289,17 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs">Descrição da solução</Label>
-              <Input value={data.solucao_descricao || ''} onChange={e => setData(p => ({ ...p, solucao_descricao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
+              {!isReadOnly ? (
+                <Select value={data.solucao_descricao || ''} onValueChange={v => setData(p => ({ ...p, solucao_descricao: v }))}>
+                  <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione a solução" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Sulfato de Sódio">Sulfato de Sódio</SelectItem>
+                    <SelectItem value="Sulfato de Magnésio">Sulfato de Magnésio</SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input value={data.solucao_descricao || ''} readOnly className="text-xs" disabled />
+              )}
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs">Lote</Label>
@@ -311,25 +374,15 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     </td>
                   </>}
                   {data.tipo === 'densidade' && <>
-                    <td className="px-1 py-2.5"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-10 text-xs px-1.5" placeholder="HH:MM" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.temperatura} onChange={e => setReg(i, 'temperatura', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.densidade_com_amostra} onChange={e => setReg(i, 'densidade_com_amostra', e.target.value)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.horario} onChange={e => setRegDensidade(i, 'horario', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="HH:MM" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.temperatura} onChange={e => setRegDensidade(i, 'temperatura', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.densidade_com_amostra} onChange={e => setRegDensidade(i, 'densidade_com_amostra', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.densidade_sem_amostra} onChange={e => setRegDensidade(i, 'densidade_sem_amostra', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
                   </>}
                   <td className="px-1 py-2.5 text-center">
-                    {(data.tipo === 'balanca' || data.tipo === 'temperatura') ? (
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
-                        {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
-                      </span>
-                    ) : (
-                      <Select value={r.situacao} onValueChange={v => setReg(i, 'situacao', v)} disabled={isReadOnly}>
-                        <SelectTrigger className="h-10 text-xs px-1.5 w-28"><SelectValue placeholder="—" /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="aprovado">Aprovado</SelectItem>
-                          <SelectItem value="reprovado">Reprovado</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
+                      {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
+                    </span>
                   </td>
                   <td className="px-1 py-2.5">
                     <RubricaButton
