@@ -374,7 +374,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
 
       {tipo === 'temperatura' && (
         <div className="rounded-lg border bg-blue-50 p-3 text-xs text-blue-800 space-y-1">
-          <p className="font-semibold">Fórmula: v = Temperatura de referência − |Temperatura medida|</p>
+          <p className="font-semibold">Fórmula: v = |Temperatura de referência − Temperatura medida</p>
           <p>Limites: −18°C=|3,0| · 25°C=|0,5| · 40–60°C=|2,0| · 60–80°C=|3,0| · 80–100°C=|4,0| · 100–120°C=|5,0| · 120–140°C=|6,0| · 140–160°C=|7,0| · 160–180°C=|8,0|</p>
         </div>
       )}
