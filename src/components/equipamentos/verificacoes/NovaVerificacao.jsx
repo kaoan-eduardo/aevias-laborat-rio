@@ -481,7 +481,6 @@ export default function NovaVerificacao({ onBack, onSaved }) {
               <Input value={solucaoLote} onChange={e => setSolucaoLote(e.target.value)} placeholder="Lote" className="text-xs" />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">Variação permitida: Sulfato de Sódio: 1,151–1,174 · Magnésio: 1,295–1,308</p>
         </div>
       )}
 
