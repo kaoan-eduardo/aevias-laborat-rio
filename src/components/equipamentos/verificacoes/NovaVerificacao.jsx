@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { currentMonthSP } from '@/lib/dateUtils';
-import { ChevronLeft, ChevronRight, PenLine } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import RubricaModal from './RubricaModal';
+import RubricaButton from './RubricaButton';
 
 const BALANCA_MIN = 1991.11;
 const BALANCA_MAX = 2011.72;
@@ -17,6 +17,45 @@ function avaliarSituacaoBalanca(valorStr) {
   const v = parseFloat(String(valorStr).replace(',', '.'));
   if (isNaN(v) || valorStr === '') return '';
   return (v >= BALANCA_MIN && v <= BALANCA_MAX) ? 'aprovado' : 'reprovado';
+}
+
+// Tabela de limites de variação por faixa de temperatura de referência
+const LIMITES_TEMPERATURA = [
+  { min: -Infinity, max: -18,  limite: 3.0 },
+  { min: -18,       max: -18,  limite: 3.0 },
+  { min: -17.99,    max: 25,   limite: 0.5 },
+  { min: 25.01,     max: 60,   limite: 2.0 },
+  { min: 60.01,     max: 80,   limite: 3.0 },
+  { min: 80.01,     max: 100,  limite: 4.0 },
+  { min: 100.01,    max: 120,  limite: 5.0 },
+  { min: 120.01,    max: 140,  limite: 6.0 },
+  { min: 140.01,    max: 160,  limite: 7.0 },
+  { min: 160.01,    max: 180,  limite: 8.0 },
+];
+
+// Limites simplificados por pontos/faixas exatos conforme enunciado
+function getLimiteTemperatura(ref) {
+  const v = parseFloat(ref);
+  if (isNaN(v)) return null;
+  if (v === -18) return 3.0;
+  if (v === 25) return 0.5;
+  if (v >= 40 && v <= 60) return 2.0;
+  if (v > 60 && v <= 80) return 3.0;
+  if (v > 80 && v <= 100) return 4.0;
+  if (v > 100 && v <= 120) return 5.0;
+  if (v > 120 && v <= 140) return 6.0;
+  if (v > 140 && v <= 160) return 7.0;
+  if (v > 160 && v <= 180) return 8.0;
+  return null;
+}
+
+function avaliarSituacaoTemperatura(refStr, variacaoStr) {
+  if (refStr === '' || variacaoStr === '') return '';
+  const limite = getLimiteTemperatura(refStr);
+  if (limite === null) return '';
+  const variacao = Math.abs(parseFloat(variacaoStr));
+  if (isNaN(variacao)) return '';
+  return variacao <= limite ? 'aprovado' : 'reprovado';
 }
 
 const TIPOS = [
@@ -43,7 +82,7 @@ function buildRegistros() {
 
 export default function NovaVerificacao({ onBack, onSaved }) {
   const { user } = useAuth();
-  const [step, setStep] = useState(1); // 1=tipo, 2=equipamento, 3=form
+  const [step, setStep] = useState(1);
   const [tipo, setTipo] = useState('');
   const [equipamentos, setEquipamentos] = useState([]);
   const [loadingEq, setLoadingEq] = useState(false);
@@ -58,13 +97,12 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   const [eqRefDesc, setEqRefDesc] = useState('');
   const [eqRefCal, setEqRefCal] = useState('');
   const [pesosPadrao, setPesosPadrao] = useState([]);
+  const [termometros, setTermometros] = useState([]);
   const [solucaoDesc, setSolucaoDesc] = useState('');
   const [solucaoLote, setSolucaoLote] = useState('');
   const [registros, setRegistros] = useState(buildRegistros());
   const [saving, setSaving] = useState(false);
-  const [rubricaModal, setRubricaModal] = useState(null); // { idx }
 
-  // Categorias de equipamento por tipo de verificação
   const CATEGORIAS_POR_TIPO = {
     balanca: ['Balança', 'balanca', 'balança'],
     temperatura: ['Temperatura', 'temperatura', 'Estufa', 'estufa', 'Banho Maria', 'banho maria', 'Banho-Maria', 'banho-maria', 'Forno', 'forno'],
@@ -73,7 +111,6 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   useEffect(() => {
     if (step === 2 && tipo) {
       if (tipo === 'densidade') {
-        // Densidade não tem LC vinculado, pula direto para step 3 sem equipamento
         setEquipamento(null);
         setStep(3);
         return;
@@ -83,9 +120,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
         .then(data => {
           const categoriasPermitidas = CATEGORIAS_POR_TIPO[tipo] || [];
           const filtrado = data.filter(eq =>
-            categoriasPermitidas.some(cat =>
-              eq.categoria?.toLowerCase() === cat.toLowerCase()
-            )
+            categoriasPermitidas.some(cat => eq.categoria?.toLowerCase() === cat.toLowerCase())
           );
           setEquipamentos(filtrado);
           setLoadingEq(false);
@@ -102,7 +137,6 @@ export default function NovaVerificacao({ onBack, onSaved }) {
       setEqRefId('');
       setEqRefDesc('');
 
-      // Para balança: busca equipamentos do tipo Conjunto de Peso Padrão
       if (tipo === 'balanca') {
         base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
           .then(data => {
@@ -121,6 +155,24 @@ export default function NovaVerificacao({ onBack, onSaved }) {
             }
           });
       }
+
+      if (tipo === 'temperatura') {
+        base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
+          .then(data => {
+            const terms = data.filter(eq =>
+              eq.categoria?.toLowerCase().includes('termômetro') ||
+              eq.categoria?.toLowerCase().includes('termometro') ||
+              eq.nome?.toLowerCase().includes('termômetro') ||
+              eq.nome?.toLowerCase().includes('termometro')
+            );
+            setTermometros(terms);
+            if (terms.length === 1) {
+              setEqRefId(terms[0].identificacao_interna || '');
+              setEqRefDesc(terms[0].nome || '');
+              setEqRefCal(terms[0].data_calibracao || '');
+            }
+          });
+      }
     }
   }, [step, equipamento, user, tipo]);
 
@@ -135,21 +187,24 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     ));
   };
 
-  const abrirRubrica = (idx) => {
-    if (!registros[idx].responsavel && user?.full_name) {
-      setReg(idx, 'responsavel', user.full_name);
-    }
-    setRubricaModal({ idx });
+  const setRegTemperatura = (idx, field, value, currentReg) => {
+    const ref = field === 'valor_referencia' ? value : currentReg.valor_referencia;
+    const medido = field === 'valor_medido' ? value : currentReg.valor_medido;
+    const variacao = (ref !== '' && medido !== '')
+      ? Math.abs(parseFloat(ref) - parseFloat(medido)).toFixed(2)
+      : '';
+    const situacao = avaliarSituacaoTemperatura(ref, variacao);
+    setRegistros(prev => prev.map((r, i) =>
+      i === idx ? { ...r, [field]: value, variacao, situacao } : r
+    ));
   };
 
-  const confirmarRubrica = (dataUrl) => {
-    const { idx } = rubricaModal;
+  const confirmarRubrica = (idx, dataUrl) => {
     setRegistros(prev => prev.map((r, i) =>
       i === idx
         ? { ...r, responsavel: r.responsavel || user?.full_name || '', rubrica_url: dataUrl }
         : r
     ));
-    setRubricaModal(null);
   };
 
   const diasNoMes = mesAno
@@ -180,7 +235,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     onSaved();
   };
 
-  // ── STEP 1: Selecionar Tipo ──
+  // ── STEP 1 ──
   if (step === 1) {
     return (
       <div className="p-6 max-w-3xl mx-auto space-y-6">
@@ -207,7 +262,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     );
   }
 
-  // ── STEP 2: Selecionar Equipamento ──
+  // ── STEP 2 ──
   if (step === 2) {
     return (
       <div className="p-6 max-w-3xl mx-auto space-y-6">
@@ -248,16 +303,9 @@ export default function NovaVerificacao({ onBack, onSaved }) {
     );
   }
 
-  // ── STEP 3: Formulário de registro ──
+  // ── STEP 3 ──
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-5">
-      {rubricaModal && (
-        <RubricaModal
-          nome={registros[rubricaModal.idx]?.responsavel || user?.full_name || ''}
-          onConfirm={confirmarRubrica}
-          onCancel={() => setRubricaModal(null)}
-        />
-      )}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => setStep(tipo === 'densidade' ? 1 : 2)}><ChevronLeft className="w-5 h-5" /></Button>
@@ -308,37 +356,46 @@ export default function NovaVerificacao({ onBack, onSaved }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Identificação</Label>
-            {tipo === 'balanca' ? (
-              pesosPadrao.length > 0 ? (
-                <Select
-                  value={eqRefId}
-                  onValueChange={val => {
-                    const eq = pesosPadrao.find(p => p.identificacao_interna === val);
-                    setEqRefId(val);
-                    setEqRefDesc(eq?.nome || '');
-                    setEqRefCal(eq?.data_calibracao || '');
-                  }}
-                >
-                  <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
-                  <SelectContent>
-                    {pesosPadrao.map(p => (
-                      <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <div className="space-y-1">
-                  <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
-                  <p className="text-xs text-amber-600">Nenhum "Conjunto de Peso Padrão" encontrado nos equipamentos.</p>
-                </div>
-              )
+            {tipo === 'balanca' && pesosPadrao.length > 0 ? (
+              <Select value={eqRefId} onValueChange={val => {
+                const eq = pesosPadrao.find(p => p.identificacao_interna === val);
+                setEqRefId(val);
+                setEqRefDesc(eq?.nome || '');
+                setEqRefCal(eq?.data_calibracao || '');
+              }}>
+                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
+                <SelectContent>
+                  {pesosPadrao.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : tipo === 'temperatura' && termometros.length > 0 ? (
+              <Select value={eqRefId} onValueChange={val => {
+                const eq = termometros.find(p => p.identificacao_interna === val);
+                setEqRefId(val);
+                setEqRefDesc(eq?.nome || '');
+                setEqRefCal(eq?.data_calibracao || '');
+              }}>
+                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o termômetro" /></SelectTrigger>
+                <SelectContent>
+                  {termometros.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             ) : (
-              <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+              <div className="space-y-1">
+                <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+                {tipo === 'balanca' && <p className="text-xs text-amber-600">Nenhum "Conjunto de Peso Padrão" encontrado.</p>}
+                {tipo === 'temperatura' && <p className="text-xs text-amber-600">Nenhum termômetro encontrado nos equipamentos.</p>}
+              </div>
             )}
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Descrição</Label>
-            <Input value={eqRefDesc} onChange={e => setEqRefDesc(e.target.value)} placeholder="Descrição" className="text-xs" disabled={tipo === 'balanca' && !!eqRefId} />
+            <Input value={eqRefDesc} onChange={e => setEqRefDesc(e.target.value)} placeholder="Descrição" className="text-xs"
+              disabled={(tipo === 'balanca' && !!eqRefId) || (tipo === 'temperatura' && !!eqRefId)} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Data de Calibração</Label>
@@ -374,7 +431,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
 
       {tipo === 'temperatura' && (
         <div className="rounded-lg border bg-blue-50 p-3 text-xs text-blue-800 space-y-1">
-          <p className="font-semibold">Fórmula: v = |Temperatura de referência − Temperatura medida</p>
+          <p className="font-semibold">Fórmula: v = |Temperatura de referência − Temperatura medida|</p>
           <p>Limites: −18°C=|3,0| · 25°C=|0,5| · 40–60°C=|2,0| · 60–80°C=|3,0| · 80–100°C=|4,0| · 100–120°C=|5,0| · 120–140°C=|6,0| · 140–160°C=|7,0| · 160–180°C=|8,0|</p>
         </div>
       )}
@@ -409,57 +466,24 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {tipo === 'balanca' && (
                     <td className="px-1 py-1">
-                      <Input
-                        type="number"
-                        value={r.valor_medido}
-                        onChange={e => setRegBalanca(i, e.target.value)}
-                        className="h-6 text-xs px-1.5"
-                        placeholder="g"
-                      />
+                      <Input type="number" value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" />
                     </td>
                   )}
                   {tipo === 'temperatura' && <>
                     <td className="px-1 py-1">
-                      <Input
-                        type="number"
-                        value={r.valor_referencia}
-                        onChange={e => {
-                          const ref = e.target.value;
-                          setReg(i, 'valor_referencia', ref);
-                          if (ref !== '' && r.valor_medido !== '') {
-                            setReg(i, 'variacao', Math.abs(parseFloat(ref) - parseFloat(r.valor_medido)).toFixed(2));
-                          } else {
-                            setReg(i, 'variacao', '');
-                          }
-                        }}
-                        className="h-6 text-xs px-1.5"
-                        placeholder="°C"
-                      />
+                      <Input type="number" value={r.valor_referencia}
+                        onChange={e => setRegTemperatura(i, 'valor_referencia', e.target.value, r)}
+                        className="h-6 text-xs px-1.5" placeholder="°C" />
                     </td>
                     <td className="px-1 py-1">
-                      <Input
-                        type="number"
-                        value={r.valor_medido}
-                        onChange={e => {
-                          const medido = e.target.value;
-                          setReg(i, 'valor_medido', medido);
-                          if (medido !== '' && r.valor_referencia !== '') {
-                            setReg(i, 'variacao', Math.abs(parseFloat(r.valor_referencia) - parseFloat(medido)).toFixed(2));
-                          } else {
-                            setReg(i, 'variacao', '');
-                          }
-                        }}
-                        className="h-6 text-xs px-1.5"
-                        placeholder="°C"
-                      />
+                      <Input type="number" value={r.valor_medido}
+                        onChange={e => setRegTemperatura(i, 'valor_medido', e.target.value, r)}
+                        className="h-6 text-xs px-1.5" placeholder="°C" />
                     </td>
                     <td className="px-1 py-1">
-                      <Input
-                        value={r.variacao}
-                        readOnly
-                        className="h-6 text-xs px-1.5 bg-slate-50 cursor-not-allowed opacity-80"
-                        placeholder="Δ"
-                      />
+                      <Input value={r.variacao} readOnly
+                        className={`h-6 text-xs px-1.5 cursor-not-allowed ${r.situacao === 'aprovado' ? 'bg-green-50 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-50 text-red-700' : 'bg-slate-50 opacity-80'}`}
+                        placeholder="Δ" />
                     </td>
                   </>}
                   {tipo === 'densidade' && <>
@@ -469,7 +493,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                     <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
                   </>}
                   <td className="px-1 py-1 text-center">
-                    {tipo === 'balanca' ? (
+                    {(tipo === 'balanca' || tipo === 'temperatura') ? (
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
                         {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
                       </span>
@@ -484,24 +508,13 @@ export default function NovaVerificacao({ onBack, onSaved }) {
                     )}
                   </td>
                   <td className="px-1 py-1">
-                    {tipo === 'balanca' ? (
-                      <button
-                        onClick={() => abrirRubrica(i)}
-                        disabled={!r.valor_medido}
-                        className={`flex items-center gap-1.5 h-6 px-2 rounded border text-xs transition-all w-full
-                          ${r.rubrica_url
-                            ? 'border-green-300 bg-green-50 text-green-700'
-                            : 'border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary'
-                          } disabled:opacity-40 disabled:cursor-not-allowed`}
-                      >
-                        {r.rubrica_url
-                          ? <><img src={r.rubrica_url} alt="rubrica" className="h-4 object-contain" /><span className="truncate text-[10px]">{r.responsavel}</span></>
-                          : <><PenLine className="w-3 h-3" /><span className="truncate">{r.responsavel || 'Rubricar'}</span></>
-                        }
-                      </button>
-                    ) : (
-                      <Input value={r.responsavel} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" />
-                    )}
+                    <RubricaButton
+                      nome={r.responsavel || user?.full_name || ''}
+                      rubricaUrl={r.rubrica_url}
+                      responsavel={r.responsavel}
+                      disabled={tipo === 'balanca' ? !r.valor_medido : tipo === 'temperatura' ? !r.valor_medido : false}
+                      onConfirm={dataUrl => confirmarRubrica(i, dataUrl)}
+                    />
                   </td>
                 </tr>
               ))}

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { formatMesAno } from '@/lib/dateUtils';
-import { ChevronLeft, Save, PenLine } from 'lucide-react';
+import { ChevronLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import RubricaModal from './RubricaModal';
+import RubricaButton from './RubricaButton';
 
 const BALANCA_MIN = 1991.11;
 const BALANCA_MAX = 2011.72;
@@ -19,6 +19,29 @@ function avaliarSituacaoBalanca(valorStr) {
   return (v >= BALANCA_MIN && v <= BALANCA_MAX) ? 'aprovado' : 'reprovado';
 }
 
+function getLimiteTemperatura(ref) {
+  const v = parseFloat(ref);
+  if (isNaN(v)) return null;
+  if (v === -18) return 3.0;
+  if (v === 25) return 0.5;
+  if (v >= 40 && v <= 60) return 2.0;
+  if (v > 60 && v <= 80) return 3.0;
+  if (v > 80 && v <= 100) return 4.0;
+  if (v > 100 && v <= 120) return 5.0;
+  if (v > 120 && v <= 140) return 6.0;
+  if (v > 140 && v <= 160) return 7.0;
+  if (v > 160 && v <= 180) return 8.0;
+  return null;
+}
+
+function avaliarSituacaoTemperatura(refStr, variacaoStr) {
+  if (refStr === '' || variacaoStr === '') return '';
+  const limite = getLimiteTemperatura(refStr);
+  if (limite === null) return '';
+  const variacao = Math.abs(parseFloat(variacaoStr));
+  if (isNaN(variacao)) return '';
+  return variacao <= limite ? 'aprovado' : 'reprovado';
+}
 
 const TIPO_LABELS = { balanca: 'Balança', temperatura: 'Temperatura', densidade: 'Densidade' };
 
@@ -32,9 +55,8 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   const [data, setData] = useState({ ...verificacao });
   const [saving, setSaving] = useState(false);
   const [userName, setUserName] = useState('');
-  const [rubricaModal, setRubricaModal] = useState(null); // { idx }
+  const [termometros, setTermometros] = useState([]);
 
-  // Bloqueado para não-gestores quando já foi finalizado (aprovado ou reprovado)
   const isFinalizado = data.resultado_geral !== 'em_andamento';
   const isReadOnly = !isGestor && isFinalizado;
 
@@ -42,6 +64,18 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
     base44.auth.me().then(u => {
       if (u?.full_name) setUserName(u.full_name);
     });
+
+    if (verificacao.tipo === 'temperatura') {
+      base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
+        .then(all => {
+          setTermometros(all.filter(eq =>
+            eq.categoria?.toLowerCase().includes('termômetro') ||
+            eq.categoria?.toLowerCase().includes('termometro') ||
+            eq.nome?.toLowerCase().includes('termômetro') ||
+            eq.nome?.toLowerCase().includes('termometro')
+          ));
+        });
+    }
   }, []);
 
   const setReg = (idx, field, value) => {
@@ -51,7 +85,6 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
     }));
   };
 
-  // Balança: ao digitar resultado, avalia situação automaticamente
   const setRegBalanca = (idx, valor) => {
     const situacao = avaliarSituacaoBalanca(valor);
     setData(prev => ({
@@ -62,17 +95,22 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
     }));
   };
 
-  const abrirRubrica = (idx) => {
-    if (isReadOnly) return;
-    // pré-preenche nome se ainda não tiver
-    if (!data.registros[idx].responsavel && userName) {
-      setReg(idx, 'responsavel', userName);
-    }
-    setRubricaModal({ idx });
+  const setRegTemperatura = (idx, field, value, currentReg) => {
+    const ref = field === 'valor_referencia' ? value : currentReg.valor_referencia;
+    const medido = field === 'valor_medido' ? value : currentReg.valor_medido;
+    const variacao = (ref !== '' && medido !== '')
+      ? Math.abs(parseFloat(ref) - parseFloat(medido)).toFixed(2)
+      : '';
+    const situacao = avaliarSituacaoTemperatura(ref, variacao);
+    setData(prev => ({
+      ...prev,
+      registros: prev.registros.map((r, i) =>
+        i === idx ? { ...r, [field]: value, variacao, situacao } : r
+      ),
+    }));
   };
 
-  const confirmarRubrica = (dataUrl) => {
-    const { idx } = rubricaModal;
+  const confirmarRubrica = (idx, dataUrl) => {
     setData(prev => ({
       ...prev,
       registros: prev.registros.map((r, i) =>
@@ -81,7 +119,6 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
           : r
       ),
     }));
-    setRubricaModal(null);
   };
 
   const mesLabel = formatMesAno(data.mes_ano);
@@ -99,13 +136,6 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-5">
-      {rubricaModal && (
-        <RubricaModal
-          nome={data.registros[rubricaModal.idx]?.responsavel || userName}
-          onConfirm={confirmarRubrica}
-          onCancel={() => setRubricaModal(null)}
-        />
-      )}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={onBack}><ChevronLeft className="w-5 h-5" /></Button>
@@ -166,11 +196,31 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Identificação</Label>
-            <Input value={data.eq_referencia_identificacao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_identificacao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
+            {data.tipo === 'temperatura' && termometros.length > 0 && !isReadOnly ? (
+              <Select value={data.eq_referencia_identificacao || ''} onValueChange={val => {
+                const eq = termometros.find(p => p.identificacao_interna === val);
+                setData(p => ({
+                  ...p,
+                  eq_referencia_identificacao: val,
+                  eq_referencia_descricao: eq?.nome || p.eq_referencia_descricao,
+                  eq_referencia_data_calibracao: eq?.data_calibracao || p.eq_referencia_data_calibracao,
+                }));
+              }}>
+                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o termômetro" /></SelectTrigger>
+                <SelectContent>
+                  {termometros.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input value={data.eq_referencia_identificacao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_identificacao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
+            )}
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Descrição</Label>
-            <Input value={data.eq_referencia_descricao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_descricao: e.target.value }))} className="text-xs" disabled={isReadOnly} />
+            <Input value={data.eq_referencia_descricao || ''} onChange={e => setData(p => ({ ...p, eq_referencia_descricao: e.target.value }))} className="text-xs"
+              disabled={isReadOnly || (data.tipo === 'temperatura' && !!data.eq_referencia_identificacao)} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Data de Calibração</Label>
@@ -205,7 +255,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
 
       {data.tipo === 'temperatura' && (
         <div className="rounded-lg border bg-blue-50 p-3 text-xs text-blue-800 space-y-1">
-          <p className="font-semibold">Fórmula: v = Temperatura de referência − |Temperatura medida|</p>
+          <p className="font-semibold">Fórmula: v = |Temperatura de referência − Temperatura medida|</p>
           <p>Limites: −18°C=|3,0| · 25°C=|0,5| · 40–60°C=|2,0| · 60–80°C=|3,0| · 80–100°C=|4,0| · 100–120°C=|5,0| · 120–140°C=|6,0| · 140–160°C=|7,0| · 160–180°C=|8,0|</p>
         </div>
       )}
@@ -239,12 +289,26 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                 <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-2.5 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {data.tipo === 'balanca' && (
-                    <td className="px-1 py-2.5"><Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-10 text-xs px-1.5" placeholder="g" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-2.5">
+                      <Input value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-10 text-xs px-1.5" placeholder="g" disabled={isReadOnly} />
+                    </td>
                   )}
                   {data.tipo === 'temperatura' && <>
-                    <td className="px-1 py-2.5"><Input value={r.valor_referencia} onChange={e => setReg(i, 'valor_referencia', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.valor_medido} onChange={e => setReg(i, 'valor_medido', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.variacao} onChange={e => setReg(i, 'variacao', e.target.value)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-2.5">
+                      <Input type="number" value={r.valor_referencia}
+                        onChange={e => setRegTemperatura(i, 'valor_referencia', e.target.value, r)}
+                        className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} />
+                    </td>
+                    <td className="px-1 py-2.5">
+                      <Input type="number" value={r.valor_medido}
+                        onChange={e => setRegTemperatura(i, 'valor_medido', e.target.value, r)}
+                        className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} />
+                    </td>
+                    <td className="px-1 py-2.5">
+                      <Input value={r.variacao} readOnly
+                        className={`h-10 text-xs px-1.5 cursor-not-allowed ${r.situacao === 'aprovado' ? 'bg-green-50 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-50 text-red-700' : 'bg-slate-50 opacity-80'}`}
+                        placeholder="Δ" />
+                    </td>
                   </>}
                   {data.tipo === 'densidade' && <>
                     <td className="px-1 py-2.5"><Input value={r.horario} onChange={e => setReg(i, 'horario', e.target.value)} className="h-10 text-xs px-1.5" placeholder="HH:MM" disabled={isReadOnly} /></td>
@@ -253,7 +317,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     <td className="px-1 py-2.5"><Input value={r.densidade_sem_amostra} onChange={e => setReg(i, 'densidade_sem_amostra', e.target.value)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
                   </>}
                   <td className="px-1 py-2.5 text-center">
-                    {data.tipo === 'balanca' ? (
+                    {(data.tipo === 'balanca' || data.tipo === 'temperatura') ? (
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
                         {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
                       </span>
@@ -268,24 +332,13 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     )}
                   </td>
                   <td className="px-1 py-2.5">
-                    {data.tipo === 'balanca' ? (
-                      <button
-                        onClick={() => abrirRubrica(i)}
-                        disabled={isReadOnly || !r.valor_medido}
-                        className={`flex items-center gap-1.5 h-6 px-2 rounded border text-xs transition-all w-full
-                          ${r.rubrica_url
-                            ? 'border-green-300 bg-green-50 text-green-700'
-                            : 'border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary'
-                          } disabled:opacity-40 disabled:cursor-not-allowed`}
-                      >
-                        {r.rubrica_url
-                          ? <><img src={r.rubrica_url} alt="rubrica" className="h-4 object-contain" /><span className="truncate text-[10px]">{r.responsavel}</span></>
-                          : <><PenLine className="w-3 h-3" /><span className="truncate">{r.responsavel || 'Rubricar'}</span></>
-                        }
-                      </button>
-                    ) : (
-                      <Input value={r.responsavel || ''} onFocus={() => { if (!r.responsavel && userName && !isReadOnly) setReg(i, 'responsavel', userName); }} onChange={e => setReg(i, 'responsavel', e.target.value)} className="h-6 text-xs px-1.5" placeholder="Nome" disabled={isReadOnly} />
-                    )}
+                    <RubricaButton
+                      nome={r.responsavel || userName}
+                      rubricaUrl={r.rubrica_url}
+                      responsavel={r.responsavel}
+                      disabled={isReadOnly || (data.tipo === 'balanca' ? !r.valor_medido : data.tipo === 'temperatura' ? !r.valor_medido : false)}
+                      onConfirm={dataUrl => confirmarRubrica(i, dataUrl)}
+                    />
                   </td>
                 </tr>
               ))}
