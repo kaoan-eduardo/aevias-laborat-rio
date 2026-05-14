@@ -70,11 +70,12 @@ export default function Dashboard() {
 
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-[#00233B] text-white shadow-xl" style={{ minHeight: 200 }}>
-        {/* Road image */}
+        {/* Lab image */}
         <img
-          src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&q=80&auto=format&fit=crop"
-          alt="estrada"
+          src="https://media.base44.com/images/public/69fdf070216c826565ee0876/edb5bf300_Imagemapp.jpg"
+          alt="laboratório"
           className="absolute right-0 top-0 h-full w-[45%] object-cover opacity-60"
+          style={{ filter: 'saturate(0.3) hue-rotate(190deg) brightness(0.5)' }}
         />
         {/* Overlay gradient */}
         <div className="absolute right-0 top-0 h-full w-[55%] bg-gradient-to-l from-transparent to-[#00233B]" />
