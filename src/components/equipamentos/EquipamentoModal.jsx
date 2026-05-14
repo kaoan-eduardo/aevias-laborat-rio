@@ -118,7 +118,6 @@ export default function EquipamentoModal({ open, onClose, equipamento, onSaved }
       <SelectItem value="Estufa">Estufa</SelectItem>
       <SelectItem value="Balança">Balança</SelectItem>
       <SelectItem value="Termômetro">Termômetro</SelectItem>
-      <SelectItem value="Soluções">Soluções</SelectItem>
     </SelectContent>
   </Select>
 </div>
