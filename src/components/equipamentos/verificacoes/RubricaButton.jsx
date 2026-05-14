@@ -1,6 +1,7 @@
 import { PenLine } from 'lucide-react';
 import RubricaModal from './RubricaModal';
 import { useState } from 'react';
+import { base44 } from '@/api/base44Client';
 
 /**
  * Botão de rubricar reutilizável.
@@ -15,8 +16,13 @@ import { useState } from 'react';
 export default function RubricaButton({ nome, rubricaUrl, responsavel, disabled, onConfirm }) {
   const [open, setOpen] = useState(false);
 
-  const handleConfirm = (dataUrl) => {
-    onConfirm(dataUrl);
+  const handleConfirm = async (dataUrl) => {
+    // Converte o dataURL para File e faz upload, armazenando só a URL
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const file = new File([blob], 'rubrica.png', { type: 'image/png' });
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    onConfirm(file_url);
     setOpen(false);
   };
 
