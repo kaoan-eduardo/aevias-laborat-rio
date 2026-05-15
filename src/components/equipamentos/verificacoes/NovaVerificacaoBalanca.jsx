@@ -32,6 +32,7 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
   const [acData, setAcData] = useState('');
   const [acRubricaUrl, setAcRubricaUrl] = useState('');
   const [saving, setSaving] = useState(false);
+  const [erros, setErros] = useState({});
 
   useEffect(() => {
     setLoadingEq(true);
@@ -76,7 +77,12 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
   };
 
   const handleSave = async () => {
-    if (!mesAno || !equipamento) return;
+    const novosErros = {};
+    if (!mesAno) novosErros.mesAno = true;
+    if (!eqRefId) novosErros.eqRefId = true;
+    if (!eqRefCal) novosErros.eqRefCal = true;
+    if (Object.keys(novosErros).length > 0) { setErros(novosErros); return; }
+    setErros({});
     setSaving(true);
     await base44.entities.VerificacaoDiaria.create({
       equipamento_id: equipamento.id,
@@ -152,16 +158,20 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={onBack}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving || !mesAno}>
+          <Button onClick={handleSave} disabled={saving}>
             {saving ? 'Salvando...' : 'Salvar Verificação'}
           </Button>
         </div>
       </div>
 
+      {Object.keys(erros).length > 0 && (
+        <p className="text-sm text-destructive font-medium">Preencha todos os campos obrigatórios (*) antes de salvar.</p>
+      )}
+
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="space-y-1.5">
           <Label className="text-xs">Mês/Ano *</Label>
-          <Input type="month" value={mesAno} onChange={e => setMesAno(e.target.value)} />
+          <Input type="month" value={mesAno} onChange={e => { setMesAno(e.target.value); setErros(p => ({ ...p, mesAno: false })); }} className={erros.mesAno ? 'border-destructive' : ''} />
         </div>
         <div className="space-y-1.5">
           <Label className="text-xs">Resultado Geral</Label>
@@ -180,15 +190,16 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Equipamento de Referência</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
-            <Label className="text-xs">Identificação</Label>
+            <Label className="text-xs">Identificação *</Label>
             {pesosPadrao.length > 0 ? (
               <Select value={eqRefId} onValueChange={val => {
                 const eq = pesosPadrao.find(p => p.identificacao_interna === val);
                 setEqRefId(val);
                 setEqRefDesc(eq?.nome || '');
                 setEqRefCal(eq?.data_calibracao || '');
+                setErros(p => ({ ...p, eqRefId: false }));
               }}>
-                <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
+                <SelectTrigger className={`text-xs h-9 ${erros.eqRefId ? 'border-destructive' : ''}`}><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
                 <SelectContent>
                   {pesosPadrao.map(p => (
                     <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
@@ -197,7 +208,7 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
               </Select>
             ) : (
               <div className="space-y-1">
-                <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+                <Input value={eqRefId} onChange={e => { setEqRefId(e.target.value); setErros(p => ({ ...p, eqRefId: false })); }} placeholder="ID do equip. referência" className={`text-xs ${erros.eqRefId ? 'border-destructive' : ''}`} />
                 <p className="text-xs text-amber-600">Nenhum "Conjunto de Peso Padrão" encontrado.</p>
               </div>
             )}
@@ -207,8 +218,8 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
             <Input value={eqRefDesc} onChange={e => setEqRefDesc(e.target.value)} className="text-xs" disabled={!!eqRefId} />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Data de Calibração</Label>
-            <Input type="date" value={eqRefCal} onChange={e => setEqRefCal(e.target.value)} className="text-xs" />
+            <Label className="text-xs">Data de Calibração *</Label>
+            <Input type="date" value={eqRefCal} onChange={e => { setEqRefCal(e.target.value); setErros(p => ({ ...p, eqRefCal: false })); }} className={`text-xs ${erros.eqRefCal ? 'border-destructive' : ''}`} />
           </div>
         </div>
       </div>
@@ -277,7 +288,7 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
 
       <div className="flex justify-end gap-2 pb-6">
         <Button variant="outline" onClick={onBack}>Cancelar</Button>
-        <Button onClick={handleSave} disabled={saving || !mesAno}>
+        <Button onClick={handleSave} disabled={saving}>
           {saving ? 'Salvando...' : 'Salvar Verificação'}
         </Button>
       </div>
