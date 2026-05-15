@@ -247,7 +247,7 @@ export default function Layout() {
         {/* Top Bar (mobile) */}
         <header className="md:hidden flex items-center gap-3 px-4 py-3 bg-[#00233B] border-b border-white/10">
           <button onClick={() => setMobileOpen(true)}>
-            <Menu className="w-5 h-5 text-white" />
+            <Menu className="w-10 h-10 text-white" />
           </button>
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-xl bg-[#566E3D] flex items-center justify-center">
