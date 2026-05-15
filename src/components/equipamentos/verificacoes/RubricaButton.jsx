@@ -38,7 +38,7 @@ export default function RubricaButton({ nome, rubricaUrl, responsavel, disabled,
       <button
         onClick={() => !disabled && setOpen(true)}
         disabled={disabled}
-        className={`flex items-center gap-1.5 h-6 rounded border text-xs transition-all w-full px-2 py-2 mx-1
+        className={`flex items-center gap-1.5 h-6 rounded border text-xs transition-all w-full px-2 py-2 my-2
           ${rubricaUrl ?
         'border-green-300 bg-green-50 text-green-700' :
         'border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary'} disabled:opacity-40 disabled:cursor-not-allowed`
