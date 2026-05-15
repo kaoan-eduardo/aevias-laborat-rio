@@ -159,10 +159,10 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
           <Label className="text-xs">Mês/Ano</Label>
           <Input type="month" value={data.mes_ano} onChange={(e) => setData((p) => ({ ...p, mes_ano: e.target.value }))} disabled={!isGestor} />
         </div>
-        <div className="space-y-1.5 hidden">
-          <Label className="text-xs hidden">Realizado por</Label>
-          <Input value={data.realizado_por || ''} onChange={(e) => setData((p) => ({ ...p, realizado_por: e.target.value }))} disabled={isReadOnly} className="hidden" />
-        </div>
+        
+
+
+        
       </div>
 
       {/* Equipamento de Referência */}
