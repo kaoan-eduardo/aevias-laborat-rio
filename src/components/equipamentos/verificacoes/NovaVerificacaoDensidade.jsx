@@ -71,7 +71,7 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
       tipo: 'densidade',
       mes_ano: mesAno,
       outras_informacoes: outrasInfo,
-      resultado_geral: resultadoGeral,
+      resultado_geral: acRubricaUrl ? resultadoGeral : 'em_andamento',
       eq_referencia_identificacao: eqRefId,
       eq_referencia_descricao: eqRefDesc,
       eq_referencia_data_calibracao: eqRefCal,

@@ -41,7 +41,7 @@ export default function AnaliseCritica({
         {showResultado &&
         <div className="space-y-1.5">
             <Label className="text-xs">Resultado Geral</Label>
-            <Select value={resultadoGeral} onValueChange={onResultadoChange} disabled={disabled}>
+            <Select value={resultadoGeral} onValueChange={onResultadoChange} disabled={disabled || !rubricaUrl}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="em_andamento">Em andamento</SelectItem>
@@ -49,6 +49,7 @@ export default function AnaliseCritica({
                 <SelectItem value="reprovado">Reprovado</SelectItem>
               </SelectContent>
             </Select>
+            {!rubricaUrl && <p className="text-xs text-muted-foreground">Rubrique para liberar o resultado</p>}
           </div>
         }
 
