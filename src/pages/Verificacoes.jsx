@@ -118,7 +118,7 @@ export default function Verificacoes() {
                         </td>
                         <td className="px-4 py-3 text-xs text-muted-foreground">{TIPO_LABELS[v.tipo] || v.tipo}</td>
                         <td className="px-4 py-3 text-xs capitalize text-muted-foreground">{mesLabel}</td>
-                        <td className="px-4 py-3 text-xs text-muted-foreground">{v.analise_critica_responsavel || '—'}</td>
+                        <td className="px-4 py-3 text-xs text-muted-foreground">{v.realizado_por || '—'}</td>
                         <td className="px-4 py-3 text-center">
                           <Badge className={RESULTADO_COLOR[v.resultado_geral] || 'bg-muted text-muted-foreground'}>
                             {v.resultado_geral === 'em_andamento' ? 'Em andamento' : v.resultado_geral === 'aprovado' ? 'Aprovado' : 'Reprovado'}
