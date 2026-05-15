@@ -96,7 +96,7 @@ export default function Verificacoes() {
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Equipamento</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Tipo</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Mês/Ano</th>
-                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Realizado por</th>
+                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Analisado por</th>
                     <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Resultado</th>
                     <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Ação</th>
                   </tr>
