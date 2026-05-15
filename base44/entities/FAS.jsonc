@@ -148,5 +148,46 @@
     "numero_proposta",
     "cliente_id",
     "objetivo"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor",
+            "comercial"
+          ]
+        }
+      }
+    },
+    "read": {
+      "user_condition": {
+        "id": {
+          "$exists": true
+        }
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor",
+            "comercial"
+          ]
+        }
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor"
+          ]
+        }
+      }
+    }
+  }
 }
