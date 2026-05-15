@@ -35,8 +35,8 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
 
   useEffect(() => {
     setLoadingEq(true);
-    listarEquipamentosParaVerificacao('balanca').
-    then((data) => {setEquipamentos(data);setLoadingEq(false);});
+    listarEquipamentosParaVerificacao('balanca')
+      .then(data => { setEquipamentos(data); setLoadingEq(false); });
   }, []);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
     setEqRefId('');
     setEqRefDesc('');
     setEqRefCal('');
-    listarPesosPadrao().then((pesos) => {
+    listarPesosPadrao().then(pesos => {
       setPesosPadrao(pesos);
       if (pesos.length === 1) {
         setEqRefId(pesos[0].identificacao_interna || '');
@@ -56,22 +56,22 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
     });
   }, [equipamento]);
 
-  const diasNoMes = mesAno ?
-  new Date(Number(mesAno.split('-')[0]), Number(mesAno.split('-')[1]), 0).getDate() :
-  31;
+  const diasNoMes = mesAno
+    ? new Date(Number(mesAno.split('-')[0]), Number(mesAno.split('-')[1]), 0).getDate()
+    : 31;
 
   const setRegBalanca = (idx, valor) => {
     const situacao = avaliarSituacaoBalanca(valor);
-    setRegistros((prev) => prev.map((r, i) =>
-    i === idx ? { ...r, valor_medido: valor, situacao } : r
+    setRegistros(prev => prev.map((r, i) =>
+      i === idx ? { ...r, valor_medido: valor, situacao } : r
     ));
   };
 
   const confirmarRubrica = (idx, dataUrl) => {
-    setRegistros((prev) => prev.map((r, i) =>
-    i === idx ?
-    { ...r, responsavel: r.responsavel || user?.nome_exibicao || user?.full_name || '', rubrica_url: dataUrl } :
-    r
+    setRegistros(prev => prev.map((r, i) =>
+      i === idx
+        ? { ...r, responsavel: r.responsavel || user?.nome_exibicao || user?.full_name || '', rubrica_url: dataUrl }
+        : r
     ));
   };
 
@@ -85,14 +85,14 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
       tipo: 'balanca',
       mes_ano: mesAno,
       outras_informacoes: outrasInfo,
-      resultado_geral: acRubricaUrl ? resultadoGeral : 'em_andamento',
+      resultado_geral: resultadoGeral,
       eq_referencia_identificacao: eqRefId,
       eq_referencia_descricao: eqRefDesc,
       eq_referencia_data_calibracao: eqRefCal,
       registros,
       analise_critica_responsavel: acResponsavel,
       analise_critica_data: acData,
-      analise_critica_rubrica_url: acRubricaUrl
+      analise_critica_rubrica_url: acRubricaUrl,
     });
     setSaving(false);
     onSaved();
@@ -109,20 +109,20 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
             <p className="text-sm text-muted-foreground">Passo 1 de 2 — Selecione o equipamento (LC)</p>
           </div>
         </div>
-        {loadingEq ?
-        <div className="space-y-3">{[1, 2, 3].map((i) => <div key={i} className="h-16 bg-muted rounded animate-pulse" />)}</div> :
-        equipamentos.length === 0 ?
-        <div className="py-12 text-center border border-dashed rounded-xl">
+        {loadingEq ? (
+          <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-muted rounded animate-pulse" />)}</div>
+        ) : equipamentos.length === 0 ? (
+          <div className="py-12 text-center border border-dashed rounded-xl">
             <p className="text-muted-foreground text-sm">Nenhuma balança em uso com verificação diária obrigatória.</p>
-          </div> :
-
-        <div className="space-y-2">
-            {equipamentos.map((eq) =>
-          <button
-            key={eq.id}
-            onClick={() => {setEquipamento(eq);setStep(2);}}
-            className="w-full rounded-lg border border-border hover:border-primary hover:bg-primary/5 px-4 py-3 text-left flex items-center justify-between transition-all">
-            
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {equipamentos.map(eq => (
+              <button
+                key={eq.id}
+                onClick={() => { setEquipamento(eq); setStep(2); }}
+                className="w-full rounded-lg border border-border hover:border-primary hover:bg-primary/5 px-4 py-3 text-left flex items-center justify-between transition-all"
+              >
                 <div>
                   <span className="font-mono-data text-sm font-semibold text-primary">{eq.identificacao_interna}</span>
                   <span className="ml-3 text-sm text-foreground">{eq.nome}</span>
@@ -130,11 +130,11 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
                 </div>
                 <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
               </button>
-          )}
+            ))}
           </div>
-        }
-      </div>);
-
+        )}
+      </div>
+    );
   }
 
   // ── Step 2: Preencher verificação ──
@@ -161,19 +161,19 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="space-y-1.5">
           <Label className="text-xs">Mês/Ano *</Label>
-          <Input type="month" value={mesAno} onChange={(e) => setMesAno(e.target.value)} />
+          <Input type="month" value={mesAno} onChange={e => setMesAno(e.target.value)} />
         </div>
-        
-
-
-
-
-
-
-
-
-
-        
+        <div className="space-y-1.5">
+          <Label className="text-xs">Resultado Geral</Label>
+          <Select value={resultadoGeral} onValueChange={setResultadoGeral}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="em_andamento">Em andamento</SelectItem>
+              <SelectItem value="aprovado">Aprovado</SelectItem>
+              <SelectItem value="reprovado">Reprovado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="rounded-lg border bg-muted/20 p-4 space-y-3">
@@ -181,34 +181,34 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Identificação</Label>
-            {pesosPadrao.length > 0 ?
-            <Select value={eqRefId} onValueChange={(val) => {
-              const eq = pesosPadrao.find((p) => p.identificacao_interna === val);
-              setEqRefId(val);
-              setEqRefDesc(eq?.nome || '');
-              setEqRefCal(eq?.data_calibracao || '');
-            }}>
+            {pesosPadrao.length > 0 ? (
+              <Select value={eqRefId} onValueChange={val => {
+                const eq = pesosPadrao.find(p => p.identificacao_interna === val);
+                setEqRefId(val);
+                setEqRefDesc(eq?.nome || '');
+                setEqRefCal(eq?.data_calibracao || '');
+              }}>
                 <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione o peso padrão" /></SelectTrigger>
                 <SelectContent>
-                  {pesosPadrao.map((p) =>
-                <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
-                )}
+                  {pesosPadrao.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
                 </SelectContent>
-              </Select> :
-
-            <div className="space-y-1">
-                <Input value={eqRefId} onChange={(e) => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+              </Select>
+            ) : (
+              <div className="space-y-1">
+                <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
                 <p className="text-xs text-amber-600">Nenhum "Conjunto de Peso Padrão" encontrado.</p>
               </div>
-            }
+            )}
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Descrição</Label>
-            <Input value={eqRefDesc} onChange={(e) => setEqRefDesc(e.target.value)} className="text-xs" disabled={!!eqRefId} />
+            <Input value={eqRefDesc} onChange={e => setEqRefDesc(e.target.value)} className="text-xs" disabled={!!eqRefId} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Data de Calibração</Label>
-            <Input type="date" value={eqRefCal} onChange={(e) => setEqRefCal(e.target.value)} className="text-xs" />
+            <Input type="date" value={eqRefCal} onChange={e => setEqRefCal(e.target.value)} className="text-xs" />
           </div>
         </div>
       </div>
@@ -231,11 +231,11 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {registros.slice(0, diasNoMes).map((r, i) =>
-              <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
+              {registros.slice(0, diasNoMes).map((r, i) => (
+                <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   <td className="px-1 py-1">
-                    <Input type="number" value={r.valor_medido} onChange={(e) => setRegBalanca(i, e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" />
+                    <Input type="number" value={r.valor_medido} onChange={e => setRegBalanca(i, e.target.value)} className="h-6 text-xs px-1.5" placeholder="g" />
                   </td>
                   <td className="px-1 py-1 text-center">
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
@@ -244,15 +244,15 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
                   </td>
                   <td className="px-1 py-1">
                     <RubricaButton
-                    nome={r.responsavel || user?.nome_exibicao || user?.full_name || ''}
-                    rubricaUrl={r.rubrica_url}
-                    responsavel={r.responsavel}
-                    disabled={!r.valor_medido}
-                    onConfirm={(dataUrl) => confirmarRubrica(i, dataUrl)} />
-                  
+                      nome={r.responsavel || user?.nome_exibicao || user?.full_name || ''}
+                      rubricaUrl={r.rubrica_url}
+                      responsavel={r.responsavel}
+                      disabled={!r.valor_medido}
+                      onConfirm={dataUrl => confirmarRubrica(i, dataUrl)}
+                    />
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
@@ -260,7 +260,7 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
 
       <div className="space-y-1.5 max-w-lg">
         <Label className="text-xs">Outras Informações</Label>
-        <Textarea value={outrasInfo} onChange={(e) => setOutrasInfo(e.target.value)} className="h-20 text-xs" />
+        <Textarea value={outrasInfo} onChange={e => setOutrasInfo(e.target.value)} className="h-20 text-xs" />
       </div>
 
       <AnaliseCritica
@@ -272,8 +272,8 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
         onDataChange={setAcData}
         rubricaUrl={acRubricaUrl}
         onRubricaConfirm={setAcRubricaUrl}
-        nomeUsuario={user?.nome_exibicao || user?.full_name || ''} />
-      
+        nomeUsuario={user?.nome_exibicao || user?.full_name || ''}
+      />
 
       <div className="flex justify-end gap-2 pb-6">
         <Button variant="outline" onClick={onBack}>Cancelar</Button>
@@ -281,6 +281,6 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
           {saving ? 'Salvando...' : 'Salvar Verificação'}
         </Button>
       </div>
-    </div>);
-
+    </div>
+  );
 }

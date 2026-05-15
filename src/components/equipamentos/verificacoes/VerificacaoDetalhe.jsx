@@ -117,8 +117,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
 
   const handleSave = async () => {
     setSaving(true);
-    const saveData = { ...data, resultado_geral: data.analise_critica_rubrica_url ? data.resultado_geral : 'em_andamento' };
-    const updated = await base44.entities.VerificacaoDiaria.update(data.id, saveData);
+    const updated = await base44.entities.VerificacaoDiaria.update(data.id, data);
     setSaving(false);
     onSaved(updated);
   };

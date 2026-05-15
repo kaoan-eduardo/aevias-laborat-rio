@@ -36,9 +36,9 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
     listarVidrarias().then(setVidrarias);
   }, []);
 
-  const diasNoMes = mesAno ?
-  new Date(Number(mesAno.split('-')[0]), Number(mesAno.split('-')[1]), 0).getDate() :
-  31;
+  const diasNoMes = mesAno
+    ? new Date(Number(mesAno.split('-')[0]), Number(mesAno.split('-')[1]), 0).getDate()
+    : 31;
 
   const setRegDensidade = (idx, field, value, currentReg) => {
     const updated = { ...currentReg, [field]: value };
@@ -50,14 +50,14 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
       }
     }
     updated.situacao = avaliarSituacaoDensidade(solucaoDesc, updated.densidade_com_amostra, updated.densidade_sem_amostra);
-    setRegistros((prev) => prev.map((r, i) => i === idx ? updated : r));
+    setRegistros(prev => prev.map((r, i) => i === idx ? updated : r));
   };
 
   const confirmarRubrica = (idx, dataUrl) => {
-    setRegistros((prev) => prev.map((r, i) =>
-    i === idx ?
-    { ...r, responsavel: r.responsavel || user?.nome_exibicao || user?.full_name || '', rubrica_url: dataUrl } :
-    r
+    setRegistros(prev => prev.map((r, i) =>
+      i === idx
+        ? { ...r, responsavel: r.responsavel || user?.nome_exibicao || user?.full_name || '', rubrica_url: dataUrl }
+        : r
     ));
   };
 
@@ -71,7 +71,7 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
       tipo: 'densidade',
       mes_ano: mesAno,
       outras_informacoes: outrasInfo,
-      resultado_geral: acRubricaUrl ? resultadoGeral : 'em_andamento',
+      resultado_geral: resultadoGeral,
       eq_referencia_identificacao: eqRefId,
       eq_referencia_descricao: eqRefDesc,
       eq_referencia_data_calibracao: eqRefCal,
@@ -80,7 +80,7 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
       registros,
       analise_critica_responsavel: acResponsavel,
       analise_critica_data: acData,
-      analise_critica_rubrica_url: acRubricaUrl
+      analise_critica_rubrica_url: acRubricaUrl,
     });
     setSaving(false);
     onSaved();
@@ -107,19 +107,19 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="space-y-1.5">
           <Label className="text-xs">Mês/Ano *</Label>
-          <Input type="month" value={mesAno} onChange={(e) => setMesAno(e.target.value)} />
+          <Input type="month" value={mesAno} onChange={e => setMesAno(e.target.value)} />
         </div>
-        
-
-
-
-
-
-
-
-
-
-        
+        <div className="space-y-1.5">
+          <Label className="text-xs">Resultado Geral</Label>
+          <Select value={resultadoGeral} onValueChange={setResultadoGeral}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="em_andamento">Em andamento</SelectItem>
+              <SelectItem value="aprovado">Aprovado</SelectItem>
+              <SelectItem value="reprovado">Reprovado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="rounded-lg border bg-muted/20 p-4 space-y-3">
@@ -127,34 +127,34 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Identificação</Label>
-            {vidrarias.length > 0 ?
-            <Select value={eqRefId} onValueChange={(val) => {
-              const eq = vidrarias.find((p) => p.identificacao_interna === val);
-              setEqRefId(val);
-              setEqRefDesc(eq?.nome || '');
-              setEqRefCal(eq?.data_calibracao || '');
-            }}>
+            {vidrarias.length > 0 ? (
+              <Select value={eqRefId} onValueChange={val => {
+                const eq = vidrarias.find(p => p.identificacao_interna === val);
+                setEqRefId(val);
+                setEqRefDesc(eq?.nome || '');
+                setEqRefCal(eq?.data_calibracao || '');
+              }}>
                 <SelectTrigger className="text-xs h-9"><SelectValue placeholder="Selecione a vidraria" /></SelectTrigger>
                 <SelectContent>
-                  {vidrarias.map((p) =>
-                <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
-                )}
+                  {vidrarias.map(p => (
+                    <SelectItem key={p.id} value={p.identificacao_interna}>{p.identificacao_interna} — {p.nome}</SelectItem>
+                  ))}
                 </SelectContent>
-              </Select> :
-
-            <div className="space-y-1">
-                <Input value={eqRefId} onChange={(e) => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
+              </Select>
+            ) : (
+              <div className="space-y-1">
+                <Input value={eqRefId} onChange={e => setEqRefId(e.target.value)} placeholder="ID do equip. referência" className="text-xs" />
                 <p className="text-xs text-amber-600">Nenhuma vidraria encontrada nos equipamentos.</p>
               </div>
-            }
+            )}
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Descrição</Label>
-            <Input value={eqRefDesc} onChange={(e) => setEqRefDesc(e.target.value)} className="text-xs" disabled={!!eqRefId} />
+            <Input value={eqRefDesc} onChange={e => setEqRefDesc(e.target.value)} className="text-xs" disabled={!!eqRefId} />
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Data de Calibração</Label>
-            <Input type="date" value={eqRefCal} onChange={(e) => setEqRefCal(e.target.value)} className="text-xs" />
+            <Input type="date" value={eqRefCal} onChange={e => setEqRefCal(e.target.value)} className="text-xs" />
           </div>
         </div>
       </div>
@@ -174,7 +174,7 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Lote</Label>
-            <Input value={solucaoLote} onChange={(e) => setSolucaoLote(e.target.value)} placeholder="Lote" className="text-xs" />
+            <Input value={solucaoLote} onChange={e => setSolucaoLote(e.target.value)} placeholder="Lote" className="text-xs" />
           </div>
         </div>
         <p className="text-xs text-muted-foreground">Variação permitida: Sulfato de Sódio: 1,151–1,174 · Magnésio: 1,295–1,308</p>
@@ -196,13 +196,13 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {registros.slice(0, diasNoMes).map((r, i) =>
-              <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
+              {registros.slice(0, diasNoMes).map((r, i) => (
+                <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-1 text-center font-mono-data text-muted-foreground">{r.dia}</td>
-                  <td className="px-1 py-1"><Input value={r.horario} onChange={(e) => setRegDensidade(i, 'horario', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="HH:MM" /></td>
-                  <td className="px-1 py-1"><Input value={r.temperatura} onChange={(e) => setRegDensidade(i, 'temperatura', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
-                  <td className="px-1 py-1"><Input value={r.densidade_com_amostra} onChange={(e) => setRegDensidade(i, 'densidade_com_amostra', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
-                  <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={(e) => setRegDensidade(i, 'densidade_sem_amostra', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
+                  <td className="px-1 py-1"><Input value={r.horario} onChange={e => setRegDensidade(i, 'horario', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="HH:MM" /></td>
+                  <td className="px-1 py-1"><Input value={r.temperatura} onChange={e => setRegDensidade(i, 'temperatura', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="°C" /></td>
+                  <td className="px-1 py-1"><Input value={r.densidade_com_amostra} onChange={e => setRegDensidade(i, 'densidade_com_amostra', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
+                  <td className="px-1 py-1"><Input value={r.densidade_sem_amostra} onChange={e => setRegDensidade(i, 'densidade_sem_amostra', e.target.value, r)} className="h-6 text-xs px-1.5" placeholder="g/cm³" /></td>
                   <td className="px-1 py-1 text-center">
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
                       {r.situacao === 'aprovado' ? 'Aprovado' : r.situacao === 'reprovado' ? 'Reprovado' : '—'}
@@ -210,15 +210,15 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
                   </td>
                   <td className="px-1 py-1">
                     <RubricaButton
-                    nome={r.responsavel || user?.nome_exibicao || user?.full_name || ''}
-                    rubricaUrl={r.rubrica_url}
-                    responsavel={r.responsavel}
-                    disabled={false}
-                    onConfirm={(dataUrl) => confirmarRubrica(i, dataUrl)} />
-                  
+                      nome={r.responsavel || user?.nome_exibicao || user?.full_name || ''}
+                      rubricaUrl={r.rubrica_url}
+                      responsavel={r.responsavel}
+                      disabled={false}
+                      onConfirm={dataUrl => confirmarRubrica(i, dataUrl)}
+                    />
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
@@ -226,7 +226,7 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
 
       <div className="space-y-1.5 max-w-lg">
         <Label className="text-xs">Outras Informações</Label>
-        <Textarea value={outrasInfo} onChange={(e) => setOutrasInfo(e.target.value)} className="h-20 text-xs" />
+        <Textarea value={outrasInfo} onChange={e => setOutrasInfo(e.target.value)} className="h-20 text-xs" />
       </div>
 
       <AnaliseCritica
@@ -238,8 +238,8 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
         onDataChange={setAcData}
         rubricaUrl={acRubricaUrl}
         onRubricaConfirm={setAcRubricaUrl}
-        nomeUsuario={user?.nome_exibicao || user?.full_name || ''} />
-      
+        nomeUsuario={user?.nome_exibicao || user?.full_name || ''}
+      />
 
       <div className="flex justify-end gap-2 pb-6">
         <Button variant="outline" onClick={onBack}>Cancelar</Button>
@@ -247,6 +247,6 @@ export default function NovaVerificacaoDensidade({ onBack, onSaved }) {
           {saving ? 'Salvando...' : 'Salvar Verificação'}
         </Button>
       </div>
-    </div>);
-
+    </div>
+  );
 }
