@@ -3,17 +3,22 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import {
   Users, FlaskConical, FileText, LayoutDashboard,
-  LogOut, Menu, UserCog, Package, Inbox, Wrench, ClipboardCheck, ChevronLeft, ChevronRight
+  LogOut, Menu, UserCog, Package, Inbox, Wrench, ClipboardCheck, ChevronLeft, ChevronRight,
+  BookOpen, ChevronDown
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 
-const NAV_ITEMS = [
-  { path: '/', label: 'Início', icon: LayoutDashboard, roles: ['admin', 'gestor', 'tecnico', 'auxiliar', 'comercial'] },
+// Itens do grupo "Cadastros"
+const CADASTROS_ITEMS = [
   { path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'gestor', 'auxiliar', 'comercial'] },
   { path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'gestor', 'tecnico'] },
-  { path: '/fas', label: 'FAS', icon: FileText, roles: ['admin', 'gestor', 'comercial', 'auxiliar'] },
   { path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'gestor', 'tecnico', 'auxiliar'] },
+];
+
+const NAV_ITEMS = [
+  { path: '/', label: 'Início', icon: LayoutDashboard, roles: ['admin', 'gestor', 'tecnico', 'auxiliar', 'comercial'] },
+  { path: '/fas', label: 'FAS', icon: FileText, roles: ['admin', 'gestor', 'comercial', 'auxiliar'] },
   { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'auxiliar', 'gestor'] },
   { path: '/equipamentos', label: 'Equipamentos', icon: Wrench, roles: ['admin', 'gestor', 'tecnico'] },
   { path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck, roles: ['admin', 'gestor', 'laboratorista', 'tecnico', 'auxiliar'] },
@@ -31,8 +36,10 @@ const ROLE_LABELS = {
   comercial: { label: 'Comercial', color: 'bg-white/10 text-white/80' },
 };
 
-function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomItems, roleInfo, user, handleLogout }) {
+function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomItems, visibleCadastros, roleInfo, user, handleLogout }) {
   const location = useLocation();
+  const cadastrosActive = CADASTROS_ITEMS.some(i => location.pathname.startsWith(i.path));
+  const [cadastrosOpen, setCadastrosOpen] = useState(cadastrosActive);
 
   return (
     <div className="flex flex-col h-full bg-[#00233B]">
@@ -57,21 +64,68 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {visibleItems.map(item => {
+        {/* Início */}
+        {visibleItems.filter(i => i.path === '/').map(item => {
           const Icon = item.icon;
-          const active = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+          const active = location.pathname === '/';
           return (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={() => setMobileOpen(false)}
+            <Link key={item.path} to={item.path} onClick={() => setMobileOpen(false)}
+              className={cn('flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-150',
+                active ? 'bg-white text-[#00233B] shadow-md' : 'text-white/65 hover:bg-white/10 hover:text-white'
+              )}>
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              {!collapsed && <span className="truncate">{item.label}</span>}
+            </Link>
+          );
+        })}
+
+        {/* Grupo Cadastros */}
+        {visibleCadastros.length > 0 && (
+          <div>
+            <button
+              onClick={() => !collapsed && setCadastrosOpen(o => !o)}
               className={cn(
-                'flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-150',
-                active
-                  ? 'bg-white text-[#00233B] shadow-md'
-                  : 'text-white/65 hover:bg-white/10 hover:text-white'
+                'w-full flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-150',
+                cadastrosActive ? 'text-white' : 'text-white/65 hover:bg-white/10 hover:text-white'
               )}
             >
+              <BookOpen className="w-4 h-4 flex-shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 text-left">Cadastros</span>
+                  <ChevronDown className={cn('w-3.5 h-3.5 transition-transform duration-200', cadastrosOpen && 'rotate-180')} />
+                </>
+              )}
+            </button>
+            {!collapsed && cadastrosOpen && (
+              <div className="ml-3 mt-0.5 space-y-0.5 border-l border-white/10 pl-3">
+                {visibleCadastros.map(item => {
+                  const Icon = item.icon;
+                  const active = location.pathname.startsWith(item.path);
+                  return (
+                    <Link key={item.path} to={item.path} onClick={() => setMobileOpen(false)}
+                      className={cn('flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150',
+                        active ? 'bg-white text-[#00233B] shadow-md' : 'text-white/60 hover:bg-white/10 hover:text-white'
+                      )}>
+                      <Icon className="w-4 h-4 flex-shrink-0" />
+                      <span className="truncate">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Demais itens (exceto Início) */}
+        {visibleItems.filter(i => i.path !== '/').map(item => {
+          const Icon = item.icon;
+          const active = location.pathname.startsWith(item.path);
+          return (
+            <Link key={item.path} to={item.path} onClick={() => setMobileOpen(false)}
+              className={cn('flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-150',
+                active ? 'bg-white text-[#00233B] shadow-md' : 'text-white/65 hover:bg-white/10 hover:text-white'
+              )}>
               <Icon className="w-4 h-4 flex-shrink-0" />
               {!collapsed && <span className="truncate">{item.label}</span>}
             </Link>
@@ -153,11 +207,12 @@ export default function Layout() {
 
   const role = user?.role || 'auxiliar';
   const visibleItems = NAV_ITEMS.filter(item => item.roles.includes(role));
+  const visibleCadastros = CADASTROS_ITEMS.filter(item => item.roles.includes(role));
   const visibleBottomItems = BOTTOM_NAV_ITEMS.filter(item => item.roles.includes(role));
   const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['auxiliar'];
 
   const handleLogout = () => base44.auth.logout();
-  const sidebarProps = { collapsed, setMobileOpen, visibleItems, visibleBottomItems, roleInfo, user, handleLogout };
+  const sidebarProps = { collapsed, setMobileOpen, visibleItems, visibleCadastros, visibleBottomItems, roleInfo, user, handleLogout };
 
   return (
     <div className="flex h-screen bg-[#F2F1EF] overflow-hidden">
