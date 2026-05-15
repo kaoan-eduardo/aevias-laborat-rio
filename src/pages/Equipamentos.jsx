@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import EquipamentoModal from '@/components/equipamentos/EquipamentoModal';
 import EquipamentoDetalhes from '@/components/equipamentos/EquipamentoDetalhes';
+import VerificacaoDetalhe from '@/components/equipamentos/verificacoes/VerificacaoDetalhe';
 import { STATUS_EQUIPAMENTO, isCalibracaoVencida, isCalibracaoProxima } from '@/utils/equipamentoHelpers';
 
 export default function Equipamentos() {
@@ -19,6 +20,7 @@ export default function Equipamentos() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEq, setEditingEq] = useState(null);
   const [detalhesEq, setDetalhesEq] = useState(null);
+  const [verificacaoDetalhe, setVerificacaoDetalhe] = useState(null);
 
   const role = user?.role || 'auxiliar';
   const canEdit = role === 'admin' || role === 'gestor';
@@ -182,7 +184,21 @@ export default function Equipamentos() {
           canEdit={canEdit}
           onClose={() => setDetalhesEq(null)}
           onEdit={() => handleEdit(detalhesEq)}
+          onOpenVerificacao={v => setVerificacaoDetalhe(v)}
         />
+      )}
+
+      {verificacaoDetalhe && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-5xl my-6">
+            <VerificacaoDetalhe
+              verificacao={verificacaoDetalhe}
+              isGestor={canEdit}
+              onBack={() => setVerificacaoDetalhe(null)}
+              onSaved={updated => setVerificacaoDetalhe(updated)}
+            />
+          </div>
+        </div>
       )}
 
     </>

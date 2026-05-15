@@ -19,7 +19,7 @@ const InfoRow = ({ label, value, mono }) => (
   </div>
 );
 
-export default function EquipamentoDetalhes({ equipamento: initialEquipamento, canEdit, onClose, onEdit }) {
+export default function EquipamentoDetalhes({ equipamento: initialEquipamento, canEdit, onClose, onEdit, onOpenVerificacao }) {
   const [eq, setEq] = useState(initialEquipamento);
 
   const status = STATUS_EQUIPAMENTO[eq.status] || STATUS_EQUIPAMENTO.em_uso;
@@ -135,7 +135,7 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
         {/* Verificações Diárias */}
         <div className="px-6 py-5 space-y-3">
           <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Verificações Diárias</h3>
-          <VerificacoesLista equipamentoId={eq.id} />
+          <VerificacoesLista equipamentoId={eq.id} onOpenDetalhe={v => { onClose(); onOpenVerificacao && onOpenVerificacao(v); }} />
         </div>
 
         {/* Histórico de status */}
