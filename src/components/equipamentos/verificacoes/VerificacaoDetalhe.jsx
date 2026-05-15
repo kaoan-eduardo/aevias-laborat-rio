@@ -38,7 +38,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
 
   useEffect(() => {
     base44.auth.me().then((u) => {
-      if (u?.full_name) setUserName(u.full_name);
+      if (u) setUserName(u.nome_exibicao || u.full_name);
     });
 
     if (verificacao.tipo === 'temperatura') {
