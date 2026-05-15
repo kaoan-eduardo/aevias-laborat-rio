@@ -63,7 +63,7 @@ export default function AnaliseCritica({
           
         </div>
 
-        <div className="space-y-1.5 my-1">
+        <div className="space-y-1.5">
           <Label className="text-xs">Responsável (rubrica)</Label>
           <div className="flex items-center gap-2">
             
