@@ -287,7 +287,7 @@ export default function NovaVerificacao({ onBack, onSaved }) {
         </div>
         <div className="space-y-1.5">
           <Label className="text-xs">Realizado por</Label>
-          <Input value={realizadoPor}/>
+          <Input/>
         </div>
       </div>
 
