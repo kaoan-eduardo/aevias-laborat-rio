@@ -59,7 +59,7 @@ export default function AnaliseCritica({
             value={data || ''}
             onChange={(e) => onDataChange(e.target.value)}
             disabled={disabled}
-            className="text-xs" />
+            className="text-xs pt-1 pr-3 pb-1 pl-3" />
           
         </div>
 
