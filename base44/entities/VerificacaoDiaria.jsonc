@@ -155,5 +155,60 @@
     "equipamento_id",
     "tipo",
     "mes_ano"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor",
+            "tecnico",
+            "auxiliar"
+          ]
+        }
+      }
+    },
+    "read": {
+      "user_condition": {
+        "id": {
+          "$exists": true
+        }
+      }
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": {
+              "$in": [
+                "admin",
+                "gestor"
+              ]
+            }
+          }
+        },
+        {
+          "$and": [
+            {
+              "created_by": "{{user.email}}"
+            },
+            {
+              "data.resultado_geral": "em_andamento"
+            }
+          ]
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor"
+          ]
+        }
+      }
+    }
+  }
 }
