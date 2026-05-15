@@ -9,7 +9,7 @@ export function buildBalancaHtml(v) {
     const ativo = i < total;
     const rubricaCell = ativo
       ? (r.rubrica_url
-          ? `<img src="${r.rubrica_url}" style="height:12px;max-width:80px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${r.responsavel || ''}</span>`
+          ? `<img src="${r.rubrica_url}" style="height:30px;max-width:100px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${r.responsavel || ''}</span>`
           : (r.responsavel || ''))
       : '';
     return `
