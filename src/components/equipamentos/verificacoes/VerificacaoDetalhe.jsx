@@ -9,59 +9,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import RubricaButton from './RubricaButton';
-
-const BALANCA_MIN = 1991.11;
-const BALANCA_MAX = 2011.72;
-
-function avaliarSituacaoBalanca(valorStr) {
-  const v = parseFloat(String(valorStr).replace(',', '.'));
-  if (isNaN(v) || valorStr === '') return '';
-  return (v >= BALANCA_MIN && v <= BALANCA_MAX) ? 'aprovado' : 'reprovado';
-}
-
-function getLimiteTemperatura(ref) {
-  const v = parseFloat(ref);
-  if (isNaN(v)) return null;
-  if (v === -18) return 3.0;
-  if (v === 25) return 0.5;
-  if (v >= 40 && v <= 60) return 2.0;
-  if (v > 60 && v <= 80) return 3.0;
-  if (v > 80 && v <= 100) return 4.0;
-  if (v > 100 && v <= 120) return 5.0;
-  if (v > 120 && v <= 140) return 6.0;
-  if (v > 140 && v <= 160) return 7.0;
-  if (v > 160 && v <= 180) return 8.0;
-  return null;
-}
-
-function avaliarSituacaoTemperatura(refStr, variacaoStr) {
-  if (refStr === '' || variacaoStr === '') return '';
-  const limite = getLimiteTemperatura(refStr);
-  if (limite === null) return '';
-  const variacao = Math.abs(parseFloat(variacaoStr));
-  if (isNaN(variacao)) return '';
-  return variacao <= limite ? 'aprovado' : 'reprovado';
-}
+import {
+  avaliarSituacaoBalanca,
+  avaliarSituacaoTemperatura,
+  avaliarSituacaoDensidade,
+  getHorarioSP,
+} from '@/business-rules/verificacoes';
+import { listarTermometros, listarVidrarias } from '@/services/equipamentosService';
 
 const TIPO_LABELS = { balanca: 'Balança', temperatura: 'Temperatura', densidade: 'Densidade' };
-
-const LIMITES_DENSIDADE = {
-  'Sulfato de Sódio':    { min: 1.151, max: 1.174 },
-  'Sulfato de Magnésio': { min: 1.295, max: 1.308 },
-};
-
-function avaliarSituacaoDensidade(solucao, comAmostra, semAmostra) {
-  const limites = LIMITES_DENSIDADE[solucao];
-  if (!limites) return '';
-  const com = parseFloat(String(comAmostra).replace(',', '.'));
-  const sem = parseFloat(String(semAmostra).replace(',', '.'));
-  if (isNaN(com) || isNaN(sem) || comAmostra === '' || semAmostra === '') return '';
-  return (com >= limites.min && com <= limites.max && sem >= limites.min && sem <= limites.max) ? 'aprovado' : 'reprovado';
-}
-
-function getHorarioSP() {
-  return new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false });
-}
 
 const RESULTADO_COLOR = {
   em_andamento: 'bg-yellow-100 text-yellow-700',
@@ -85,20 +41,11 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
     });
 
     if (verificacao.tipo === 'temperatura') {
-      base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
-        .then(all => {
-          setTermometros(all.filter(eq =>
-            eq.categoria?.toLowerCase().includes('termômetro') ||
-            eq.categoria?.toLowerCase().includes('termometro') ||
-            eq.nome?.toLowerCase().includes('termômetro') ||
-            eq.nome?.toLowerCase().includes('termometro')
-          ));
-        });
+      listarTermometros().then(setTermometros);
     }
 
     if (verificacao.tipo === 'densidade') {
-      base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
-        .then(all => setVidrarias(all.filter(eq => eq.categoria === 'Vidraria')));
+      listarVidrarias().then(setVidrarias);
     }
   }, []);
 

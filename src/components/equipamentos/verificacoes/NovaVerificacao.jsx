@@ -9,96 +9,25 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import RubricaButton from './RubricaButton';
-
-const BALANCA_MIN = 1991.11;
-const BALANCA_MAX = 2011.72;
-
-function avaliarSituacaoBalanca(valorStr) {
-  const v = parseFloat(String(valorStr).replace(',', '.'));
-  if (isNaN(v) || valorStr === '') return '';
-  return (v >= BALANCA_MIN && v <= BALANCA_MAX) ? 'aprovado' : 'reprovado';
-}
-
-// Tabela de limites de variação por faixa de temperatura de referência
-const LIMITES_TEMPERATURA = [
-  { min: -Infinity, max: -18,  limite: 3.0 },
-  { min: -18,       max: -18,  limite: 3.0 },
-  { min: -17.99,    max: 25,   limite: 0.5 },
-  { min: 25.01,     max: 60,   limite: 2.0 },
-  { min: 60.01,     max: 80,   limite: 3.0 },
-  { min: 80.01,     max: 100,  limite: 4.0 },
-  { min: 100.01,    max: 120,  limite: 5.0 },
-  { min: 120.01,    max: 140,  limite: 6.0 },
-  { min: 140.01,    max: 160,  limite: 7.0 },
-  { min: 160.01,    max: 180,  limite: 8.0 },
-];
-
-// Limites simplificados por pontos/faixas exatos conforme enunciado
-function getLimiteTemperatura(ref) {
-  const v = parseFloat(ref);
-  if (isNaN(v)) return null;
-  if (v === -18) return 3.0;
-  if (v === 25) return 0.5;
-  if (v >= 40 && v <= 60) return 2.0;
-  if (v > 60 && v <= 80) return 3.0;
-  if (v > 80 && v <= 100) return 4.0;
-  if (v > 100 && v <= 120) return 5.0;
-  if (v > 120 && v <= 140) return 6.0;
-  if (v > 140 && v <= 160) return 7.0;
-  if (v > 160 && v <= 180) return 8.0;
-  return null;
-}
-
-function avaliarSituacaoTemperatura(refStr, variacaoStr) {
-  if (refStr === '' || variacaoStr === '') return '';
-  const limite = getLimiteTemperatura(refStr);
-  if (limite === null) return '';
-  const variacao = Math.abs(parseFloat(variacaoStr));
-  if (isNaN(variacao)) return '';
-  return variacao <= limite ? 'aprovado' : 'reprovado';
-}
-
-const LIMITES_DENSIDADE = {
-  'Sulfato de Sódio':    { min: 1.151, max: 1.174 },
-  'Sulfato de Magnésio': { min: 1.295, max: 1.308 },
-};
-
-function avaliarSituacaoDensidade(solucao, comAmostra, semAmostra) {
-  const limites = LIMITES_DENSIDADE[solucao];
-  if (!limites) return '';
-  const com = parseFloat(String(comAmostra).replace(',', '.'));
-  const sem = parseFloat(String(semAmostra).replace(',', '.'));
-  if (isNaN(com) || isNaN(sem) || comAmostra === '' || semAmostra === '') return '';
-  const comOk = com >= limites.min && com <= limites.max;
-  const semOk = sem >= limites.min && sem <= limites.max;
-  return (comOk && semOk) ? 'aprovado' : 'reprovado';
-}
-
-function getHorarioSP() {
-  return new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false });
-}
+import {
+  avaliarSituacaoBalanca,
+  avaliarSituacaoTemperatura,
+  avaliarSituacaoDensidade,
+  getHorarioSP,
+  buildRegistros,
+} from '@/business-rules/verificacoes';
+import {
+  listarEquipamentosParaVerificacao,
+  listarPesosPadrao,
+  listarTermometros,
+  listarVidrarias,
+} from '@/services/equipamentosService';
 
 const TIPOS = [
   { value: 'balanca', label: 'Balança', desc: 'Verificação de massa com peso padrão' },
   { value: 'temperatura', label: 'Temperatura', desc: 'Verificação de termômetros e fornos' },
   { value: 'densidade', label: 'Densidade', desc: 'Verificação de densímetros' },
 ];
-
-function buildRegistros() {
-  return Array.from({ length: 31 }, (_, i) => ({
-    dia: i + 1,
-    valor_referencia: '',
-    valor_medido: '',
-    variacao: '',
-    horario: '',
-    temperatura: '',
-    densidade_com_amostra: '',
-    densidade_sem_amostra: '',
-    situacao: '',
-    responsavel: '',
-    rubrica_url: '',
-  }));
-}
 
 export default function NovaVerificacao({ onBack, onSaved }) {
   const { user } = useAuth();
@@ -123,11 +52,6 @@ export default function NovaVerificacao({ onBack, onSaved }) {
   const [registros, setRegistros] = useState(buildRegistros());
   const [saving, setSaving] = useState(false);
 
-  const CATEGORIAS_POR_TIPO = {
-    balanca: ['Balança', 'balanca', 'balança'],
-    temperatura: ['Temperatura', 'temperatura', 'Estufa', 'estufa', 'Banho Maria', 'banho maria', 'Banho-Maria', 'banho-maria', 'Forno', 'forno'],
-  };
-
   const [vidrarias, setVidrarias] = useState([]);
 
   useEffect(() => {
@@ -138,15 +62,8 @@ export default function NovaVerificacao({ onBack, onSaved }) {
         return;
       }
       setLoadingEq(true);
-      base44.entities.Equipamento.filter({ status: 'em_uso', obrigatorio_verificacao_diaria: true }, 'identificacao_interna')
-        .then(data => {
-          const categoriasPermitidas = CATEGORIAS_POR_TIPO[tipo] || [];
-          const filtrado = data.filter(eq =>
-            categoriasPermitidas.some(cat => eq.categoria?.toLowerCase() === cat.toLowerCase())
-          );
-          setEquipamentos(filtrado);
-          setLoadingEq(false);
-        });
+      listarEquipamentosParaVerificacao(tipo)
+        .then(data => { setEquipamentos(data); setLoadingEq(false); });
     }
   }, [step, tipo]);
 
@@ -160,47 +77,29 @@ export default function NovaVerificacao({ onBack, onSaved }) {
       setEqRefDesc('');
 
       if (tipo === 'balanca') {
-        base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
-          .then(data => {
-            const pesos = data.filter(eq =>
-              eq.categoria?.toLowerCase().includes('peso padrão') ||
-              eq.categoria?.toLowerCase().includes('peso padrao') ||
-              eq.nome?.toLowerCase().includes('peso padrão') ||
-              eq.nome?.toLowerCase().includes('peso padrao') ||
-              eq.categoria?.toLowerCase().includes('conjunto de peso')
-            );
-            setPesosPadrao(pesos);
-            if (pesos.length === 1) {
-              setEqRefId(pesos[0].identificacao_interna || '');
-              setEqRefDesc(pesos[0].nome || '');
-              setEqRefCal(pesos[0].data_calibracao || '');
-            }
-          });
+        listarPesosPadrao().then(pesos => {
+          setPesosPadrao(pesos);
+          if (pesos.length === 1) {
+            setEqRefId(pesos[0].identificacao_interna || '');
+            setEqRefDesc(pesos[0].nome || '');
+            setEqRefCal(pesos[0].data_calibracao || '');
+          }
+        });
       }
 
       if (tipo === 'temperatura') {
-        base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
-          .then(data => {
-            const terms = data.filter(eq =>
-              eq.categoria?.toLowerCase().includes('termômetro') ||
-              eq.categoria?.toLowerCase().includes('termometro') ||
-              eq.nome?.toLowerCase().includes('termômetro') ||
-              eq.nome?.toLowerCase().includes('termometro')
-            );
-            setTermometros(terms);
-            if (terms.length === 1) {
-              setEqRefId(terms[0].identificacao_interna || '');
-              setEqRefDesc(terms[0].nome || '');
-              setEqRefCal(terms[0].data_calibracao || '');
-            }
-          });
+        listarTermometros().then(terms => {
+          setTermometros(terms);
+          if (terms.length === 1) {
+            setEqRefId(terms[0].identificacao_interna || '');
+            setEqRefDesc(terms[0].nome || '');
+            setEqRefCal(terms[0].data_calibracao || '');
+          }
+        });
       }
 
       if (tipo === 'densidade') {
-        base44.entities.Equipamento.filter({ status: 'em_uso' }, 'identificacao_interna')
-          .then(data => {
-            setVidrarias(data.filter(eq => eq.categoria === 'Vidraria'));
-          });
+        listarVidrarias().then(setVidrarias);
       }
     }
   }, [step, equipamento, user, tipo]);
