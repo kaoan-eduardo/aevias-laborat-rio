@@ -66,12 +66,12 @@ export default function AnaliseCritica({
         <div className="space-y-1.5">
           <Label className="text-xs">Responsável (rubrica)</Label>
           <div className="flex items-center gap-2">
-            <Input
-              value={responsavel || ''}
-              onChange={(e) => onResponsavelChange(e.target.value)}
-              placeholder="Nome do responsável"
-              disabled={disabled}
-              className="text-xs flex-1 hidden" />
+            
+
+
+
+
+            
             
             <RubricaButton
               nome={responsavel || nomeUsuario}
