@@ -48,7 +48,7 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved, currentU
           <DialogTitle>Editar Usuário</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 pt-2">
+        <div className="space-y-4 py-1">
           <div className="space-y-1.5 hidden">
             <Label>Nome</Label>
             <Input value={usuario?.full_name?.replace(/./g, '•') || ''} readOnly className="bg-muted text-muted-foreground font-mono tracking-widest" />
