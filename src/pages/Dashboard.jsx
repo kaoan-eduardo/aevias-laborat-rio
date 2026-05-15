@@ -48,7 +48,7 @@ export default function Dashboard() {
     return 'Boa noite,';
   };
 
-  const firstName = user?.full_name?.split(' ')[0] || 'usuário';
+  const nome_exibicao = user?.nome_exibicao || user?.full_name?.split(' ')[0] || 'usuário';
   const role = user?.role || 'auxiliar';
 
   const STAT_CARDS = [
