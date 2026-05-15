@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { ChevronRight, ClipboardList } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { openVerificacaoImpressao } from './VerificacaoDocumento';
 
 const TIPO_LABELS = { balanca: 'Balança', temperatura: 'Temperatura', densidade: 'Densidade' };
 
@@ -63,7 +64,7 @@ export default function VerificacoesLista({ equipamentoId, onOpenDetalhe }) {
 
   return (
     <div className="space-y-2">
-      {verificacoes.map(v => <VerificacaoCard key={v.id} v={v} onOpen={onOpenDetalhe} />)}
+      {verificacoes.map(v => <VerificacaoCard key={v.id} v={v} onOpen={openVerificacaoImpressao} />)}
     </div>
   );
 }
