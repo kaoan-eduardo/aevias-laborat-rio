@@ -54,8 +54,7 @@ export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <tr>
       <td style="border:1.5px solid #555;padding:6px 10px;width:140px;text-align:center;vertical-align:middle">
-        <div style="font-weight:900;font-size:10px;letter-spacing:2px">AFIRMAEVIAS</div>
-        <div style="font-size:6px;letter-spacing:3px;color:#555">e n g e n h a r i a</div>
+        <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/4cb4a9760_image.png" style="max-width:120px;height:auto;display:block;margin:0 auto" />
       </td>
       <td style="border:1.5px solid #555;padding:4px 8px;text-align:center;font-weight:bold;font-size:11px;vertical-align:middle">
         ${titulo}
