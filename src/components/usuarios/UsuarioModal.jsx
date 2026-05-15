@@ -15,13 +15,12 @@ const ROLES = [
 ];
 
 export default function UsuarioModal({ open, onClose, usuario, onSaved }) {
-  const [form, setForm] = useState({ full_name: '', cargo: '', role: 'auxiliar', ativo: true });
+  const [form, setForm] = useState({ cargo: '', role: 'auxiliar', ativo: true });
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (usuario) {
       setForm({
-        full_name: usuario.full_name || '',
         cargo: usuario.cargo || '',
         role: usuario.role || 'auxiliar',
         ativo: usuario.ativo !== false,
@@ -32,7 +31,6 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved }) {
   const set = (field, value) => setForm(f => ({ ...f, [field]: value }));
 
   const handleSave = async () => {
-    if (!form.full_name) return;
     setSaving(true);
     await base44.entities.User.update(usuario.id, form);
     setSaving(false);
@@ -50,11 +48,7 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved }) {
         <div className="space-y-4 pt-2">
           <div className="space-y-1.5">
             <Label>Nome Completo</Label>
-            <Input
-              value={form.full_name}
-              onChange={e => set('full_name', e.target.value)}
-              placeholder="Nome completo do usuário"
-            />
+            <Input value={usuario?.full_name || ''} readOnly className="bg-muted text-muted-foreground" />
           </div>
 
           <div className="space-y-1.5">
@@ -95,7 +89,7 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved }) {
 
           <div className="flex justify-end gap-3 pt-2">
             <Button variant="outline" onClick={onClose}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={saving || !form.full_name}>
+            <Button onClick={handleSave} disabled={saving}>
               {saving ? 'Salvando...' : 'Salvar Alterações'}
             </Button>
           </div>
