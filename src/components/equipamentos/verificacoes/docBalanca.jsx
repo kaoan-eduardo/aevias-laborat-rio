@@ -38,7 +38,7 @@ export function buildBalancaHtml(v) {
     <table style="margin-bottom:4px">
       <tr>
         <td style="width:160px;background:#eee;font-weight:bold">Descrição do equipamento:</td>
-        <td>BALANÇA &nbsp;&nbsp; ${v.equipamento_nome || ''}</td>
+        <td>${v.equipamento_nome || ''}</td>
         <td style="width:120px;background:#eee;font-weight:bold">Identificação:</td>
         <td style="width:140px">${v.equipamento_identificacao || ''}</td>
       </tr>
