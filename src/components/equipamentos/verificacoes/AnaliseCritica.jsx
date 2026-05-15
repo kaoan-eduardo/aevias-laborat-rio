@@ -60,18 +60,10 @@ export default function AnaliseCritica({
             onChange={(e) => onDataChange(e.target.value)}
             disabled={disabled}
             className="text-xs pt-1 pr-3 pb-1 pl-3" />
-          
         </div>
-
         <div className="space-y-1.5">
           <Label className="text-xs">Responsável (rubrica)</Label>
           <div className="flex items-center gap-2">
-            
-
-
-
-
-            
             
             <RubricaButton
               nome={responsavel || nomeUsuario}
