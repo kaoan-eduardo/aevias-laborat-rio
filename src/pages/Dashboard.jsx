@@ -83,7 +83,7 @@ export default function Dashboard() {
         {/* Content */}
         <div className="relative z-10 p-8 max-w-lg">
           <p className="text-white/70 text-base mb-1">{greeting()}</p>
-          <h1 className="font-exo text-4xl font-bold leading-tight mb-3">{firstName}</h1>
+          <h1 className="font-exo text-4xl font-bold leading-tight mb-3">{nome_exibicao}</h1>
           <div className="w-10 h-1 rounded-full bg-[#566E3D] mb-4" />
           <p className="text-white/60 text-sm leading-relaxed">
             Bem-vindo ao <span className="text-[#BFCF99] font-semibold">AE Laboratório</span>. Veja o resumo de atividades e indicadores do dia.
