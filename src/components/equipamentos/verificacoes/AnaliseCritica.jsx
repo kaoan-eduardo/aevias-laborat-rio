@@ -6,7 +6,7 @@ import RubricaButton from './RubricaButton';
 const RESULTADO_COLOR = {
   em_andamento: 'border-yellow-300 bg-yellow-50',
   aprovado: 'border-green-300 bg-green-50',
-  reprovado: 'border-red-300 bg-red-50',
+  reprovado: 'border-red-300 bg-red-50'
 };
 
 /**
@@ -31,15 +31,15 @@ export default function AnaliseCritica({
   onRubricaConfirm,
   nomeUsuario = '',
   disabled = false,
-  showResultado = true,
+  showResultado = true
 }) {
   return (
     <div className={`rounded-lg border-2 p-4 space-y-3 ${RESULTADO_COLOR[resultadoGeral] || 'border-border bg-muted/10'}`}>
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Análise Crítica</p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
 
-        {showResultado && (
-          <div className="space-y-1.5">
+        {showResultado &&
+        <div className="space-y-1.5">
             <Label className="text-xs">Resultado Geral</Label>
             <Select value={resultadoGeral} onValueChange={onResultadoChange} disabled={disabled}>
               <SelectTrigger><SelectValue /></SelectTrigger>
@@ -50,17 +50,17 @@ export default function AnaliseCritica({
               </SelectContent>
             </Select>
           </div>
-        )}
+        }
 
         <div className="space-y-1.5">
           <Label className="text-xs">Data</Label>
           <Input
             type="date"
             value={data || ''}
-            onChange={e => onDataChange(e.target.value)}
+            onChange={(e) => onDataChange(e.target.value)}
             disabled={disabled}
-            className="text-xs"
-          />
+            className="text-xs" />
+          
         </div>
 
         <div className="space-y-1.5">
@@ -68,25 +68,25 @@ export default function AnaliseCritica({
           <div className="flex items-center gap-2">
             <Input
               value={responsavel || ''}
-              onChange={e => onResponsavelChange(e.target.value)}
+              onChange={(e) => onResponsavelChange(e.target.value)}
               placeholder="Nome do responsável"
               disabled={disabled}
-              className="text-xs flex-1"
-            />
+              className="text-xs flex-1 hidden" />
+            
             <RubricaButton
               nome={responsavel || nomeUsuario}
               rubricaUrl={rubricaUrl}
               responsavel={responsavel}
               disabled={disabled}
-              onConfirm={dataUrl => {
+              onConfirm={(dataUrl) => {
                 if (!responsavel && nomeUsuario) onResponsavelChange(nomeUsuario);
                 onRubricaConfirm(dataUrl);
-              }}
-            />
+              }} />
+            
           </div>
         </div>
 
       </div>
-    </div>
-  );
+    </div>);
+
 }
