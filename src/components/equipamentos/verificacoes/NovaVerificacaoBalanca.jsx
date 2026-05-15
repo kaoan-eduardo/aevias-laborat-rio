@@ -163,17 +163,17 @@ export default function NovaVerificacaoBalanca({ onBack, onSaved }) {
           <Label className="text-xs">Mês/Ano *</Label>
           <Input type="month" value={mesAno} onChange={(e) => setMesAno(e.target.value)} />
         </div>
-        <div className="space-y-1.5 hidden">
-          <Label className="text-xs">Resultado Geral</Label>
-          <Select value={resultadoGeral} onValueChange={setResultadoGeral}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="em_andamento">Em andamento</SelectItem>
-              <SelectItem value="aprovado">Aprovado</SelectItem>
-              <SelectItem value="reprovado">Reprovado</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        
+
+
+
+
+
+
+
+
+
+        
       </div>
 
       <div className="rounded-lg border bg-muted/20 p-4 space-y-3">
