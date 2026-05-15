@@ -52,12 +52,7 @@
     },
     "delete": {
       "user_condition": {
-        "role": {
-          "$in": [
-            "admin",
-            "gestor"
-          ]
-        }
+        "role": "admin"
       }
     }
   }
