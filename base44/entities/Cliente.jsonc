@@ -43,12 +43,7 @@
   "rls": {
     "create": {
       "user_condition": {
-        "role": {
-          "$in": [
-            "admin",
-            "gestor"
-          ]
-        }
+        "role": "admin"
       }
     },
     "read": {
@@ -69,6 +64,16 @@
       }
     },
     "delete": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor"
+          ]
+        }
+      }
+    },
+    "write": {
       "user_condition": {
         "role": {
           "$in": [
