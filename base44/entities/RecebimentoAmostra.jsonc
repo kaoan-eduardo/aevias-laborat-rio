@@ -113,5 +113,52 @@
     "numero_protocolo",
     "cliente_id",
     "data_entrada"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor",
+            "auxiliar"
+          ]
+        }
+      }
+    },
+    "read": {
+      "user_condition": {
+        "id": {
+          "$exists": true
+        }
+      }
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": {
+              "$in": [
+                "admin",
+                "gestor"
+              ]
+            }
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": {
+          "$in": [
+            "admin",
+            "gestor"
+          ]
+        }
+      }
+    }
+  }
 }
