@@ -33,8 +33,9 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   const [termometros, setTermometros] = useState([]);
   const [vidrarias, setVidrarias] = useState([]);
 
+  const analiseCriticaAssinada = !!data.analise_critica_rubrica_url;
   const isFinalizado = data.resultado_geral !== 'em_andamento';
-  const isReadOnly = !isGestor && isFinalizado;
+  const isReadOnly = analiseCriticaAssinada || (!isGestor && isFinalizado);
 
   useEffect(() => {
     base44.auth.me().then((u) => {
@@ -356,7 +357,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
         rubricaUrl={data.analise_critica_rubrica_url || ''}
         onRubricaConfirm={(url) => setData((p) => ({ ...p, analise_critica_rubrica_url: url }))}
         nomeUsuario={userName}
-        disabled={isReadOnly}
+        disabled={analiseCriticaAssinada || !isGestor}
         showResultado={isGestor} />
       
 
