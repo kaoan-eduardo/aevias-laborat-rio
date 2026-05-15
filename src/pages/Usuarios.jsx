@@ -35,8 +35,10 @@ export default function Usuarios() {
 
   useEffect(() => { load(); }, []);
 
+  const displayName = (u) => u.nome_exibicao || u.full_name || '—';
+
   const filtered = usuarios.filter(u =>
-    u.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+    displayName(u).toLowerCase().includes(search.toLowerCase()) ||
     u.email?.toLowerCase().includes(search.toLowerCase()) ||
     u.cargo?.toLowerCase().includes(search.toLowerCase())
   );
@@ -116,10 +118,10 @@ export default function Usuarios() {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary flex-shrink-0">
-                              {u.full_name?.charAt(0)?.toUpperCase() || '?'}
+                              {displayName(u).charAt(0)?.toUpperCase() || '?'}
                             </div>
                             <div>
-                              <p className="font-medium text-foreground">{u.full_name || '—'}</p>
+                              <p className="font-medium text-foreground">{displayName(u)}</p>
                               {isSelf && <span className="text-xs text-muted-foreground">(você)</span>}
                             </div>
                           </div>
@@ -167,6 +169,7 @@ export default function Usuarios() {
         onClose={() => setModalOpen(false)}
         usuario={editingUsuario}
         onSaved={load}
+        currentUserRole={role}
       />
     </div>
   );

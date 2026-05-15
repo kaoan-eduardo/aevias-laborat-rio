@@ -14,9 +14,11 @@ const ROLES = [
   { value: 'auxiliar', label: 'Auxiliar' },
 ];
 
-export default function UsuarioModal({ open, onClose, usuario, onSaved }) {
-  const [form, setForm] = useState({ cargo: '', role: 'auxiliar', ativo: true });
+export default function UsuarioModal({ open, onClose, usuario, onSaved, currentUserRole }) {
+  const [form, setForm] = useState({ cargo: '', role: 'auxiliar', ativo: true, nome_exibicao: '' });
   const [saving, setSaving] = useState(false);
+
+  const canEditNomeExibicao = currentUserRole === 'admin' || currentUserRole === 'gestor';
 
   useEffect(() => {
     if (usuario) {
@@ -24,6 +26,7 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved }) {
         cargo: usuario.cargo || '',
         role: usuario.role || 'auxiliar',
         ativo: usuario.ativo !== false,
+        nome_exibicao: usuario.nome_exibicao || '',
       });
     }
   }, [usuario]);
@@ -47,8 +50,22 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved }) {
 
         <div className="space-y-4 pt-2">
           <div className="space-y-1.5">
-            <Label>Nome Completo</Label>
-            <Input value={usuario?.full_name || ''} readOnly className="bg-muted text-muted-foreground" />
+            <Label>Nome</Label>
+            <Input value={usuario?.full_name?.replace(/./g, '•') || ''} readOnly className="bg-muted text-muted-foreground font-mono tracking-widest" />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Nome de Exibição</Label>
+            <Input
+              value={form.nome_exibicao}
+              onChange={e => set('nome_exibicao', e.target.value)}
+              placeholder="Como o usuário aparece no sistema..."
+              disabled={!canEditNomeExibicao}
+              className={!canEditNomeExibicao ? 'bg-muted text-muted-foreground' : ''}
+            />
+            {!canEditNomeExibicao && (
+              <p className="text-xs text-muted-foreground">Apenas admins e gestores podem editar</p>
+            )}
           </div>
 
           <div className="space-y-1.5">
