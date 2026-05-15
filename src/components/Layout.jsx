@@ -116,7 +116,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
                 </span>
               </div>
               <div className="min-w-0">
-                <p className="text-white text-xs font-semibold truncate">{user?.full_name || 'Usuário'}</p>
+                <p className="text-white text-xs font-semibold truncate">{user?.nome_exibicao || 'Usuário'}</p>
                 <p className="text-white/50 text-xs truncate">{user?.email}</p>
               </div>
             </div>
