@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import RubricaButton from './RubricaButton';
+import AnaliseCritica from './AnaliseCritica';
 import {
   avaliarSituacaoBalanca,
   avaliarSituacaoTemperatura,
@@ -158,19 +159,6 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
           <Label className="text-xs">Mês/Ano</Label>
           <Input type="month" value={data.mes_ano} onChange={e => setData(p => ({ ...p, mes_ano: e.target.value }))} disabled={!isGestor} />
         </div>
-        {isGestor && (
-          <div className="space-y-1.5">
-            <Label className="text-xs">Resultado Geral</Label>
-            <Select value={data.resultado_geral} onValueChange={v => setData(p => ({ ...p, resultado_geral: v }))}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="em_andamento">Em andamento</SelectItem>
-                <SelectItem value="aprovado">Aprovado</SelectItem>
-                <SelectItem value="reprovado">Reprovado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        )}
         <div className="space-y-1.5">
           <Label className="text-xs">Realizado por</Label>
           <Input value={data.realizado_por || ''} onChange={e => setData(p => ({ ...p, realizado_por: e.target.value }))} disabled={isReadOnly} />
@@ -356,6 +344,21 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
         <Label className="text-xs">Outras Informações</Label>
         <Textarea value={data.outras_informacoes || ''} onChange={e => setData(p => ({ ...p, outras_informacoes: e.target.value }))} className="h-20 text-xs" disabled={isReadOnly} />
       </div>
+
+      {/* Análise Crítica */}
+      <AnaliseCritica
+        resultadoGeral={data.resultado_geral}
+        onResultadoChange={v => setData(p => ({ ...p, resultado_geral: v }))}
+        responsavel={data.analise_critica_responsavel || ''}
+        onResponsavelChange={v => setData(p => ({ ...p, analise_critica_responsavel: v }))}
+        data={data.analise_critica_data || ''}
+        onDataChange={v => setData(p => ({ ...p, analise_critica_data: v }))}
+        rubricaUrl={data.analise_critica_rubrica_url || ''}
+        onRubricaConfirm={url => setData(p => ({ ...p, analise_critica_rubrica_url: url }))}
+        nomeUsuario={userName}
+        disabled={isReadOnly}
+        showResultado={isGestor}
+      />
 
       <div className="flex justify-end gap-2 pb-6">
         <Button variant="outline" onClick={onBack}>Voltar</Button>

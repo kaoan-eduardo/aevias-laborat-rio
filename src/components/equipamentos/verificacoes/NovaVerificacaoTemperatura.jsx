@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import RubricaButton from './RubricaButton';
+import AnaliseCritica from './AnaliseCritica';
 import { avaliarSituacaoTemperatura, buildRegistros } from '@/business-rules/verificacoes';
 import { listarEquipamentosParaVerificacao, listarTermometros } from '@/services/equipamentosService';
 
@@ -27,6 +28,9 @@ export default function NovaVerificacaoTemperatura({ onBack, onSaved }) {
   const [eqRefCal, setEqRefCal] = useState('');
   const [termometros, setTermometros] = useState([]);
   const [registros, setRegistros] = useState(buildRegistros());
+  const [acResponsavel, setAcResponsavel] = useState('');
+  const [acData, setAcData] = useState('');
+  const [acRubricaUrl, setAcRubricaUrl] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -91,6 +95,9 @@ export default function NovaVerificacaoTemperatura({ onBack, onSaved }) {
       eq_referencia_descricao: eqRefDesc,
       eq_referencia_data_calibracao: eqRefCal,
       registros,
+      analise_critica_responsavel: acResponsavel,
+      analise_critica_data: acData,
+      analise_critica_rubrica_url: acRubricaUrl,
     });
     setSaving(false);
     onSaved();
@@ -274,6 +281,18 @@ export default function NovaVerificacaoTemperatura({ onBack, onSaved }) {
         <Label className="text-xs">Outras Informações</Label>
         <Textarea value={outrasInfo} onChange={e => setOutrasInfo(e.target.value)} className="h-20 text-xs" />
       </div>
+
+      <AnaliseCritica
+        resultadoGeral={resultadoGeral}
+        onResultadoChange={setResultadoGeral}
+        responsavel={acResponsavel}
+        onResponsavelChange={setAcResponsavel}
+        data={acData}
+        onDataChange={setAcData}
+        rubricaUrl={acRubricaUrl}
+        onRubricaConfirm={setAcRubricaUrl}
+        nomeUsuario={user?.nome_exibicao || user?.full_name || ''}
+      />
 
       <div className="flex justify-end gap-2 pb-6">
         <Button variant="outline" onClick={onBack}>Cancelar</Button>

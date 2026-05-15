@@ -49,6 +49,19 @@
       ],
       "default": "em_andamento"
     },
+    "analise_critica_responsavel": {
+      "type": "string",
+      "description": "Respons\u00e1vel pela an\u00e1lise cr\u00edtica"
+    },
+    "analise_critica_data": {
+      "type": "string",
+      "format": "date",
+      "description": "Data da an\u00e1lise cr\u00edtica"
+    },
+    "analise_critica_rubrica_url": {
+      "type": "string",
+      "description": "Rubrica do respons\u00e1vel pela an\u00e1lise cr\u00edtica"
+    },
     "eq_referencia_identificacao": {
       "type": "string",
       "description": "Identifica\u00e7\u00e3o do equipamento de refer\u00eancia"
