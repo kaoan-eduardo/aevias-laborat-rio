@@ -53,10 +53,20 @@ export const COMMON_STYLES = `
     body { background:#fff; padding:0; }
     .top-bar { display:none; }
     .doc { box-shadow:none; }
-    .page-counter { counter-increment: page; }
-    .page-counter::after { content: "Página " counter(page); }
-  }
-`;
+   @media print { 
+    body { 
+      /* Inicializa o contador nativo de páginas no escopo do body */
+      counter-reset: page 0; 
+    } 
+    .top-bar { display:none; } 
+    .doc { box-shadow:none; } 
+    .page-counter {
+      counter-increment: page;
+    }
+    .page-counter::after { 
+          content: "Página " counter(page); 
+    }
+  }`
 
 export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
