@@ -35,8 +35,6 @@
             "cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
-                "Coordenadora Comercial",
-                "Estagi\u00e1ria",
                 "Encarregado",
                 "Auxiliar da Qualidade"
               ]
@@ -46,13 +44,6 @@
       ]
     },
     "read": {
-      "user_condition": {
-        "id": {
-          "$exists": true
-        }
-      }
-    },
-    "update": {
       "$or": [
         {
           "user_condition": {
@@ -66,6 +57,29 @@
                 "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
                 "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade",
+                "Laboratorista",
+                "Auxiliar de Laborat\u00f3rio",
+                "Assistente de Laborat\u00f3rio"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
                 "Encarregado",
                 "Auxiliar da Qualidade"
               ]
@@ -86,8 +100,6 @@
             "cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
-                "Coordenadora Comercial",
-                "Estagi\u00e1ria",
                 "Encarregado",
                 "Auxiliar da Qualidade"
               ]
