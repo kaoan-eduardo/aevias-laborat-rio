@@ -99,15 +99,18 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
     }));
   };
 
-  const confirmarRubrica = (idx, dataUrl) => {
-    setData((prev) => ({
-      ...prev,
-      registros: prev.registros.map((r, i) =>
-      i === idx ?
-      { ...r, responsavel: r.responsavel || userName, rubrica_url: dataUrl } :
-      r
+  const confirmarRubrica = async (idx, dataUrl) => {
+    const updated = {
+      ...data,
+      registros: data.registros.map((r, i) =>
+        i === idx ? { ...r, responsavel: r.responsavel || userName, rubrica_url: dataUrl } : r
       )
-    }));
+    };
+    setData(updated);
+    setSaving(true);
+    const saved = await base44.entities.VerificacaoDiaria.update(data.id, updated);
+    setSaving(false);
+    onSaved(saved);
   };
 
   const mesLabel = formatMesAno(data.mes_ano);
@@ -288,24 +291,26 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {(data.registros || []).slice(0, diasNoMes).map((r, i) =>
-              <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
+              {(data.registros || []).slice(0, diasNoMes).map((r, i) => {
+                const linhaLocked = isReadOnly || !!r.rubrica_url;
+                return (
+                <tr key={i} className={r.situacao === 'reprovado' ? 'bg-red-50' : 'hover:bg-muted/20'}>
                   <td className="px-2 py-2.5 text-center font-mono-data text-muted-foreground">{r.dia}</td>
                   {data.tipo === 'balanca' &&
                 <td className="px-1 py-2.5">
-                      <Input value={r.valor_medido} onChange={(e) => setRegBalanca(i, e.target.value)} className="h-10 text-xs px-1.5" placeholder="g" disabled={isReadOnly} />
+                      <Input value={r.valor_medido} onChange={(e) => setRegBalanca(i, e.target.value)} className="h-10 text-xs px-1.5" placeholder="g" disabled={linhaLocked} />
                     </td>
                 }
                   {data.tipo === 'temperatura' && <>
                     <td className="px-1 py-2.5">
                       <Input type="number" value={r.valor_referencia}
                     onChange={(e) => setRegTemperatura(i, 'valor_referencia', e.target.value, r)}
-                    className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} />
+                    className="h-10 text-xs px-1.5" placeholder="°C" disabled={linhaLocked} />
                     </td>
                     <td className="px-1 py-2.5">
                       <Input type="number" value={r.valor_medido}
                     onChange={(e) => setRegTemperatura(i, 'valor_medido', e.target.value, r)}
-                    className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} />
+                    className="h-10 text-xs px-1.5" placeholder="°C" disabled={linhaLocked} />
                     </td>
                     <td className="px-1 py-2.5">
                       <Input value={r.variacao} readOnly
@@ -314,10 +319,10 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     </td>
                   </>}
                   {data.tipo === 'densidade' && <>
-                    <td className="px-1 py-2.5"><Input value={r.horario} onChange={(e) => setRegDensidade(i, 'horario', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="HH:MM" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.temperatura} onChange={(e) => setRegDensidade(i, 'temperatura', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.densidade_com_amostra} onChange={(e) => setRegDensidade(i, 'densidade_com_amostra', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
-                    <td className="px-1 py-2.5"><Input value={r.densidade_sem_amostra} onChange={(e) => setRegDensidade(i, 'densidade_sem_amostra', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={isReadOnly} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.horario} onChange={(e) => setRegDensidade(i, 'horario', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="HH:MM" disabled={linhaLocked} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.temperatura} onChange={(e) => setRegDensidade(i, 'temperatura', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="°C" disabled={linhaLocked} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.densidade_com_amostra} onChange={(e) => setRegDensidade(i, 'densidade_com_amostra', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={linhaLocked} /></td>
+                    <td className="px-1 py-2.5"><Input value={r.densidade_sem_amostra} onChange={(e) => setRegDensidade(i, 'densidade_sem_amostra', e.target.value, r)} className="h-10 text-xs px-1.5" placeholder="g/cm³" disabled={linhaLocked} /></td>
                   </>}
                   <td className="px-1 py-2.5 text-center">
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.situacao === 'aprovado' ? 'bg-green-100 text-green-700' : r.situacao === 'reprovado' ? 'bg-red-100 text-red-700' : 'text-muted-foreground'}`}>
@@ -329,12 +334,11 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
                     nome={r.responsavel || userName}
                     rubricaUrl={r.rubrica_url}
                     responsavel={r.responsavel}
-                    disabled={isReadOnly || (data.tipo === 'balanca' ? !r.valor_medido : data.tipo === 'temperatura' ? !r.valor_medido : false)}
+                    disabled={isReadOnly || !!r.rubrica_url || (data.tipo === 'balanca' ? !r.valor_medido : data.tipo === 'temperatura' ? !r.valor_medido : false)}
                     onConfirm={(dataUrl) => confirmarRubrica(i, dataUrl)} />
-                  
                   </td>
                 </tr>
-              )}
+              );})}
             </tbody>
           </table>
         </div>
@@ -355,7 +359,14 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
         data={data.analise_critica_data || ''}
         onDataChange={(v) => setData((p) => ({ ...p, analise_critica_data: v }))}
         rubricaUrl={data.analise_critica_rubrica_url || ''}
-        onRubricaConfirm={(url) => setData((p) => ({ ...p, analise_critica_rubrica_url: url }))}
+        onRubricaConfirm={async (url) => {
+          const updated = { ...data, analise_critica_rubrica_url: url };
+          setData(updated);
+          setSaving(true);
+          const saved = await base44.entities.VerificacaoDiaria.update(data.id, updated);
+          setSaving(false);
+          onSaved(saved);
+        }}
         nomeUsuario={userName}
         disabled={analiseCriticaAssinada || !isGestor}
         showResultado={isGestor} />
