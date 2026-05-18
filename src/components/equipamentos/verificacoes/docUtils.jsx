@@ -47,6 +47,7 @@ export const COMMON_STYLES = `
   th { background:#d8d8d8; font-weight:bold; text-align:center; padding:2px 4px; }
   td { padding:2px 4px; }
   .logo-box { border:1.5px solid #555; padding:4px 8px; display:inline-block; }
+  @page { margin: 10mm; size: A4; }
   @media print { body { background:#fff; padding:0; } .top-bar { display:none; } .doc { box-shadow:none; } }
 `;
 
