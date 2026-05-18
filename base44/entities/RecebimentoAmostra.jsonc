@@ -127,9 +127,13 @@
             "cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
                 "Encarregado",
                 "Auxiliar da Qualidade",
-                "Auxiliar de Laborat\u00f3rio"
+                "Laboratorista",
+                "Auxiliar de Laborat\u00f3rio",
+                "Assistente de Laborat\u00f3rio"
               ]
             }
           }
@@ -170,22 +174,11 @@
               "$in": [
                 "Coordenadora T\u00e9cnica",
                 "Encarregado",
-                "Auxiliar da Qualidade"
+                "Auxiliar da Qualidade",
+                "Auxiliar de Laborat\u00f3rio"
               ]
             }
           }
-        },
-        {
-          "$and": [
-            {
-              "user_condition": {
-                "cargo": "Auxiliar de Laborat\u00f3rio"
-              }
-            },
-            {
-              "created_by": "{{user.email}}"
-            }
-          ]
         }
       ]
     },
