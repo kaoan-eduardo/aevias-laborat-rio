@@ -153,27 +153,71 @@
     "create": {
       "$or": [
         {
-          "data.Estagi\u00e1ria": "{{user.data.cargo}}"
-        },
-        {
-          "data.Coordenadora Comercial": "{{user.data.cargo}}"
+          "user_condition": {
+            "role": "admin"
+          }
         },
         {
           "user_condition": {
-            "role": "admin"
+            "cargo": {
+              "$in": [
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Coordenadora T\u00e9cnica"
+              ]
+            }
           }
         }
       ]
     },
     "read": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Coordenadora T\u00e9cnica",
+                "Laboratorista",
+                "Assistente de Laborat\u00f3rio",
+                "Auxiliar de Laborat\u00f3rio"
+              ]
+            }
+          }
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.nome_solicitante": "{{user.full_name}}"
+        }
+      ]
     },
     "update": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Coordenadora T\u00e9cnica"
+              ]
+            }
+          }
+        }
+      ]
     },
     "delete": {
       "user_condition": {

@@ -117,12 +117,8 @@
   "rls": {
     "create": {
       "user_condition": {
-        "role": {
-          "$in": [
-            "admin",
-            "gestor",
-            "auxiliar"
-          ]
+        "id": {
+          "$exists": true
         }
       }
     },
@@ -137,12 +133,7 @@
       "$or": [
         {
           "user_condition": {
-            "role": {
-              "$in": [
-                "admin",
-                "gestor"
-              ]
-            }
+            "role": "admin"
           }
         },
         {
@@ -152,12 +143,7 @@
     },
     "delete": {
       "user_condition": {
-        "role": {
-          "$in": [
-            "admin",
-            "gestor"
-          ]
-        }
+        "role": "admin"
       }
     }
   }
