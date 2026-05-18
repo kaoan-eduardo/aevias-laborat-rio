@@ -59,13 +59,7 @@
     "data_hora"
   ],
   "rls": {
-    "create": {
-      "user_condition": {
-        "id": {
-          "$exists": true
-        }
-      }
-    },
+    "create": null,
     "read": {
       "user_condition": {
         "role": "admin"
