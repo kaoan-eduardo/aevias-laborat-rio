@@ -48,7 +48,17 @@ export const COMMON_STYLES = `
   td { padding:2px 4px; }
   .logo-box { border:1.5px solid #555; padding:4px 8px; display:inline-block; }
   @page { margin: 0mm; size: A4; }
-  @media print { body { background:#fff; padding:0; } .top-bar { display:none; } .doc { box-shadow:none; } }
+  
+  @media print { 
+    body { background:#fff; padding:0; } 
+    .top-bar { display:none; } 
+    .doc { box-shadow:none; } 
+    
+    /* Paginação Automática Compartilhada */
+    .page-counter::after { 
+      content: "Página " counter(page); 
+    }
+  }
 `;
 
 export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
