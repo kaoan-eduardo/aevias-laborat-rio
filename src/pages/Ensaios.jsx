@@ -14,7 +14,7 @@ const CATEGORIA_CONFIG = {
   solos: { label: 'Solos', color: 'bg-emerald-100 text-emerald-800' },
   concreto: { label: 'Concreto', color: 'bg-blue-100 text-blue-700' },
   outros: { label: 'Outros', color: 'bg-pink-100 text-pink-800' },
-  projeto: { label: 'Projeto', color: 'bg-blue-200 text-blue-1000' }
+  projeto: { label: 'Projeto', color: 'bg-black-100 text-yellow-800' }
 };
 
 export default function Ensaios() {
