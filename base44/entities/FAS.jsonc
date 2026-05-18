@@ -161,11 +161,8 @@
           "user_condition": {
             "cargo": {
               "$in": [
-                "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
-                "Estagi\u00e1ria",
-                "Encarregado",
-                "Auxiliar da Qualidade"
+                "Estagi\u00e1ria"
               ]
             }
           }
@@ -209,7 +206,8 @@
                 "Coordenadora Comercial",
                 "Estagi\u00e1ria",
                 "Encarregado",
-                "Auxiliar da Qualidade"
+                "Auxiliar da Qualidade",
+                "Auxiliar de Laborat\u00f3rio"
               ]
             }
           }
@@ -228,8 +226,6 @@
             "cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
-                "Coordenadora Comercial",
-                "Estagi\u00e1ria",
                 "Encarregado",
                 "Auxiliar da Qualidade"
               ]
