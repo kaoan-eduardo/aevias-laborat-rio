@@ -33,7 +33,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   const [termometros, setTermometros] = useState([]);
   const [vidrarias, setVidrarias] = useState([]);
 
-  const analiseCriticaAssinada = !!data.analise_critica_rubrica_url;
+  const analiseCriticaAssinada = !!verificacao.analise_critica_rubrica_url;
   const isFinalizado = data.resultado_geral !== 'em_andamento';
   const isReadOnly = analiseCriticaAssinada || (!isGestor && isFinalizado);
 
