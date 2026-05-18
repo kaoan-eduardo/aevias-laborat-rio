@@ -25,8 +25,10 @@ export default function Verificacoes() {
   const [view, setView] = useState('lista'); // 'lista' | 'nova' | 'detalhe'
   const [selected, setSelected] = useState(null);
 
-  const role = user?.role || 'auxiliar';
-  const isGestor = role === 'admin' || role === 'gestor';
+  const role = user?.role || 'user';
+  const cargo = user?.cargo || '';
+  const CARGOS_GESTOR = ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade'];
+  const isGestor = role === 'admin' || CARGOS_GESTOR.includes(cargo);
 
   const load = async () => {
     setLoading(true);

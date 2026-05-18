@@ -73,6 +73,7 @@ export default function AnaliseCritica({
               disabled={disabled}
               onConfirm={(dataUrl) => {
                 if (!responsavel && nomeUsuario) onResponsavelChange(nomeUsuario);
+                if (!data) onDataChange(new Date().toISOString().slice(0, 10));
                 onRubricaConfirm(dataUrl);
               }} />
             
