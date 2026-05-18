@@ -98,9 +98,9 @@ export function buildBalancaHtml(v) {
     <table>
       <tr>
         <td style="background:#eee;font-weight:bold;width:100px">Realizado por:</td>
-        <td>${v.realizado_por || ''}</td>
+        <td>${v.analise_critica_rubrica_url ? `<img src="${v.analise_critica_rubrica_url}" style="height:40px;max-width:120px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${v.analise_critica_responsavel || ''}</span>` : (v.analise_critica_responsavel || '')}</td>
         <td style="background:#eee;font-weight:bold;width:50px">Data:</td>
-        <td style="width:110px">${v.data_finalizacao ? fmt_date(v.data_finalizacao) : ''}</td>
+        <td style="width:110px">${v.analise_critica_data ? fmt_date(v.analise_critica_data) : ''}</td>
       </tr>
     </table>
 
