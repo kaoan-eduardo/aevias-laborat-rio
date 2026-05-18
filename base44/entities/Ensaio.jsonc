@@ -18,7 +18,9 @@
         "concreto",
         "outros",
         "projeto",
-        "mraf"
+        "mraf",
+        "ligantes",
+        "emulsao"
       ],
       "description": "Categoria do ensaio"
     },

@@ -80,6 +80,8 @@ export default function EnsaioModal({ open, onClose, ensaio, onSaved }) {
                   <SelectItem value="outros">Outros</SelectItem>
                   <SelectItem value="projeto">Projeto</SelectItem>
                   <SelectItem value="mraf">MRAF</SelectItem>
+                  <SelectItem value="ligantes">Ligantes</SelectItem>
+                  <SelectItem value="emulsao">Emulsão</SelectItem>
                 </SelectContent>
               </Select>
             </div>

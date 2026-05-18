@@ -15,7 +15,9 @@ const CATEGORIA_CONFIG = {
   concreto: { label: 'Concreto', color: 'bg-blue-100 text-blue-700' },
   outros: { label: 'Outros', color: 'bg-pink-100 text-pink-800' },
   projeto: { label: 'Projeto', color: 'bg-blue-200 text-blue-800' },
-  mraf: { label: 'MRAF', color: 'bg-purple-100 text-purple-800' }
+  mraf: { label: 'MRAF', color: 'bg-purple-100 text-purple-800' },
+  ligantes: { label: 'Ligantes', color: 'bg-yellow-100 text-yellow-800' },
+  emulsao: { label: 'Emulsão', color: 'bg-orange-100 text-orange-800' }
 };
 
 export default function Ensaios() {
@@ -76,7 +78,7 @@ export default function Ensaios() {
           />
         </div>
         <div className="flex gap-2">
-          {['todos','agregado', 'asfalto', 'solos', 'concreto', 'outros', 'projeto', 'mraf'].map(cat => (
+          {['todos','agregado', 'asfalto', 'solos', 'concreto', 'outros', 'projeto', 'mraf', 'ligantes', 'emulsao'].map(cat => (
             <button
               key={cat}
               onClick={() => setCategoriaFilter(cat)}
