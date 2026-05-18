@@ -8,23 +8,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 
 const ROLES = [
-{ value: 'admin', label: 'Administrador' },
-{ value: 'gestor', label: 'Gestor/Coordenador' },
-{ value: 'tecnico', label: 'Técnico/Laboratorista' },
-{ value: 'auxiliar', label: 'Auxiliar' }];
+  { value: 'admin', label: 'Administrador' },
+  { value: 'user', label: 'Usuário' },
+];
+
+const CARGOS = [
+  'Coordenadora Técnica',
+  'Laboratorista',
+  'Assistente de Laboratório',
+  'Auxiliar de Laboratório',
+  'Auxiliar de Serviços Gerais',
+  'Auxiliar da Qualidade',
+];
 
 
 export default function UsuarioModal({ open, onClose, usuario, onSaved, currentUserRole }) {
-  const [form, setForm] = useState({ cargo: '', role: 'auxiliar', ativo: true, nome_exibicao: '' });
+  const [form, setForm] = useState({ cargo: '', role: 'user', ativo: true, nome_exibicao: '' });
   const [saving, setSaving] = useState(false);
 
-  const canEditNomeExibicao = currentUserRole === 'admin' || currentUserRole === 'gestor';
+  const canEditNomeExibicao = currentUserRole === 'admin';
 
   useEffect(() => {
     if (usuario) {
       setForm({
         cargo: usuario.cargo || '',
-        role: usuario.role || 'auxiliar',
+        role: usuario.role || 'user',
         ativo: usuario.ativo !== false,
         nome_exibicao: usuario.nome_exibicao || ''
       });
@@ -64,7 +72,7 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved, currentU
               className={!canEditNomeExibicao ? 'bg-muted text-muted-foreground' : ''} />
             
             {!canEditNomeExibicao &&
-            <p className="text-xs text-muted-foreground">Apenas admins e gestores podem editar</p>
+            <p className="text-xs text-muted-foreground">Apenas administradores podem editar</p>
             }
           </div>
 
@@ -75,11 +83,16 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved, currentU
 
           <div className="space-y-1.5">
             <Label>Cargo</Label>
-            <Input
-              value={form.cargo}
-              onChange={(e) => set('cargo', e.target.value)}
-              placeholder="Ex: Engenheiro de Materiais, Técnico de Laboratório..." />
-            
+            <Select value={form.cargo} onValueChange={(v) => set('cargo', v)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o cargo..." />
+              </SelectTrigger>
+              <SelectContent>
+                {CARGOS.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-1.5">

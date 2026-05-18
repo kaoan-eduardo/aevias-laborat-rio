@@ -10,9 +10,7 @@ import UsuarioModal from '@/components/usuarios/UsuarioModal';
 
 const ROLE_LABELS = {
   admin: { label: 'Administrador', color: 'bg-red-100 text-red-700' },
-  gestor: { label: 'Gestor/Coord.', color: 'bg-purple-100 text-purple-700' },
-  tecnico: { label: 'Técnico/Lab.', color: 'bg-blue-100 text-blue-700' },
-  auxiliar: { label: 'Auxiliar', color: 'bg-green-100 text-green-700' },
+  user: { label: 'Usuário', color: 'bg-blue-100 text-blue-700' },
 };
 
 export default function Usuarios() {
@@ -23,7 +21,7 @@ export default function Usuarios() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUsuario, setEditingUsuario] = useState(null);
 
-  const role = user?.role || 'auxiliar';
+  const role = user?.role || 'user';
   const isAdmin = role === 'admin';
 
   const load = async () => {

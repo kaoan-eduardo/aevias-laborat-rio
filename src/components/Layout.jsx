@@ -11,17 +11,17 @@ import { cn } from '@/lib/utils';
 
 // Itens do grupo "Cadastros"
 const CADASTROS_ITEMS = [
-  { path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'gestor', 'auxiliar', 'comercial'] },
-  { path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'gestor', 'tecnico'] },
-  { path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'gestor', 'tecnico', 'auxiliar'] },
+  { path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'user'] },
+  { path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'user'] },
+  { path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'user'] },
 ];
 
 const NAV_ITEMS = [
-  { path: '/', label: 'Início', icon: LayoutDashboard, roles: ['admin', 'gestor', 'tecnico', 'auxiliar', 'comercial'] },
-  { path: '/fas', label: 'FAS', icon: FileText, roles: ['admin', 'gestor', 'comercial', 'auxiliar'] },
-  { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'auxiliar', 'gestor'] },
-  { path: '/equipamentos', label: 'Equipamentos', icon: Wrench, roles: ['admin', 'gestor', 'tecnico'] },
-  { path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck, roles: ['admin', 'gestor', 'laboratorista', 'tecnico', 'auxiliar'] },
+  { path: '/', label: 'Início', icon: LayoutDashboard, roles: ['admin', 'user'] },
+  { path: '/fas', label: 'FAS', icon: FileText, roles: ['admin', 'user'] },
+  { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'user'] },
+  { path: '/equipamentos', label: 'Equipamentos', icon: Wrench, roles: ['admin', 'user'] },
+  { path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck, roles: ['admin', 'user'] },
 ];
 
 const BOTTOM_NAV_ITEMS = [
@@ -30,10 +30,7 @@ const BOTTOM_NAV_ITEMS = [
 
 const ROLE_LABELS = {
   admin: { label: 'Administrador', color: 'bg-[#566E3D]/20 text-[#BFCF99]' },
-  gestor: { label: 'Gestor/Coord.', color: 'bg-[#566E3D]/20 text-[#BFCF99]' },
-  tecnico: { label: 'Técnico/Lab.', color: 'bg-white/10 text-white/80' },
-  auxiliar: { label: 'Auxiliar', color: 'bg-white/10 text-white/80' },
-  comercial: { label: 'Comercial', color: 'bg-white/10 text-white/80' },
+  user: { label: 'Usuário', color: 'bg-white/10 text-white/80' },
 };
 
 function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomItems, visibleCadastros, roleInfo, user, handleLogout }) {
@@ -205,11 +202,11 @@ export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
 
-  const role = user?.role || 'auxiliar';
+  const role = user?.role || 'user';
   const visibleItems = NAV_ITEMS.filter(item => item.roles.includes(role));
   const visibleCadastros = CADASTROS_ITEMS.filter(item => item.roles.includes(role));
   const visibleBottomItems = BOTTOM_NAV_ITEMS.filter(item => item.roles.includes(role));
-  const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['auxiliar'];
+  const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['user'];
 
   const handleLogout = () => base44.auth.logout();
   const sidebarProps = { collapsed, setMobileOpen, visibleItems, visibleCadastros, visibleBottomItems, roleInfo, user, handleLogout };
