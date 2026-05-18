@@ -4,7 +4,7 @@ import { useAuth } from '@/lib/AuthContext';
 import {
   Users, FlaskConical, FileText, LayoutDashboard,
   LogOut, Menu, UserCog, Package, Inbox, Wrench, ClipboardCheck, ChevronLeft, ChevronRight,
-  BookOpen, ChevronDown
+  BookOpen, ChevronDown, ShieldCheck
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
@@ -26,6 +26,7 @@ const NAV_ITEMS = [
 
 const BOTTOM_NAV_ITEMS = [
   { path: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['admin'] },
+  { path: '/auditoria', label: 'Auditoria', icon: ShieldCheck, roles: ['admin'] },
 ];
 
 const ROLE_LABELS = {

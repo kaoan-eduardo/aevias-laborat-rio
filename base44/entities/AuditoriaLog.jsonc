@@ -1,0 +1,77 @@
+{
+  "name": "AuditoriaLog",
+  "type": "object",
+  "properties": {
+    "entidade": {
+      "type": "string",
+      "description": "Nome da entidade alterada (ex: FAS, Cliente, Equipamento)"
+    },
+    "entidade_id": {
+      "type": "string",
+      "description": "ID do registro alterado"
+    },
+    "entidade_descricao": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o leg\u00edvel do registro (ex: FAS-2026-0001, Cliente XYZ)"
+    },
+    "acao": {
+      "type": "string",
+      "enum": [
+        "criado",
+        "atualizado",
+        "deletado"
+      ],
+      "description": "Tipo de a\u00e7\u00e3o realizada"
+    },
+    "usuario_email": {
+      "type": "string",
+      "description": "Email do usu\u00e1rio que realizou a a\u00e7\u00e3o"
+    },
+    "usuario_nome": {
+      "type": "string",
+      "description": "Nome do usu\u00e1rio que realizou a a\u00e7\u00e3o"
+    },
+    "campos_alterados": {
+      "type": "array",
+      "description": "Lista de campos que foram alterados",
+      "items": {
+        "type": "string"
+      }
+    },
+    "valores_anteriores": {
+      "type": "string",
+      "description": "JSON com valores anteriores dos campos alterados"
+    },
+    "valores_novos": {
+      "type": "string",
+      "description": "JSON com novos valores dos campos alterados"
+    },
+    "data_hora": {
+      "type": "string",
+      "description": "Data e hora da altera\u00e7\u00e3o (ISO 8601)"
+    }
+  },
+  "required": [
+    "entidade",
+    "entidade_id",
+    "acao",
+    "usuario_email",
+    "data_hora"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "id": {
+          "$exists": true
+        }
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": null,
+    "delete": null
+  }
+}
