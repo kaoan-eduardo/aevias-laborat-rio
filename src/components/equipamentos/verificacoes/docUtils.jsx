@@ -55,11 +55,12 @@ export const COMMON_STYLES = `
     .doc { box-shadow:none; } 
     
     /* Paginação Automática Compartilhada */
-    .page-counter::after { 
-      content: "Página " counter(page); 
-    }
-  }
-`;
+    .page-counter {
+    counter-increment: page; 
+}
+.page-counter::after { 
+  content: "Página " counter(page); 
+}
 
 export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
