@@ -105,7 +105,8 @@ export function buildBalancaHtml(v) {
     </table>
 
     <div style="display:flex;justify-content:space-between;border-top:1px solid #ccc;margin-top:8px;padding-top:3px;font-size:7px;color:#888">
-      <span>FORM 017 — REV 03 — 04/03/2025</span><span class="page-counter"></span>
+      <span>FORM 017 — REV 03 — 04/03/2025</span>
+      <span class="page-counter"></span>
     </div>
   </div></body>`;
 }
