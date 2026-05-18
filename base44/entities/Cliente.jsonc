@@ -42,26 +42,92 @@
   ],
   "rls": {
     "create": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
     },
     "read": {
-      "user_condition": {
-        "id": {
-          "$exists": true
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     "update": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
     },
     "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }

@@ -45,20 +45,77 @@
   ],
   "rls": {
     "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "read": {
       "user_condition": {
-        "role": "admin"
+        "id": {
+          "$exists": true
+        }
       }
     },
-    "read": null,
     "update": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
     },
     "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }

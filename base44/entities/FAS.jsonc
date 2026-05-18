@@ -161,9 +161,11 @@
           "user_condition": {
             "cargo": {
               "$in": [
+                "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
                 "Estagi\u00e1ria",
-                "Coordenadora T\u00e9cnica"
+                "Encarregado",
+                "Auxiliar da Qualidade"
               ]
             }
           }
@@ -181,21 +183,14 @@
           "user_condition": {
             "cargo": {
               "$in": [
+                "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
                 "Estagi\u00e1ria",
-                "Coordenadora T\u00e9cnica",
-                "Laboratorista",
-                "Assistente de Laborat\u00f3rio",
-                "Auxiliar de Laborat\u00f3rio"
+                "Encarregado",
+                "Auxiliar da Qualidade"
               ]
             }
           }
-        },
-        {
-          "created_by": "{{user.email}}"
-        },
-        {
-          "data.nome_solicitante": "{{user.full_name}}"
         }
       ]
     },
@@ -210,9 +205,11 @@
           "user_condition": {
             "cargo": {
               "$in": [
+                "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
                 "Estagi\u00e1ria",
-                "Coordenadora T\u00e9cnica"
+                "Encarregado",
+                "Auxiliar da Qualidade"
               ]
             }
           }
@@ -220,9 +217,26 @@
       ]
     },
     "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }

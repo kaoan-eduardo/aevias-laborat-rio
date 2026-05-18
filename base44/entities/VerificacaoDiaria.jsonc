@@ -158,18 +158,50 @@
   ],
   "rls": {
     "create": {
-      "user_condition": {
-        "id": {
-          "$exists": true
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Encarregado",
+                "Auxiliar da Qualidade",
+                "Laboratorista",
+                "Assistente de Laborat\u00f3rio",
+                "Auxiliar de Laborat\u00f3rio"
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     "read": {
-      "user_condition": {
-        "id": {
-          "$exists": true
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Encarregado",
+                "Auxiliar da Qualidade",
+                "Laboratorista",
+                "Assistente de Laborat\u00f3rio",
+                "Auxiliar de Laborat\u00f3rio"
+              ]
+            }
+          }
         }
-      }
+      ]
     },
     "update": {
       "$or": [
@@ -179,14 +211,40 @@
           }
         },
         {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        },
+        {
           "created_by": "{{user.email}}"
         }
       ]
     },
     "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }
