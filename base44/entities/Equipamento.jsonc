@@ -182,11 +182,13 @@
             "cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
                 "Encarregado",
                 "Auxiliar da Qualidade",
                 "Laboratorista",
-                "Assistente de Laborat\u00f3rio",
-                "Auxiliar de Laborat\u00f3rio"
+                "Auxiliar de Laborat\u00f3rio",
+                "Assistente de Laborat\u00f3rio"
               ]
             }
           }
