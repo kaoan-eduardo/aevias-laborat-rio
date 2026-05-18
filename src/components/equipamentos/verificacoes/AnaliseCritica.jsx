@@ -66,13 +66,6 @@ export default function AnaliseCritica({
         <div className="space-y-1.5">
           <Label className="text-xs">Responsável (rubrica)</Label>
           <div className="flex items-center gap-2">
-            
-
-
-
-
-            
-            
             <RubricaButton
               nome={responsavel || nomeUsuario}
               rubricaUrl={rubricaUrl}
