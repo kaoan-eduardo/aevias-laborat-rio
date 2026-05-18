@@ -44,9 +44,92 @@
     "categoria"
   ],
   "rls": {
-    "create": null,
-    "read": null,
-    "update": null,
-    "delete": null
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade",
+                "Laboratorista",
+                "Auxiliar de Laborat\u00f3rio",
+                "Assistente de Laborat\u00f3rio"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Coordenadora Comercial",
+                "Estagi\u00e1ria",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "cargo": {
+              "$in": [
+                "Coordenadora T\u00e9cnica",
+                "Encarregado",
+                "Auxiliar da Qualidade"
+              ]
+            }
+          }
+        }
+      ]
+    }
   }
 }
