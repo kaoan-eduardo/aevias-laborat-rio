@@ -78,6 +78,7 @@ export default function EnsaioModal({ open, onClose, ensaio, onSaved }) {
                   <SelectItem value="solos">Solos</SelectItem>
                   <SelectItem value="concreto">Concreto</SelectItem>
                   <SelectItem value="outros">Outros</SelectItem>
+                  <SelectItem value="projeto">Projeto</SelectItem>
                 </SelectContent>
               </Select>
             </div>
