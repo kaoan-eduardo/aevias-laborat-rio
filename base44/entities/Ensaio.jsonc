@@ -16,7 +16,9 @@
         "asfalto",
         "solos",
         "concreto",
-        "outros"
+        "outros",
+        "projeto",
+        "mraf"
       ],
       "description": "Categoria do ensaio"
     },
