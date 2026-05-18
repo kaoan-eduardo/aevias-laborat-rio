@@ -14,6 +14,8 @@ const ROLES = [
 
 const CARGOS = [
   'Coordenadora Técnica',
+  'Coordenadora Comercial',
+  'Estagiária',
   'Laboratorista',
   'Assistente de Laboratório',
   'Auxiliar de Laboratório',
