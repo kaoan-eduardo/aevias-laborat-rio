@@ -108,6 +108,7 @@ export default function Materiais() {
                 <SelectItem value="AGREGADO">AGREGADO</SelectItem>
                 <SelectItem value="LIGANTES">LIGANTES</SelectItem>
                 <SelectItem value="MRAF">MRAF</SelectItem>
+                <SelectItem value="EMULSÃO">EMULSÃO</SelectItem>
                 <SelectItem value="OUTROS">OUTROS</SelectItem>
               </SelectContent>
             </Select>
