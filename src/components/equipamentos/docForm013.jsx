@@ -58,20 +58,21 @@ export function buildForm013Html(eq) {
 <meta charset="UTF-8">
 <title>FORM 013 — ${eq.identificacao_interna || eq.nome}</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Poppins:wght@400;500&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: Arial, sans-serif; font-size: 8px; color: #000; background: #e8e8e8; padding: 20px; }
+  body { font-family: 'Poppins', Arial, sans-serif; font-size: 8px; color: #000; background: #EFEBDC; padding: 20px; }
   .doc { width: 794px; background: #fff; padding: 10px 12px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
-  .top-bar { width: 794px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 8px; padding: 8px 14px; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  .top-bar { width: 794px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; background: #00233B; border-radius: 8px; padding: 8px 14px; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
   table { border-collapse: collapse; width: 100%; }
   td, th { border: 1px solid #bbb; font-size: 7.5px; vertical-align: middle; }
-  th { background: #d0d8e4; font-weight: bold; text-align: center; padding: 2px 3px; }
-  td { padding: 2px 4px; }
-  .sec { background: #d0d8e4; font-weight: bold; font-size: 8px; text-align: center; padding: 4px; letter-spacing: .8px; border: 1px solid #999; margin-bottom: 0; }
-  .lbl { background: #eee; font-weight: bold; }
-  .id-badge { font-size: 22px; font-weight: bold; color: #003366; font-family: Arial, sans-serif; letter-spacing: 1px; }
-  .legend-lc { background: #c8d8e8; }
-  .legend-qua { background: #c8e8c8; }
-  .legend-op { background: #e8dcc8; }
+  th { background: #BFCF99; color: #00233B; font-weight: 700; text-align: center; padding: 2px 3px; font-family: 'Exo 2', Arial, sans-serif; }
+  td { padding: 2px 4px; font-family: 'Poppins', Arial, sans-serif; }
+  .sec { background: #00233B; color: #F2F1EF; font-weight: 800; font-size: 8px; text-align: center; padding: 4px; letter-spacing: .8px; border: 1px solid #00233B; margin-bottom: 0; font-family: 'Exo 2', Arial, sans-serif; }
+  .lbl { background: #F2F1EF; font-weight: 700; font-family: 'Exo 2', Arial, sans-serif; color: #00233B; }
+  .id-badge { font-size: 22px; font-weight: 800; color: #00233B; font-family: 'Exo 2', Arial, sans-serif; letter-spacing: 1px; }
+  .legend-lc { background: #BFCF99; color: #00233B; }
+  .legend-qua { background: #566E3D; color: #fff; }
+  .legend-op { background: #EFEBDC; color: #00233B; }
   @media print {
     body { background: #fff; padding: 0; }
     .top-bar { display: none; }
@@ -83,8 +84,8 @@ export function buildForm013Html(eq) {
 <body>
 
 <div class="top-bar">
-  <span style="font-weight:700;font-size:13px;color:#1a1a1a">FORM 013 — Ficha de Equipamento</span>
-  <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer">🖨️ Imprimir</button>
+  <span style="font-weight:700;font-size:13px;color:#BFCF99;font-family:'Exo 2',Arial,sans-serif">FORM 013 — Ficha de Equipamento</span>
+  <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:6px;background:#566E3D;color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Exo 2',Arial,sans-serif">🖨️ Imprimir</button>
 </div>
 
 <div class="doc">
@@ -92,15 +93,15 @@ export function buildForm013Html(eq) {
 <!-- ═══ CABEÇALHO ═══ -->
 <table style="margin-bottom:4px">
   <tr>
-    <td style="width:140px;padding:6px 10px;border:1.5px solid #555;text-align:center;vertical-align:middle">
+    <td style="width:140px;padding:6px 10px;border:1.5px solid #00233B;text-align:center;vertical-align:middle;background:#F2F1EF">
       <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/4cb4a9760_image.png" style="max-width:120px;height:auto;display:block;margin:0 auto"/>
     </td>
-    <td style="border:1.5px solid #555;text-align:center;font-weight:bold;font-size:13px;letter-spacing:2px;vertical-align:middle;padding:6px">
-      FICHA DE EQUIPAMENTO
+    <td style="border:1.5px solid #00233B;text-align:center;font-weight:800;font-size:13px;letter-spacing:2px;vertical-align:middle;padding:6px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">
+    FICHA DE EQUIPAMENTO
     </td>
-    <td style="width:150px;border:1.5px solid #555;padding:4px 6px;vertical-align:top;font-size:7px">
-      <div style="font-weight:bold;text-align:center;border-bottom:1px solid #bbb;padding-bottom:2px;margin-bottom:3px">Identificação do doc. Nº</div>
-      <div style="text-align:center;font-weight:bold;font-size:9px;margin-bottom:3px">FORM 013</div>
+    <td style="width:150px;border:1.5px solid #00233B;padding:4px 6px;vertical-align:top;font-size:7px;background:#F2F1EF">
+    <div style="font-weight:700;text-align:center;border-bottom:1px solid #BFCF99;padding-bottom:2px;margin-bottom:3px;font-family:'Exo 2',Arial,sans-serif;color:#566E3D">Identificação do doc. Nº</div>
+    <div style="text-align:center;font-weight:800;font-size:9px;margin-bottom:3px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">FORM 013</div>
       <table style="width:100%">
         <tr>
           <th style="font-size:7px;padding:1px 3px">Emissão</th>

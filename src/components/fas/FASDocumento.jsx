@@ -41,13 +41,18 @@ export function buildFASHtml(fas) {
   <meta charset="UTF-8">
   <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Poppins:wght@400;500&display=swap');
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: Arial, sans-serif; font-size:9px; color:#000; background:#f0f0f0; padding:20px; }
-    .top-bar { width:794px; margin:0 auto 12px auto; display:flex; align-items:center; justify-content:space-between; background:#fff; border-radius:8px; padding:12px 18px; box-shadow:0 1px 4px rgba(0,0,0,0.1); font-size:13px; font-family:Arial,sans-serif; }
-    .top-bar-title { font-weight:700; color:#1a1a1a; font-size:15px; }
-    .top-bar-btn { display:inline-flex; align-items:center; gap:6px; background:#1a1a1a; color:#fff; border:none; border-radius:6px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; }
+    body { font-family: 'Poppins', Arial, sans-serif; font-size:9px; color:#000; background:#EFEBDC; padding:20px; }
+    .top-bar { width:794px; margin:0 auto 12px auto; display:flex; align-items:center; justify-content:space-between; background:#00233B; border-radius:8px; padding:12px 18px; box-shadow:0 1px 4px rgba(0,0,0,0.18); }
+    .top-bar-title { font-weight:700; color:#BFCF99; font-size:15px; font-family:'Exo 2',Arial,sans-serif; }
+    .top-bar-btn { display:inline-flex; align-items:center; gap:6px; background:#566E3D; color:#fff; border:none; border-radius:6px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Exo 2',Arial,sans-serif; }
     .top-bar-btn svg { width:15px; height:15px; }
     .doc { width:794px; min-height:1123px; background:#fff; padding:8px 12px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    .sec-hdr { text-align:center; font-weight:800; font-size:9px; border:1px solid #00233B; border-bottom:none; padding:3px; background:#00233B; color:#F2F1EF; font-family:'Exo 2',Arial,sans-serif; letter-spacing:.5px; }
+    th { background:#BFCF99; color:#00233B; font-weight:700; font-family:'Exo 2',Arial,sans-serif; }
+    td { font-family:'Poppins',Arial,sans-serif; }
+    td.lbl { background:#F2F1EF; font-weight:700; font-family:'Exo 2',Arial,sans-serif; color:#00233B; }
     @media print { body { background:#fff; padding:0; } .top-bar { display:none; } .doc { box-shadow:none; } }
   </style>
 </head>
@@ -62,12 +67,12 @@ export function buildFASHtml(fas) {
 <div class="doc">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #000;padding-bottom:6px;margin-bottom:8px">
     <div>
-      <div style="font-weight:bold;font-size:13px;letter-spacing:1px;color:#1a1a1a">AFIRMAEVIAS</div>
-      <div style="font-size:7px;color:#666">e n g e n h a r i a &nbsp; n i v e l</div>
-      <div style="font-size:7px;margin-top:4px;color:#888">FORM 045 A- REV 00 - 07/07/2025</div>
+      <div style="font-weight:800;font-size:13px;letter-spacing:1px;color:#00233B;font-family:'Exo 2',Arial,sans-serif">AFIRMAEVIAS</div>
+      <div style="font-size:7px;color:#566E3D;font-family:'Poppins',Arial,sans-serif">e n g e n h a r i a &nbsp; n i v e l</div>
+      <div style="font-size:7px;margin-top:4px;color:#888;font-family:'Poppins',Arial,sans-serif">FORM 045 A- REV 00 - 07/07/2025</div>
     </div>
     <div style="text-align:center;flex:1;padding:0 16px">
-      <div style="font-weight:bold;font-size:13px">FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
+      <div style="font-weight:800;font-size:13px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
     </div>
     <div style="border:1px solid #000;padding:6px 10px;text-align:center;min-width:140px">
       <div style="font-size:8px;font-weight:bold">Proposta Comercial / Rev.</div>
@@ -77,56 +82,56 @@ export function buildFASHtml(fas) {
 
   <table style="width:100%;border-collapse:collapse;margin-bottom:4px">
     <tbody>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">Contratante</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.razao_social || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">CNPJ</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.cnpj || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">Responsável</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.responsavel || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5;white-space:nowrap">E-mail para envio:</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.email_envio || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;font-weight:bold;background:#f5f5f5">Anotação de Responsabilidade Técnica (ART):</td><td style="border:1px solid #ccc;padding:3px 8px;text-align:center"><span style="border:1px solid #aaa;padding:1px 12px;background:#e9e9e9">${sim_nao(fas.exige_art)}</span></td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Contratante</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.razao_social || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#00233B">CNPJ</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.cnpj || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Responsável</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.responsavel || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#00233B">E-mail para envio:</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.email_envio || ''}</td></tr>
+      <tr><td style="border:1px solid #ccc;padding:3px 6px;font-weight:700;background:#F2F1EF;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Anotação de Responsabilidade Técnica (ART):</td><td style="border:1px solid #ccc;padding:3px 8px;text-align:center;font-family:'Poppins',Arial,sans-serif"><span style="border:1px solid #BFCF99;padding:1px 12px;background:#F2F1EF">${sim_nao(fas.exige_art)}</span></td></tr>
     </tbody>
   </table>
 
-  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0;margin-top:6px">ENSAIOS</div>
+  <div class="sec-hdr" style="margin-top:6px">ENSAIOS</div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <thead>
-      <tr style="background:#f0f0f0">
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Objetivo</th>
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Serviço</th>
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Norma</th>
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Quantidade</th>
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Unidade</th>
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Prazo</th>
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Decl. De Conf.</th>
-        <th style="border:1px solid #ccc;padding:2px 4px;font-weight:bold;text-align:center;font-size:8px">Símbolo</th>
+      <tr style="background:#BFCF99">
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Objetivo</th>
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Serviço</th>
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Norma</th>
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Quantidade</th>
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Unidade</th>
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Prazo</th>
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Decl. De Conf.</th>
+        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Símbolo</th>
       </tr>
     </thead>
     <tbody>${itensRows}${emptyRows}</tbody>
   </table>
 
-  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0">OBSERVAÇÕES DA PROPOSTA</div>
-  <div style="border:1px solid #ccc;min-height:60px;padding:4px 6px;margin-bottom:6px;font-size:9px">${fas.observacoes || ''}</div>
+  <div class="sec-hdr">OBSERVAÇÕES DA PROPOSTA</div>
+  <div style="border:1px solid #bbb;min-height:60px;padding:4px 6px;margin-bottom:6px;font-size:9px;font-family:'Poppins',Arial,sans-serif">${fas.observacoes || ''}</div>
 
-  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0">ANDAMENTO DAS ATIVIDADES</div>
+  <div class="sec-hdr">ANDAMENTO DAS ATIVIDADES</div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <thead>
-      <tr style="background:#f0f0f0">
-        <th style="border:1px solid #ccc;padding:2px 6px;width:120px;text-align:left">Data</th>
-        <th style="border:1px solid #ccc;padding:2px 6px;text-align:left">Descrição</th>
+      <tr style="background:#BFCF99">
+        <th style="border:1px solid #bbb;padding:2px 6px;width:120px;text-align:left;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Data</th>
+        <th style="border:1px solid #bbb;padding:2px 6px;text-align:left;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Descrição</th>
       </tr>
     </thead>
     <tbody>${andamentoRows}${emptyAndamento}</tbody>
   </table>
 
-  <div style="text-align:center;font-weight:bold;font-size:9px;border:1px solid #ccc;border-bottom:none;padding:3px;background:#f0f0f0">CONSIDERAÇÕES</div>
-  <div style="border:1px solid #ccc;min-height:36px;padding:4px 6px;margin-bottom:8px">&nbsp;</div>
+  <div class="sec-hdr">CONSIDERAÇÕES</div>
+  <div style="border:1px solid #bbb;min-height:36px;padding:4px 6px;margin-bottom:8px;font-family:'Poppins',Arial,sans-serif">&nbsp;</div>
 
   <table style="width:100%;border-collapse:collapse;margin-bottom:8px">
     <tbody>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:bold;background:#f5f5f5">Solicitante:</td><td style="border:1px solid #ccc;padding:3px 8px">${fas.nome_solicitante || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;font-weight:bold;background:#f5f5f5">Data:</td><td style="border:1px solid #ccc;padding:3px 8px">${fmt_date(fas.data_solicitacao)}</td></tr>
+      <tr><td style="border:1px solid #bbb;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Solicitante:</td><td style="border:1px solid #bbb;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.nome_solicitante || ''}</td></tr>
+      <tr><td style="border:1px solid #bbb;padding:3px 6px;font-weight:700;background:#F2F1EF;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Data:</td><td style="border:1px solid #bbb;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fmt_date(fas.data_solicitacao)}</td></tr>
     </tbody>
   </table>
 
-  <div style="display:flex;justify-content:space-between;border-top:1px solid #ccc;padding-top:4px;font-size:7px;color:#888">
+  <div style="display:flex;justify-content:space-between;border-top:1px solid #BFCF99;padding-top:4px;font-size:7px;color:#566E3D;font-family:'Exo 2',Arial,sans-serif">
     <span>FORM 045 - REV 06 - 09/06/2025</span>
     <span>Página 1 de 1</span>
   </div>
