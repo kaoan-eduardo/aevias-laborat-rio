@@ -40,7 +40,7 @@ export { BRAND_CSS, BRAND };
 
 export const COMMON_STYLES = BRAND_CSS + `
   .section-header {
-    background: #566E3D; color: #F2F1EF; border: 1px solid #566E3D; border-bottom: none;
+    background: #BFCF99; color: #F2F1EF; border: 1px solid #BFCF99; border-bottom: none;
     padding: 3px 6px; text-align: center; font-weight: 800; font-size: 8px;
     letter-spacing: .5px; font-family: 'Exo 2', Arial, sans-serif;
   }
@@ -49,7 +49,7 @@ export const COMMON_STYLES = BRAND_CSS + `
   th { background:#BFCF99; color:#333; font-weight:700; text-align:center; padding:2px 4px; font-family:'Exo 2',Arial,sans-serif; }
   td { padding:2px 4px; font-family:'Poppins',Arial,sans-serif; }
   td.lbl { background:#F2F1EF; font-weight:700; font-family:'Exo 2',Arial,sans-serif; color:#333; }
-  .logo-box { border:1.5px solid #566E3D; padding:4px 8px; display:inline-block; }
+  .logo-box { border:1.5px solid #BFCF99; padding:4px 8px; display:inline-block; }
   @page { margin: 10mm; size: A4; }
 `;
 
