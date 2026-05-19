@@ -16,7 +16,7 @@ export const BRAND = {
   fontBody:    "'Poppins', Arial, sans-serif",
 
   // Semantic aliases
-  sectionHeaderBg:    '#00233B',
+  sectionHeaderBg:    '#BFCF99',
   sectionHeaderText:  '#F2F1EF',
   sectionHeaderBorder:'#00233B',
 
