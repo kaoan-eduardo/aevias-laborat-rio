@@ -56,7 +56,7 @@ export function buildFASHtml(fas) {
 <div class="doc">
   <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid #000;padding-bottom:6px;margin-bottom:8px">
     <div style="min-width:160px;display:flex;flex-direction:column;align-items:flex-start;gap:2px">
-      <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/69f355834_image.png" style="max-width:140px;height:auto;display:block"/>
+      <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/4cb4a9760_image.png" style="max-width:140px;height:auto;display:block"/>
       <div style="font-size:7px;margin-top:2px;color:#888;font-family:'Poppins',Arial,sans-serif">FORM 045 A- REV 00 - 07/07/2025</div>
     </div>
     <div style="text-align:center;flex:1;padding:0 16px">
