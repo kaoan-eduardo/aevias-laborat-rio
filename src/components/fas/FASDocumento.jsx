@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Printer, X } from 'lucide-react';
+import { BRAND_CSS } from '@/lib/brandColors';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
@@ -40,20 +41,8 @@ export function buildFASHtml(fas) {
 <head>
   <meta charset="UTF-8">
   <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Poppins:wght@400;500&display=swap');
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Poppins', Arial, sans-serif; font-size:9px; color:#000; background:#EFEBDC; padding:20px; }
-    .top-bar { width:794px; margin:0 auto 12px auto; display:flex; align-items:center; justify-content:space-between; background:#00233B; border-radius:8px; padding:12px 18px; box-shadow:0 1px 4px rgba(0,0,0,0.18); }
-    .top-bar-title { font-weight:700; color:#BFCF99; font-size:15px; font-family:'Exo 2',Arial,sans-serif; }
-    .top-bar-btn { display:inline-flex; align-items:center; gap:6px; background:#566E3D; color:#fff; border:none; border-radius:6px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Exo 2',Arial,sans-serif; }
-    .top-bar-btn svg { width:15px; height:15px; }
-    .doc { width:794px; min-height:1123px; background:#fff; padding:8px 12px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+  <style>${BRAND_CSS}
     .sec-hdr { text-align:center; font-weight:800; font-size:9px; border:1px solid #00233B; border-bottom:none; padding:3px; background:#00233B; color:#F2F1EF; font-family:'Exo 2',Arial,sans-serif; letter-spacing:.5px; }
-    th { background:#BFCF99; color:#00233B; font-weight:700; font-family:'Exo 2',Arial,sans-serif; }
-    td { font-family:'Poppins',Arial,sans-serif; }
-    td.lbl { background:#F2F1EF; font-weight:700; font-family:'Exo 2',Arial,sans-serif; color:#00233B; }
-    @media print { body { background:#fff; padding:0; } .top-bar { display:none; } .doc { box-shadow:none; } }
   </style>
 </head>
 <body>

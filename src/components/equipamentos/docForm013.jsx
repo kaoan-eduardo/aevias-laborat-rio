@@ -1,3 +1,5 @@
+import { BRAND_CSS } from '@/lib/brandColors';
+
 function fmt(date) {
   if (!date) return '';
   if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
@@ -58,27 +60,16 @@ export function buildForm013Html(eq) {
 <meta charset="UTF-8">
 <title>FORM 013 — ${eq.identificacao_interna || eq.nome}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Poppins:wght@400;500&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: 'Poppins', Arial, sans-serif; font-size: 8px; color: #000; background: #EFEBDC; padding: 20px; }
+  ${BRAND_CSS}
   .doc { width: 794px; background: #fff; padding: 10px 12px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
-  .top-bar { width: 794px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; background: #00233B; border-radius: 8px; padding: 8px 14px; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
   table { border-collapse: collapse; width: 100%; }
   td, th { border: 1px solid #bbb; font-size: 7.5px; vertical-align: middle; }
-  th { background: #BFCF99; color: #00233B; font-weight: 700; text-align: center; padding: 2px 3px; font-family: 'Exo 2', Arial, sans-serif; }
-  td { padding: 2px 4px; font-family: 'Poppins', Arial, sans-serif; }
   .sec { background: #00233B; color: #F2F1EF; font-weight: 800; font-size: 8px; text-align: center; padding: 4px; letter-spacing: .8px; border: 1px solid #00233B; margin-bottom: 0; font-family: 'Exo 2', Arial, sans-serif; }
-  .lbl { background: #F2F1EF; font-weight: 700; font-family: 'Exo 2', Arial, sans-serif; color: #00233B; }
   .id-badge { font-size: 22px; font-weight: 800; color: #00233B; font-family: 'Exo 2', Arial, sans-serif; letter-spacing: 1px; }
   .legend-lc { background: #BFCF99; color: #00233B; }
   .legend-qua { background: #566E3D; color: #fff; }
   .legend-op { background: #EFEBDC; color: #00233B; }
-  @media print {
-    body { background: #fff; padding: 0; }
-    .top-bar { display: none; }
-    .doc { box-shadow: none; }
-    @page { size: A4; margin: 8mm; }
-  }
+  @media print { body { background: #fff; padding: 0; } .top-bar { display: none; } .doc { box-shadow: none; } @page { size: A4; margin: 8mm; } }
 </style>
 </head>
 <body>

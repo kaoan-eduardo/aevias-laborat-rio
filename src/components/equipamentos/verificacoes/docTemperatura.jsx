@@ -114,7 +114,7 @@ export function buildTemperaturaHtml(v) {
       </tr>
     </table>
 
-    <div style="display:flex;justify-content:space-between;border-top:1px solid #ccc;margin-top:8px;padding-top:3px;font-size:7px;color:#888">
+    <div class="doc-footer" style="margin-top:8px">
       <span>FORM 051 — REV 04 — 02/09/2025</span><span>Página 1 de 1</span>
     </div>
   </div></body></html>`;

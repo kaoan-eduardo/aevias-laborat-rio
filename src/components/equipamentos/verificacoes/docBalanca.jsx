@@ -37,9 +37,9 @@ export function buildBalancaHtml(v) {
     <div class="section-header">EQUIPAMENTO VERIFICADO</div>
     <table style="margin-bottom:4px">
       <tr>
-        <td style="width:160px;background:#eee;font-weight:bold">Descrição do equipamento:</td>
+        <td style="width:160px;background:#F2F1EF;font-weight:700;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Descrição do equipamento:</td>
         <td>${v.equipamento_nome || ''}</td>
-        <td style="width:120px;background:#eee;font-weight:bold">Identificação:</td>
+        <td style="width:120px;background:#F2F1EF;font-weight:700;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Identificação:</td>
         <td style="width:140px">${v.equipamento_identificacao || ''}</td>
       </tr>
     </table>
@@ -47,13 +47,11 @@ export function buildBalancaHtml(v) {
     <div class="section-header" style="margin-top:4px">EQUIPAMENTO DE REFERÊNCIA</div>
     <table style="margin-bottom:4px">
       <tr>
-        <td style="width:160px;background:#eee;font-weight:bold" rowspan="2">Descrição do equipamento:</td>
+        <td style="width:160px;background:#F2F1EF;font-weight:700;font-family:'Exo 2',Arial,sans-serif;color:#00233B" rowspan="2">Descrição do equipamento:</td>
         <td rowspan="2">CONJUNTO PESO PADRÃO &nbsp; ${v.eq_referencia_descricao || ''}</td>
-        <td style="background:#eee;font-weight:bold;width:120px">Identificação:</td>
-        <td style="width:140px">${v.eq_referencia_identificacao || ''}</td>
-      </tr>
-      <tr>
-        <td style="background:#eee;font-weight:bold">Data da calibração:</td>
+        <td style="background:#F2F1EF;font-weight:700;font-family:'Exo 2',Arial,sans-serif;color:#00233B;width:120px">Identificação:</td>
+...
+        <td style="background:#F2F1EF;font-weight:700;font-family:'Exo 2',Arial,sans-serif;color:#00233B">Data da calibração:</td>
         <td>${fmt_date(v.eq_referencia_data_calibracao)}</td>
       </tr>
     </table>
@@ -104,7 +102,7 @@ export function buildBalancaHtml(v) {
       </tr>
     </table>
 
-    <div style="display:flex;justify-content:space-between;border-top:1px solid #ccc;margin-top:8px;padding-top:3px;font-size:7px;color:#888">
+    <div class="doc-footer" style="margin-top:8px">
       <span>FORM 017 — REV 03 — 04/03/2025</span>
     </div>
   </div></body>`;

@@ -1,4 +1,5 @@
 // Utilitários compartilhados para geração de documentos de impressão
+import { BRAND_CSS, BRAND } from '@/lib/brandColors';
 
 export const fmt_date = (d) => {
   if (!d) return '—';
@@ -34,47 +35,47 @@ export const situacaoCell = (situacao) => {
     </span>`;
 };
 
-export const COMMON_STYLES = `
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: Arial, sans-serif; font-size:8px; color:#000; background:#e8e8e8; padding:20px; }
-  .top-bar { width:794px; margin:0 auto 12px auto; display:flex; align-items:center; justify-content:space-between; background:#fff; border-radius:8px; padding:10px 16px; box-shadow:0 1px 4px rgba(0,0,0,0.12); font-family:Arial,sans-serif; }
-  .top-bar-title { font-weight:700; color:#1a1a1a; font-size:13px; }
-  .btn-print { display:inline-flex; align-items:center; gap:6px; background:#1a1a1a; color:#fff; border:none; border-radius:6px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; }
-  .doc { width:794px; min-height:1123px; background:#fff; padding:10px 14px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,0.12); }
-  .section-header { background:#d0d0d0; border:1px solid #999; padding:3px 6px; text-align:center; font-weight:bold; font-size:8px; letter-spacing:.5px; }
+// Re-export BRAND_CSS so doc files can import from a single place
+export { BRAND_CSS, BRAND };
+
+export const COMMON_STYLES = BRAND_CSS + `
+  .section-header {
+    background: #00233B; color: #F2F1EF; border: 1px solid #00233B; border-bottom: none;
+    padding: 3px 6px; text-align: center; font-weight: 800; font-size: 8px;
+    letter-spacing: .5px; font-family: 'Exo 2', Arial, sans-serif;
+  }
   table { border-collapse:collapse; width:100%; }
-  td, th { border:1px solid #999; font-size:8px; }
-  th { background:#d8d8d8; font-weight:bold; text-align:center; padding:2px 4px; }
-  td { padding:2px 4px; }
-  .logo-box { border:1.5px solid #555; padding:4px 8px; display:inline-block; }
+  td, th { border:1px solid #bbb; font-size:8px; }
+  th { background:#BFCF99; color:#00233B; font-weight:700; text-align:center; padding:2px 4px; font-family:'Exo 2',Arial,sans-serif; }
+  td { padding:2px 4px; font-family:'Poppins',Arial,sans-serif; }
+  td.lbl { background:#F2F1EF; font-weight:700; font-family:'Exo 2',Arial,sans-serif; color:#00233B; }
+  .logo-box { border:1.5px solid #00233B; padding:4px 8px; display:inline-block; }
   @page { margin: 10mm; size: A4; }
-  @media print { body { background:#fff; padding:0; } .top-bar { display:none; } .doc { box-shadow:none; } }
 `;
 
 export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <tr>
-      <td style="border:1.5px solid #555;padding:6px 10px;width:140px;text-align:center;vertical-align:middle">
+      <td style="border:1.5px solid #00233B;padding:6px 10px;width:140px;text-align:center;vertical-align:middle;background:#F2F1EF">
         <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/4cb4a9760_image.png" style="max-width:120px;height:auto;display:block;margin:0 auto" />
       </td>
-      <td style="border:1.5px solid #555;padding:4px 8px;text-align:center;font-weight:bold;font-size:11px;vertical-align:middle">
+      <td style="border:1.5px solid #00233B;padding:4px 8px;text-align:center;font-weight:800;font-size:11px;vertical-align:middle;font-family:'Exo 2',Arial,sans-serif;color:#00233B">
         ${titulo}
       </td>
-      <td style="border:1.5px solid #555;padding:4px 8px;width:160px;vertical-align:middle;text-align:center">
-        <div style="font-size:7px;color:#555">Identificação do Documento Nº</div>
-        <div style="font-weight:bold;font-size:9px">${form}</div>
-        
+      <td style="border:1.5px solid #00233B;padding:4px 8px;width:160px;vertical-align:middle;text-align:center;background:#F2F1EF">
+        <div style="font-size:7px;color:#566E3D;font-family:'Poppins',Arial,sans-serif">Identificação do Documento Nº</div>
+        <div style="font-weight:800;font-size:9px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">${form}</div>
         <table style="width:100%;border-collapse:collapse;margin-top:3px">
           <tr>
-            <th style="border:1px solid #999;padding:1px 4px;font-size:7px">Emissão</th>
-            <th style="border:1px solid #999;padding:1px 4px;font-size:7px">Revisão</th>
+            <th style="border:1px solid #BFCF99;padding:1px 4px;font-size:7px;background:#BFCF99;color:#00233B;font-family:'Exo 2',Arial,sans-serif">Emissão</th>
+            <th style="border:1px solid #BFCF99;padding:1px 4px;font-size:7px;background:#BFCF99;color:#00233B;font-family:'Exo 2',Arial,sans-serif">Revisão</th>
           </tr>
           <tr>
-            <td style="border:1px solid #999;padding:1px 4px;font-size:7px;text-align:center">${emissao}</td>
-            <td style="border:1px solid #999;padding:1px 4px;font-size:7px;text-align:center">${revisao}</td>
+            <td style="border:1px solid #bbb;padding:1px 4px;font-size:7px;text-align:center;font-family:'Poppins',Arial,sans-serif">${emissao}</td>
+            <td style="border:1px solid #bbb;padding:1px 4px;font-size:7px;text-align:center;font-family:'Poppins',Arial,sans-serif">${revisao}</td>
           </tr>
         </table>
-        <div style="margin-top:3px;font-size:7px">Mês/Ano: <strong>${mesAno ? fmt_mes_ano(mesAno) : '___________'}</strong></div>
+        <div style="margin-top:3px;font-size:7px;font-family:'Poppins',Arial,sans-serif">Mês/Ano: <strong style="font-family:'Exo 2',Arial,sans-serif;color:#00233B">${mesAno ? fmt_mes_ano(mesAno) : '___________'}</strong></div>
       </td>
     </tr>
   </table>`;
