@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Printer, X } from 'lucide-react';
-import { BRAND_CSS } from '@/lib/brandColors';
+import { BRAND_CSS, BRAND, BRAND_STYLES } from '@/lib/brandColors';
 
 const sim_nao = (val) => val ? 'Sim' : 'Não';
 const fmt_date = (d) => d ? new Date(d).toLocaleDateString('pt-BR') : '—';
@@ -42,7 +42,7 @@ export function buildFASHtml(fas) {
   <meta charset="UTF-8">
   <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
   <style>${BRAND_CSS}
-    .sec-hdr { text-align:center; font-weight:800; font-size:9px; border:1px solid #566E3D; border-bottom:none; padding:3px; color:#F2F1EF; font-family:'Exo 2',Arial,sans-serif; letter-spacing:.5px; }
+    /* sec-hdr is already defined in BRAND_CSS */
   </style>
 </head>
 <body>
@@ -70,26 +70,26 @@ export function buildFASHtml(fas) {
 
   <table style="width:100%;border-collapse:collapse;margin-bottom:4px">
     <tbody>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#333">Contratante</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.razao_social || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#333">CNPJ</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.cnpj || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#333">Responsável</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.responsavel || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:#333">E-mail para envio:</td><td style="border:1px solid #ccc;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.email_envio || ''}</td></tr>
-      <tr><td style="border:1px solid #ccc;padding:3px 6px;font-weight:700;background:#F2F1EF;font-family:'Exo 2',Arial,sans-serif;color:#333">Anotação de Responsabilidade Técnica (ART):</td><td style="border:1px solid #ccc;padding:3px 8px;text-align:center;font-family:'Poppins',Arial,sans-serif"><span style="border:1px solid #BFCF99;padding:1px 12px;background:#F2F1EF">${sim_nao(fas.exige_art)}</span></td></tr>
+      <tr><td style="border:1px solid ${BRAND.cellBorder};padding:3px 6px;width:120px;font-weight:700;background:${BRAND.labelBg};white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.labelText}">Contratante</td><td style="border:1px solid ${BRAND.cellBorder};padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.razao_social || ''}</td></tr>
+      <tr><td style="border:1px solid ${BRAND.cellBorder};padding:3px 6px;width:120px;font-weight:700;background:${BRAND.labelBg};white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.labelText}">CNPJ</td><td style="border:1px solid ${BRAND.cellBorder};padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.cnpj || ''}</td></tr>
+      <tr><td style="border:1px solid ${BRAND.cellBorder};padding:3px 6px;width:120px;font-weight:700;background:${BRAND.labelBg};white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.labelText}">Responsável</td><td style="border:1px solid ${BRAND.cellBorder};padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.responsavel || ''}</td></tr>
+      <tr><td style="border:1px solid ${BRAND.cellBorder};padding:3px 6px;width:120px;font-weight:700;background:${BRAND.labelBg};white-space:nowrap;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.labelText}">E-mail para envio:</td><td style="border:1px solid ${BRAND.cellBorder};padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.email_envio || ''}</td></tr>
+      <tr><td style="border:1px solid ${BRAND.cellBorder};padding:3px 6px;font-weight:700;background:${BRAND.labelBg};font-family:'Exo 2',Arial,sans-serif;color:${BRAND.labelText}">Anotação de Responsabilidade Técnica (ART):</td><td style="border:1px solid ${BRAND.cellBorder};padding:3px 8px;text-align:center;font-family:'Poppins',Arial,sans-serif"><span style="border:1px solid ${BRAND.footerBorder};padding:1px 12px;background:${BRAND.labelBg}">${sim_nao(fas.exige_art)}</span></td></tr>
     </tbody>
   </table>
 
   <div class="sec-hdr" style="margin-top:6px">ENSAIOS</div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <thead>
-      <tr style="background:#F2F1EF">
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Objetivo</th>
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Serviço</th>
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Norma</th>
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Quantidade</th>
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Unidade</th>
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Prazo</th>
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Decl. De Conf.</th>
-        <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Símbolo</th>
+      <tr style="background:${BRAND.tableHeaderBg}">
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Objetivo</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Serviço</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Norma</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Quantidade</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Unidade</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Prazo</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Decl. De Conf.</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Símbolo</th>
       </tr>
     </thead>
     <tbody>${itensRows}${emptyRows}</tbody>
@@ -101,9 +101,9 @@ export function buildFASHtml(fas) {
   <div class="sec-hdr">ANDAMENTO DAS ATIVIDADES</div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <thead>
-      <tr style="background:#BFCF99">
-        <th style="border:1px solid #bbb;padding:2px 6px;width:120px;text-align:left;font-family:'Exo 2',Arial,sans-serif;color:#333">Data</th>
-        <th style="border:1px solid #bbb;padding:2px 6px;text-align:left;font-family:'Exo 2',Arial,sans-serif;color:#333">Descrição</th>
+      <tr style="background:${BRAND.tableHeaderBg}">
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 6px;width:120px;text-align:left;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Data</th>
+        <th style="border:1px solid ${BRAND.tableHeaderBorder};padding:2px 6px;text-align:left;font-family:'Exo 2',Arial,sans-serif;color:${BRAND.tableHeaderText}">Descrição</th>
       </tr>
     </thead>
     <tbody>${andamentoRows}${emptyAndamento}</tbody>
@@ -114,13 +114,13 @@ export function buildFASHtml(fas) {
 
   <table style="width:100%;border-collapse:collapse;margin-bottom:8px">
     <tbody>
-      <tr><td style="border:1px solid #bbb;padding:3px 6px;width:120px;font-weight:700;background:#F2F1EF;font-family:'Exo 2',Arial,sans-serif;color:#333">Solicitante:</td><td style="border:1px solid #bbb;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.nome_solicitante || ''}</td></tr>
-      <tr><td style="border:1px solid #bbb;padding:3px 6px;font-weight:700;background:#F2F1EF;font-family:'Exo 2',Arial,sans-serif;color:#333">Data:</td><td style="border:1px solid #bbb;padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fmt_date(fas.data_solicitacao)}</td></tr>
+      <tr><td style="border:1px solid ${BRAND.cellBorder};padding:3px 6px;width:120px;font-weight:700;background:${BRAND.labelBg};font-family:'Exo 2',Arial,sans-serif;color:${BRAND.labelText}">Solicitante:</td><td style="border:1px solid ${BRAND.cellBorder};padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fas.nome_solicitante || ''}</td></tr>
+      <tr><td style="border:1px solid ${BRAND.cellBorder};padding:3px 6px;font-weight:700;background:${BRAND.labelBg};font-family:'Exo 2',Arial,sans-serif;color:${BRAND.labelText}">Data:</td><td style="border:1px solid ${BRAND.cellBorder};padding:3px 8px;font-family:'Poppins',Arial,sans-serif">${fmt_date(fas.data_solicitacao)}</td></tr>
     </tbody>
   </table>
 
-  <div style="display:flex;justify-content:space-between;border-top:1px solid #BFCF99;padding-top:4px;font-size:7px;color:#566E3D;font-family:'Exo 2',Arial,sans-serif">
-    <span>FORM 045 - REV 06 - 09/06/2025</span>
+  <div style="display:flex;justify-content:space-between;border-top:1px solid ${BRAND.footerBorder};padding-top:4px;font-size:7px;color:${BRAND.footerText};font-family:'Exo 2',Arial,sans-serif">
+    <span>FORM 045 A- REV 00 - 07/07/2025</span>
     <span>Página 1 de 1</span>
   </div>
 </div>
@@ -205,28 +205,28 @@ export default function FASDocumento({ fas, onClose }) {
                 ['E-mail para envio:', fas.email_envio || ''],
               ].map(([label, value], i) => (
                 <tr key={i}>
-                  <td style={{ border: '1px solid #bbb', padding: '3px 6px', width: '120px', fontWeight: '700', background: '#F2F1EF', whiteSpace: 'nowrap', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>{label}</td>
-                  <td style={{ border: '1px solid #bbb', padding: '3px 8px', fontFamily: "'Poppins', Arial, sans-serif" }}>{value}</td>
+                  <td style={BRAND_STYLES.labelCell({ width: '120px', whiteSpace: 'nowrap' })}>{label}</td>
+                  <td style={BRAND_STYLES.valueCell()}>{value}</td>
                 </tr>
               ))}
               <tr>
-                <td style={{ border: '1px solid #bbb', padding: '3px 6px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>Anotação de Responsabilidade Técnica (ART):</td>
-                <td style={{ border: '1px solid #bbb', padding: '3px 8px', textAlign: 'center' }}>
-                  <span style={{ border: '1px solid #BFCF99', padding: '1px 12px', background: '#F2F1EF' }}>{sim_nao(fas.exige_art)}</span>
+                <td style={BRAND_STYLES.labelCell()}>Anotação de Responsabilidade Técnica (ART):</td>
+                <td style={{ ...BRAND_STYLES.valueCell(), textAlign: 'center' }}>
+                  <span style={{ border: `1px solid ${BRAND.footerBorder}`, padding: '1px 12px', background: BRAND.labelBg }}>{sim_nao(fas.exige_art)}</span>
                 </td>
               </tr>
             </tbody>
           </table>
 
           {/* Ensaios header */}
-          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #566E3D', borderBottom: 'none', padding: '3px', background: '#566E3D', color: '#F2F1EF', marginTop: '6px', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
+          <div style={{ ...BRAND_STYLES.sectionHdr(), marginTop: '6px' }}>
             ENSAIOS
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '6px' }}>
             <thead>
-              <tr style={{ background: '#BFCF99' }}>
+              <tr style={{ background: BRAND.tableHeaderBg }}>
                 {['Objetivo', 'Serviço', 'Norma', 'Quantidade', 'Unidade', 'Prazo', 'Decl. De Conf.', 'Símbolo'].map(h => (
-                  <th key={h} style={{ border: '1px solid #bbb', padding: '2px 4px', fontWeight: '700', textAlign: 'center', fontSize: '8px', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>{h}</th>
+                  <th key={h} style={{ border: `1px solid ${BRAND.tableHeaderBorder}`, padding: '2px 4px', fontWeight: '700', textAlign: 'center', fontSize: '8px', fontFamily: BRAND.fontHeader, color: BRAND.tableHeaderText }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -254,7 +254,7 @@ export default function FASDocumento({ fas, onClose }) {
           </table>
 
           {/* Observações */}
-          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #566E3D', borderBottom: 'none', padding: '3px', background: '#566E3D', color: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
+          <div style={BRAND_STYLES.sectionHdr()}>
             OBSERVAÇÕES DA PROPOSTA
           </div>
           <div style={{ border: '1px solid #bbb', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px', fontFamily: "'Poppins', Arial, sans-serif" }}>
@@ -262,14 +262,14 @@ export default function FASDocumento({ fas, onClose }) {
           </div>
 
           {/* Andamento */}
-          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #566E3D', borderBottom: 'none', padding: '3px', background: '#566E3D', color: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
+          <div style={BRAND_STYLES.sectionHdr()}>
             ANDAMENTO DAS ATIVIDADES
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '6px' }}>
             <thead>
-              <tr style={{ background: '#BFCF99' }}>
-                <th style={{ border: '1px solid #bbb', padding: '2px 6px', width: '120px', textAlign: 'left', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>Data</th>
-                <th style={{ border: '1px solid #bbb', padding: '2px 6px', textAlign: 'left', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>Descrição</th>
+              <tr style={{ background: BRAND.tableHeaderBg }}>
+                <th style={{ border: `1px solid ${BRAND.tableHeaderBorder}`, padding: '2px 6px', width: '120px', textAlign: 'left', fontFamily: BRAND.fontHeader, color: BRAND.tableHeaderText }}>Data</th>
+                <th style={{ border: `1px solid ${BRAND.tableHeaderBorder}`, padding: '2px 6px', textAlign: 'left', fontFamily: BRAND.fontHeader, color: BRAND.tableHeaderText }}>Descrição</th>
               </tr>
             </thead>
             <tbody>
@@ -295,7 +295,7 @@ export default function FASDocumento({ fas, onClose }) {
           </table>
 
           {/* Considerações */}
-          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #566E3D', borderBottom: 'none', padding: '3px', background: '#566E3D', color: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
+          <div style={BRAND_STYLES.sectionHdr()}>
             CONSIDERAÇÕES
           </div>
           <div style={{ border: '1px solid #bbb', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px', fontFamily: "'Poppins', Arial, sans-serif" }}>
@@ -306,17 +306,17 @@ export default function FASDocumento({ fas, onClose }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px' }}>
             <tbody>
               <tr>
-                <td style={{ border: '1px solid #bbb', padding: '3px 6px', width: '120px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>Solicitante:</td>
+                <td style={BRAND_STYLES.labelCell({ width: '120px' })}>Solicitante:</td>
 ...
-                <td style={{ border: '1px solid #bbb', padding: '3px 6px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>Data:</td>
-                <td style={{ border: '1px solid #bbb', padding: '3px 8px', fontFamily: "'Poppins', Arial, sans-serif" }}>{fmt_date(fas.data_solicitacao)}</td>
+                <td style={BRAND_STYLES.labelCell()}>Data:</td>
+                <td style={BRAND_STYLES.valueCell()}>{fmt_date(fas.data_solicitacao)}</td>
               </tr>
             </tbody>
           </table>
 
           {/* Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #BFCF99', paddingTop: '4px', fontSize: '7px', color: '#566E3D', fontFamily: "'Exo 2', Arial, sans-serif" }}>
-            <span>FORM 045 - REV 06 - 09/06/2025</span>
+          <div style={BRAND_STYLES.footer()}>
+            <span>FORM 045 A- REV 00 - 07/07/2025</span>
             <span>Página 1 de 1</span>
           </div>
         </div>
