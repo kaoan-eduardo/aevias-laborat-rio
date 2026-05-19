@@ -20,7 +20,7 @@ export const BRAND = {
   sectionHeaderText:  '#000f',
   sectionHeaderBorder:'#00233B',
 
-  tableHeaderBg:      '#BFCF99',
+  tableHeaderBg:      '#F2F1EF',
   tableHeaderText:    '#00233B',
   tableHeaderBorder:  '#bbb',
 
