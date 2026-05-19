@@ -33,7 +33,7 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
   const [termometros, setTermometros] = useState([]);
   const [vidrarias, setVidrarias] = useState([]);
 
-  const analiseCriticaAssinada = !!verificacao.analise_critica_rubrica_url;
+  const analiseCriticaAssinada = !!data.analise_critica_rubrica_url;
   const isFinalizado = data.resultado_geral !== 'em_andamento';
   const isReadOnly = analiseCriticaAssinada || (!isGestor && isFinalizado);
 
@@ -359,8 +359,13 @@ export default function VerificacaoDetalhe({ verificacao, isGestor, onBack, onSa
         data={data.analise_critica_data || ''}
         onDataChange={(v) => setData((p) => ({ ...p, analise_critica_data: v }))}
         rubricaUrl={data.analise_critica_rubrica_url || ''}
-        onRubricaConfirm={(url) => {
-          setData((p) => ({ ...p, analise_critica_rubrica_url: url }));
+        onRubricaConfirm={async (url) => {
+          const updated = { ...data, analise_critica_rubrica_url: url };
+          setData(updated);
+          setSaving(true);
+          const saved = await base44.entities.VerificacaoDiaria.update(data.id, updated);
+          setSaving(false);
+          onSaved(saved);
         }}
         nomeUsuario={userName}
         disabled={analiseCriticaAssinada || !isGestor}
