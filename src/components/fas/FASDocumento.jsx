@@ -90,7 +90,7 @@ export function buildFASHtml(fas) {
     </tbody>
   </table>
 
-  <div class="sec-hdr" style="margin-top:6px">ENSAIOS</div>
+  < div class="sec-hdr" style="margin-top:6px">ENSAIOS</div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <thead>
       <tr style="background:#BFCF99">
@@ -232,7 +232,7 @@ export default function FASDocumento({ fas, onClose }) {
           </table>
 
           {/* Ensaios header */}
-          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0', marginTop: '6px' }}>
+          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#811950ff', marginTop: '6px' }}>
             ENSAIOS
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '6px' }}>
