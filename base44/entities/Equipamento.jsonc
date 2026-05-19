@@ -146,7 +146,7 @@
             "type": "string"
           },
           "titulo": {
-            "type": "string"
+            "type": "boolean"
           },
           "identificacao_lab": {
             "type": "boolean"
@@ -203,12 +203,6 @@
             "type": "boolean"
           },
           "periodicidade": {
-            "type": "string"
-          },
-          "data_calibracao_resultado": {
-            "type": "string"
-          },
-          "proxima_calibracao": {
             "type": "string"
           },
           "item_em_uso": {
