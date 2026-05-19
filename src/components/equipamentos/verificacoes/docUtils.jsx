@@ -56,13 +56,13 @@ export const COMMON_STYLES = BRAND_CSS + `
 export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <tr>
-      <td style="border:1.5px solid #aaa;padding:6px 10px;width:140px;text-align:center;vertical-align:middle;background:#F2F1EF">
+      <td style="border:1.5px solid #aaa;padding:6px 10px;width:140px;text-align:center;vertical-align:middle;background:#FFF">
         <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/4cb4a9760_image.png" style="max-width:120px;height:auto;display:block;margin:0 auto" />
       </td>
       <td style="border:1.5px solid #aaa;padding:4px 8px;text-align:center;font-weight:800;font-size:11px;vertical-align:middle;font-family:'Exo 2',Arial,sans-serif;color:#333">
         ${titulo}
       </td>
-      <td style="border:1.5px solid #aaa;padding:4px 8px;width:160px;vertical-align:middle;text-align:center;background:#F2F1EF">
+      <td style="border:1.5px solid #aaa;padding:4px 8px;width:160px;vertical-align:middle;text-align:center;background:#FFF">
         <div style="font-size:7px;color:#566E3D;font-family:'Poppins',Arial,sans-serif">Identificação do Documento Nº</div>
         <div style="font-weight:800;font-size:9px;font-family:'Exo 2',Arial,sans-serif;color:#333">${form}</div>
         <table style="width:100%;border-collapse:collapse;margin-top:3px">
