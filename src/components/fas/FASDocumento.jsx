@@ -81,7 +81,7 @@ export function buildFASHtml(fas) {
   <div class="sec-hdr" style="margin-top:6px">ENSAIOS</div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <thead>
-      <tr style="background:#BFCF99">
+      <tr style="background:#F2F1EF">
         <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Objetivo</th>
         <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Serviço</th>
         <th style="border:1px solid #bbb;padding:2px 4px;font-weight:700;text-align:center;font-size:8px;font-family:'Exo 2',Arial,sans-serif;color:#333">Norma</th>
