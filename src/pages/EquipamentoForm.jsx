@@ -247,9 +247,6 @@ export default function EquipamentoForm() {
             <Field label="Frequência de Calibração">
               <Input value={form.frequencia_calibracao || ''} onChange={e => set('frequencia_calibracao', e.target.value)} placeholder="Ex: Anual" />
             </Field>
-            <Field label="Erro Máximo Admissível (EMA)">
-              <Input value={form.erro_maximo_admissivel || ''} onChange={e => set('erro_maximo_admissivel', e.target.value)} placeholder="Ex: 0,500" />
-            </Field>
           </div>
         </CardContent>
       </Card>
@@ -283,9 +280,10 @@ export default function EquipamentoForm() {
                 <Field label="Órgão">
                   <Input value={c.orgao || ''} onChange={e => setCal(i, 'orgao', e.target.value)} placeholder="Ex: K&L" />
                 </Field>
-                <Field label="Título">
-                  <Input value={c.titulo || ''} onChange={e => setCal(i, 'titulo', e.target.value)} />
-                </Field>
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Título</Label>
+                  <CheckField label="Sim" checked={!!c.titulo} onChange={v => setCal(i, 'titulo', v)} />
+                </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
@@ -327,12 +325,6 @@ export default function EquipamentoForm() {
                 </Field>
                 <Field label="Periodicidade entre calibrações">
                   <Input value={c.periodicidade || ''} onChange={e => setCal(i, 'periodicidade', e.target.value)} placeholder="Ex: Manter" />
-                </Field>
-                <Field label="Data da calibração (resultado)">
-                  <Input value={c.data_calibracao_resultado || ''} onChange={e => setCal(i, 'data_calibracao_resultado', e.target.value)} placeholder="Ex: 12/05/2026" />
-                </Field>
-                <Field label="Próxima calibração">
-                  <Input value={c.proxima_calibracao || ''} onChange={e => setCal(i, 'proxima_calibracao', e.target.value)} placeholder="Ex: 12/05/2027" />
                 </Field>
                 <Field label="Observações">
                   <Input value={c.observacoes_resultado || ''} onChange={e => setCal(i, 'observacoes_resultado', e.target.value)} />
