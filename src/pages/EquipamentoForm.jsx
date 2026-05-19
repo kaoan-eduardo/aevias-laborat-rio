@@ -80,8 +80,7 @@ export default function EquipamentoForm() {
 
   useEffect(() => {
     if (isEdit) {
-      base44.entities.Equipamento.filter({ id }).then(res => {
-        const eq = res[0];
+      base44.entities.Equipamento.get(id).then(eq => {
         if (eq) {
           setForm({ ...EMPTY_FORM, ...eq });
           setStatusOriginal(eq.status || 'em_uso');
