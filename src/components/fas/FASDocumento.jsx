@@ -54,14 +54,13 @@ export function buildFASHtml(fas) {
   </button>
 </div>
 <div class="doc">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #000;padding-bottom:6px;margin-bottom:8px">
-    <div>
-      <div style="font-weight:800;font-size:13px;letter-spacing:1px;color:#00233B;font-family:'Exo 2',Arial,sans-serif">AFIRMAEVIAS</div>
-      <div style="font-size:7px;color:#566E3D;font-family:'Poppins',Arial,sans-serif">e n g e n h a r i a &nbsp; n i v e l</div>
-      <div style="font-size:7px;margin-top:4px;color:#888;font-family:'Poppins',Arial,sans-serif">FORM 045 A- REV 00 - 07/07/2025</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1.5px solid #000;padding-bottom:6px;margin-bottom:8px">
+    <div style="min-width:160px;display:flex;flex-direction:column;align-items:flex-start;gap:2px">
+      <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/69f355834_image.png" style="max-width:140px;height:auto;display:block"/>
+      <div style="font-size:7px;margin-top:2px;color:#888;font-family:'Poppins',Arial,sans-serif">FORM 045 A- REV 00 - 07/07/2025</div>
     </div>
     <div style="text-align:center;flex:1;padding:0 16px">
-      <div style="font-weight:800;font-size:13px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
+      <div style="font-weight:800;font-size:13px;font-family:'Exo 2',Arial,sans-serif;color:#333">FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
     </div>
     <div style="border:1px solid #000;padding:6px 10px;text-align:center;min-width:140px">
       <div style="font-size:8px;font-weight:bold">Proposta Comercial / Rev.</div>
@@ -182,11 +181,10 @@ export default function FASDocumento({ fas, onClose }) {
           style={{ width: '794px', minHeight: '1123px', background: '#fff', fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#000', padding: '8px 12px', boxSizing: 'border-box' }}
         >
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1.5px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
-            <div>
-              <div style={{ fontWeight: '800', fontSize: '13px', letterSpacing: '1px', color: '#333', fontFamily: "'Exo 2', Arial, sans-serif" }}>AFIRMAEVIAS</div>
-              <div style={{ fontSize: '7px', color: '#566E3D', fontFamily: "'Poppins', Arial, sans-serif" }}>e n g e n h a r i a &nbsp; n i v e l</div>
-              <div style={{ fontSize: '7px', marginTop: '4px', color: '#888', fontFamily: "'Poppins', Arial, sans-serif" }}>FORM 045 A- REV 00 - 07/07/2025</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
+            <div style={{ minWidth: '160px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
+              <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/69f355834_image.png" style={{ maxWidth: '140px', height: 'auto', display: 'block' }} />
+              <div style={{ fontSize: '7px', marginTop: '2px', color: '#888', fontFamily: "'Poppins', Arial, sans-serif" }}>FORM 045 A- REV 00 - 07/07/2025</div>
             </div>
             <div style={{ textAlign: 'center', flex: 1, padding: '0 16px' }}>
               <div style={{ fontWeight: '800', fontSize: '13px', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
@@ -308,11 +306,9 @@ export default function FASDocumento({ fas, onClose }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px' }}>
             <tbody>
               <tr>
-                <td style={{ border: '1px solid #bbb', padding: '3px 6px', width: '120px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>Solicitante:</td>
-                <td style={{ border: '1px solid #bbb', padding: '3px 8px', fontFamily: "'Poppins', Arial, sans-serif" }}>{fas.nome_solicitante || ''}</td>
-              </tr>
-              <tr>
-                <td style={{ border: '1px solid #bbb', padding: '3px 6px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>Data:</td>
+                <td style={{ border: '1px solid #bbb', padding: '3px 6px', width: '120px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>Solicitante:</td>
+...
+                <td style={{ border: '1px solid #bbb', padding: '3px 6px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#333' }}>Data:</td>
                 <td style={{ border: '1px solid #bbb', padding: '3px 8px', fontFamily: "'Poppins', Arial, sans-serif" }}>{fmt_date(fas.data_solicitacao)}</td>
               </tr>
             </tbody>
