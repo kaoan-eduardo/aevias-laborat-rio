@@ -40,7 +40,7 @@ export { BRAND_CSS, BRAND };
 
 export const COMMON_STYLES = BRAND_CSS + `
   .section-header {
-    background: #BFCF99; color: #F2F1EF; border: 1px solid #BFCF99; border-bottom: none;
+    background: #BFCF99; color: #000F; border: 1px solid #BFCF99; border-bottom: none;
     padding: 3px 6px; text-align: center; font-weight: 800; font-size: 8px;
     letter-spacing: .5px; font-family: 'Exo 2', Arial, sans-serif;
   }
