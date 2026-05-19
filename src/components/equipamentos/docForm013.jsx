@@ -20,63 +20,7 @@ const VTH_MAN = (txt, extra = '') =>
 export function buildForm013Html(eq) {
   const hoje = new Date().toLocaleDateString('pt-BR');
 
-  // ── Linhas de Calibração ─────────────────────────────────────────────────
-  const emptyCalRow = `
-    <tr style="height:18px">
-      ${Array(14).fill('<td style="border:1px solid #bbb"></td>').join('')}
-    </tr>`;
-
-  const calRows = (eq.historico_calibracao || []).length > 0
-    ? (eq.historico_calibracao || []).map((c) => `
-    <tr style="font-size:7px">
-      <td style="border:1px solid #bbb;padding:2px 3px">${c.numero_certificado || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.orgao || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.titulo || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_lab)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.selo_rbc)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_certificado)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.numero_paginas)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.nome_endereco_cliente)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.descricao_item_calibrado)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_metodo)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.data_calibracao)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.nome_autorizou)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.rastreabilidade)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.certificado_aceito)}</td>
-    </tr>`).join('')
-    : Array(5).fill(emptyCalRow).join('');
-
-  const calEmptyExtra = Math.max(0, 5 - (eq.historico_calibracao || []).length);
-  const calEmptyRows = Array(calEmptyExtra).fill(emptyCalRow).join('');
-
-  // ── Linhas de Análise de Resultados ──────────────────────────────────────
-  const emptyResRow = `
-    <tr style="height:18px">
-      ${Array(14).fill('<td style="border:1px solid #bbb"></td>').join('')}
-    </tr>`;
-
-  const resRows = (eq.historico_calibracao || []).length > 0
-    ? (eq.historico_calibracao || []).map((c) => `
-    <tr style="font-size:7px">
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_ref || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_obtido_1 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_1 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_obtido_2 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_2 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px;font-weight:bold;background:#fff8c0">${c.erro_maximo_obtido_3 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.atende_especificado)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.periodicidade || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.data_calibracao_resultado || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.proxima_calibracao || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.item_em_uso)}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.observacoes_resultado || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.data_analise || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.responsavel_analise || ''}</td>
-    </tr>`).join('')
-    : Array(5).fill(emptyResRow).join('');
-
-  const resEmptyExtra = Math.max(0, 5 - (eq.historico_calibracao || []).length);
-  const resEmptyRows = Array(resEmptyExtra).fill(emptyResRow).join('');
+  // (linhas de calibração e resultados são geradas inline na tabela unificada)
 
   // ── Linhas de Manutenção ─────────────────────────────────────────────────
   const emptyManRow = `
@@ -232,13 +176,32 @@ export function buildForm013Html(eq) {
 <!-- ═══ CALIBRAÇÃO ═══ -->
 <div class="sec" style="margin-top:6px">CALIBRAÇÃO</div>
 
-<!-- Sub-cabeçalho: ANÁLISE DAS INFORMAÇÕES DO CERTIFICADO -->
-<table style="margin-bottom:0">
+<!-- CALIBRAÇÃO UNIFICADA: Informações + Resultados numa só tabela alinhada -->
+<table style="margin-bottom:0;table-layout:fixed;width:100%">
+  <colgroup>
+    <!-- col nº certificado -->
+    <col style="width:70px">
+    <!-- 13 colunas info certificado (Órgão a Aceito?) -->
+    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
+    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
+    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
+    <col style="width:26px">
+    <!-- separador visual -->
+    <col style="width:4px">
+    <!-- 12 colunas resultados -->
+    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
+    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:30px">
+    <col style="width:26px"><col style="width:40px"><col style="width:26px"><col style="width:50px">
+  </colgroup>
   <thead>
+    <!-- Linha de grupo -->
     <tr>
-      <th rowspan="2" style="width:80px;vertical-align:middle;font-size:7px">IDENTIFICAÇÃO<br><span style="font-weight:normal">Número do certificado</span></th>
+      <th rowspan="2" style="vertical-align:middle;font-size:6.5px;text-align:center;background:#d0d8e4">IDENTIFICAÇÃO<br><span style="font-weight:normal;font-size:6px">Nº do certificado</span></th>
       <th colspan="13" style="background:#c8d8e8;font-size:7px">ANÁLISE DAS INFORMAÇÕES DO CERTIFICADO</th>
+      <td style="border:none;background:#fff;padding:0"></td>
+      <th colspan="12" style="background:#c8d8e8;font-size:7px">ANÁLISE DOS RESULTADOS</th>
     </tr>
+    <!-- Linha de sub-cabeçalhos -->
     <tr>
       ${VTH('Órgão')}
       ${VTH('Título')}
@@ -253,21 +216,7 @@ export function buildForm013Html(eq) {
       ${VTH('Nome e função da pessoa que autorizou a emissão do certificado')}
       ${VTH('Rastreabilidade das medições')}
       ${VTH('Certificado pode ser aceito?')}
-    </tr>
-  </thead>
-  <tbody>
-    ${calRows}
-    ${calEmptyRows}
-  </tbody>
-</table>
-
-<!-- Sub-cabeçalho: ANÁLISE DOS RESULTADOS -->
-<table style="margin-top:0;margin-bottom:0">
-  <thead>
-    <tr>
-      <th colspan="14" style="background:#c8d8e8;font-size:7px">ANÁLISE DOS RESULTADOS</th>
-    </tr>
-    <tr>
+      <td style="border:none;background:#fff;padding:0"></td>
       ${VTH('Erro máximo admissível')}
       ${VTH('Erro máximo obtido')}
       ${VTH('Erro máximo admissível')}
@@ -276,8 +225,6 @@ export function buildForm013Html(eq) {
       ${VTH('Erro máximo obtido', 'background:#fff8c0')}
       ${VTH('Atende ao especificado?')}
       ${VTH('Periodicidade entre calibrações')}
-      ${VTH('Data da calibração')}
-      ${VTH('Próxima calibração')}
       ${VTH('Item pode ser colocado em uso?')}
       ${VTH('Observações')}
       ${VTH('Data da análise')}
@@ -285,8 +232,50 @@ export function buildForm013Html(eq) {
     </tr>
   </thead>
   <tbody>
-    ${resRows}
-    ${resEmptyRows}
+    ${(eq.historico_calibracao || []).length > 0
+      ? (eq.historico_calibracao || []).map((c) => `
+    <tr style="font-size:7px">
+      <td style="border:1px solid #bbb;padding:2px 3px">${c.numero_certificado || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.orgao || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.titulo)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_lab)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.selo_rbc)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_certificado)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.numero_paginas)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.nome_endereco_cliente)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.descricao_item_calibrado)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_metodo)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.data_calibracao)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.nome_autorizou)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.rastreabilidade)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.certificado_aceito)}</td>
+      <td style="border:none;background:#fff;padding:0"></td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_ref || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_obtido_1 || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_1 || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_obtido_2 || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_2 || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px;font-weight:bold;background:#fff8c0">${c.erro_maximo_obtido_3 || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.atende_especificado)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.periodicidade || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.item_em_uso)}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.observacoes_resultado || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.data_analise || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.responsavel_analise || ''}</td>
+    </tr>`).join('')
+      : Array(5).fill(`<tr style="height:18px">
+      ${Array(14).fill('<td style="border:1px solid #bbb"></td>').join('')}
+      <td style="border:none;background:#fff;padding:0"></td>
+      ${Array(12).fill('<td style="border:1px solid #bbb"></td>').join('')}
+    </tr>`).join('')}
+    ${(() => {
+      const extra = Math.max(0, 5 - (eq.historico_calibracao || []).length);
+      return Array(extra).fill(`<tr style="height:18px">
+      ${Array(14).fill('<td style="border:1px solid #bbb"></td>').join('')}
+      <td style="border:none;background:#fff;padding:0"></td>
+      ${Array(12).fill('<td style="border:1px solid #bbb"></td>').join('')}
+    </tr>`).join('');
+    })()}
   </tbody>
 </table>
 
