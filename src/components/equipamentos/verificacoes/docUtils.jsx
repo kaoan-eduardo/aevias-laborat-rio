@@ -40,42 +40,42 @@ export { BRAND_CSS, BRAND };
 
 export const COMMON_STYLES = BRAND_CSS + `
   .section-header {
-    background: #00233B; color: #F2F1EF; border: 1px solid #00233B; border-bottom: none;
+    background: #566E3D; color: #F2F1EF; border: 1px solid #566E3D; border-bottom: none;
     padding: 3px 6px; text-align: center; font-weight: 800; font-size: 8px;
     letter-spacing: .5px; font-family: 'Exo 2', Arial, sans-serif;
   }
   table { border-collapse:collapse; width:100%; }
   td, th { border:1px solid #bbb; font-size:8px; }
-  th { background:#BFCF99; color:#00233B; font-weight:700; text-align:center; padding:2px 4px; font-family:'Exo 2',Arial,sans-serif; }
+  th { background:#BFCF99; color:#333; font-weight:700; text-align:center; padding:2px 4px; font-family:'Exo 2',Arial,sans-serif; }
   td { padding:2px 4px; font-family:'Poppins',Arial,sans-serif; }
-  td.lbl { background:#F2F1EF; font-weight:700; font-family:'Exo 2',Arial,sans-serif; color:#00233B; }
-  .logo-box { border:1.5px solid #00233B; padding:4px 8px; display:inline-block; }
+  td.lbl { background:#F2F1EF; font-weight:700; font-family:'Exo 2',Arial,sans-serif; color:#333; }
+  .logo-box { border:1.5px solid #566E3D; padding:4px 8px; display:inline-block; }
   @page { margin: 10mm; size: A4; }
 `;
 
 export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <tr>
-      <td style="border:1.5px solid #00233B;padding:6px 10px;width:140px;text-align:center;vertical-align:middle;background:#F2F1EF">
+      <td style="border:1.5px solid #aaa;padding:6px 10px;width:140px;text-align:center;vertical-align:middle;background:#F2F1EF">
         <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/4cb4a9760_image.png" style="max-width:120px;height:auto;display:block;margin:0 auto" />
       </td>
-      <td style="border:1.5px solid #00233B;padding:4px 8px;text-align:center;font-weight:800;font-size:11px;vertical-align:middle;font-family:'Exo 2',Arial,sans-serif;color:#00233B">
+      <td style="border:1.5px solid #aaa;padding:4px 8px;text-align:center;font-weight:800;font-size:11px;vertical-align:middle;font-family:'Exo 2',Arial,sans-serif;color:#333">
         ${titulo}
       </td>
-      <td style="border:1.5px solid #00233B;padding:4px 8px;width:160px;vertical-align:middle;text-align:center;background:#F2F1EF">
+      <td style="border:1.5px solid #aaa;padding:4px 8px;width:160px;vertical-align:middle;text-align:center;background:#F2F1EF">
         <div style="font-size:7px;color:#566E3D;font-family:'Poppins',Arial,sans-serif">Identificação do Documento Nº</div>
-        <div style="font-weight:800;font-size:9px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">${form}</div>
+        <div style="font-weight:800;font-size:9px;font-family:'Exo 2',Arial,sans-serif;color:#333">${form}</div>
         <table style="width:100%;border-collapse:collapse;margin-top:3px">
           <tr>
-            <th style="border:1px solid #BFCF99;padding:1px 4px;font-size:7px;background:#BFCF99;color:#00233B;font-family:'Exo 2',Arial,sans-serif">Emissão</th>
-            <th style="border:1px solid #BFCF99;padding:1px 4px;font-size:7px;background:#BFCF99;color:#00233B;font-family:'Exo 2',Arial,sans-serif">Revisão</th>
+            <th style="border:1px solid #BFCF99;padding:1px 4px;font-size:7px;background:#BFCF99;color:#333;font-family:'Exo 2',Arial,sans-serif">Emissão</th>
+            <th style="border:1px solid #BFCF99;padding:1px 4px;font-size:7px;background:#BFCF99;color:#333;font-family:'Exo 2',Arial,sans-serif">Revisão</th>
           </tr>
           <tr>
             <td style="border:1px solid #bbb;padding:1px 4px;font-size:7px;text-align:center;font-family:'Poppins',Arial,sans-serif">${emissao}</td>
             <td style="border:1px solid #bbb;padding:1px 4px;font-size:7px;text-align:center;font-family:'Poppins',Arial,sans-serif">${revisao}</td>
           </tr>
         </table>
-        <div style="margin-top:3px;font-size:7px;font-family:'Poppins',Arial,sans-serif">Mês/Ano: <strong style="font-family:'Exo 2',Arial,sans-serif;color:#00233B">${mesAno ? fmt_mes_ano(mesAno) : '___________'}</strong></div>
+        <div style="margin-top:3px;font-size:7px;font-family:'Poppins',Arial,sans-serif">Mês/Ano: <strong style="font-family:'Exo 2',Arial,sans-serif;color:#333">${mesAno ? fmt_mes_ano(mesAno) : '___________'}</strong></div>
       </td>
     </tr>
   </table>`;

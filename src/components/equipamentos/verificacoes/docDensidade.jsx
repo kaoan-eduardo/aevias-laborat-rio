@@ -46,9 +46,9 @@ export function buildDensidadeHtml(v) {
     <div class="section-header">SOLUÇÃO VERIFICADA</div>
     <table style="margin-bottom:4px">
       <tr>
-        <td style="width:160px;background:#eee;font-weight:bold">Descrição da solução:</td>
+        <td class="lbl" style="width:160px">Descrição da solução:</td>
         <td>${v.solucao_descricao || ''}</td>
-        <td style="width:50px;background:#eee;font-weight:bold">Lote:</td>
+        <td class="lbl" style="width:50px">Lote:</td>
         <td style="width:120px">${v.solucao_lote || ''}</td>
       </tr>
     </table>
@@ -65,7 +65,7 @@ export function buildDensidadeHtml(v) {
       </thead>
       <tbody>
         <tr>
-          <td rowspan="2" style="text-align:center;background:#f5f5f5">Solução com Amostra</td>
+          <td rowspan="2" style="text-align:center;background:#eee">Solução com Amostra</td>
           <td>Proveta</td>
           <td style="text-align:center">${v.proveta_com_amostra_id || ''}</td>
           <td style="text-align:center">N/A</td>
@@ -76,7 +76,7 @@ export function buildDensidadeHtml(v) {
           <td style="text-align:center">N/A</td>
         </tr>
         <tr>
-          <td rowspan="2" style="text-align:center;background:#f5f5f5">Solução sem Amostra</td>
+          <td rowspan="2" style="text-align:center;background:#eee">Solução sem Amostra</td>
           <td>Proveta</td>
           <td style="text-align:center">${v.proveta_sem_amostra_id || ''}</td>
           <td style="text-align:center">N/A</td>
@@ -90,7 +90,7 @@ export function buildDensidadeHtml(v) {
     </table>
 
     <div class="section-header" style="margin-top:4px">CHECAGEM DIÁRIA DE DENSIDADE</div>
-    <div style="border:1px solid #999;border-top:none;padding:2px 6px;font-size:7px;background:#f5f5f5;text-align:center;margin-bottom:2px">
+    <div style="border:1px solid #bbb;border-top:none;padding:2px 6px;font-size:7px;background:#eee;text-align:center;margin-bottom:2px">
       Variação permitida da solução saturada de Sulfato de sódio: Entre 1.151 e 1.174 &nbsp;·&nbsp;
       Variação permitida da solução saturada de Magnésio: Entre 1.295 e 1.308
     </div>
@@ -135,9 +135,9 @@ export function buildDensidadeHtml(v) {
 
     <table>
       <tr>
-        <td style="background:#eee;font-weight:bold;width:100px">Realizado por:</td>
+        <td class="lbl" style="width:100px">Realizado por:</td>
         <td>${v.analise_critica_rubrica_url ? `<img src="${v.analise_critica_rubrica_url}" style="height:50px;max-width:150px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${v.analise_critica_responsavel || ''}</span>` : (v.analise_critica_responsavel || '')}</td>
-        <td style="background:#eee;font-weight:bold;width:50px">Data:</td>
+        <td class="lbl" style="width:50px">Data:</td>
         <td style="width:110px">${v.analise_critica_data ? fmt_date(v.analise_critica_data) : ''}</td>
       </tr>
     </table>

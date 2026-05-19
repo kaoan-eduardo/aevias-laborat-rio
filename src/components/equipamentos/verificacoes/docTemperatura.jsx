@@ -39,9 +39,9 @@ export function buildTemperaturaHtml(v) {
     <div class="section-header">EQUIPAMENTO VERIFICADO</div>
     <table style="margin-bottom:4px">
       <tr>
-        <td style="width:160px;background:#eee;font-weight:bold">Descrição do equipamento:</td>
+        <td class="lbl" style="width:160px">Descrição do equipamento:</td>
         <td>${v.equipamento_nome || ''}</td>
-        <td style="width:120px;background:#eee;font-weight:bold">Identificação:</td>
+        <td class="lbl" style="width:120px">Identificação:</td>
         <td style="width:140px">${v.equipamento_identificacao || ''}</td>
       </tr>
     </table>
@@ -49,13 +49,13 @@ export function buildTemperaturaHtml(v) {
     <div class="section-header" style="margin-top:4px">EQUIPAMENTO DE REFERÊNCIA</div>
     <table style="margin-bottom:4px">
       <tr>
-        <td style="width:160px;background:#eee;font-weight:bold" rowspan="2">Descrição do equipamento:</td>
+        <td class="lbl" style="width:160px" rowspan="2">Descrição do equipamento:</td>
         <td rowspan="2">${v.eq_referencia_descricao || ''}</td>
-        <td style="background:#eee;font-weight:bold;width:120px">Identificação:</td>
+        <td class="lbl" style="width:120px">Identificação:</td>
         <td style="width:140px">${v.eq_referencia_identificacao || ''}</td>
       </tr>
       <tr>
-        <td style="background:#eee;font-weight:bold">Data da calibração:</td>
+        <td class="lbl">Data da calibração:</td>
         <td>${fmt_date(v.eq_referencia_data_calibracao)}</td>
       </tr>
     </table>
@@ -107,9 +107,9 @@ export function buildTemperaturaHtml(v) {
 
     <table>
       <tr>
-        <td style="background:#eee;font-weight:bold;width:100px">Realizado por:</td>
+        <td class="lbl" style="width:100px">Realizado por:</td>
         <td>${v.analise_critica_rubrica_url ? `<img src="${v.analise_critica_rubrica_url}" style="height:40px;max-width:150px;object-fit:contain;vertical-align:middle"> <span style="font-size:7px">${v.analise_critica_responsavel || ''}</span>` : (v.analise_critica_responsavel || '')}</td>
-        <td style="background:#eee;font-weight:bold;width:50px">Data:</td>
+        <td class="lbl" style="width:50px">Data:</td>
         <td style="width:110px">${v.analise_critica_data ? fmt_date(v.analise_critica_data) : ''}</td>
       </tr>
     </table>
