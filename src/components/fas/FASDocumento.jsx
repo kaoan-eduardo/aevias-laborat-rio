@@ -42,7 +42,7 @@ export function buildFASHtml(fas) {
   <meta charset="UTF-8">
   <title>FAS - ${fas.numero_fas || fas.numero_proposta}</title>
   <style>${BRAND_CSS}
-    .sec-hdr { text-align:center; font-weight:800; font-size:9px; border:1px solid #566E3D; border-bottom:none; padding:3px; background:#566E3D; color:#F2F1EF; font-family:'Exo 2',Arial,sans-serif; letter-spacing:.5px; }
+    .sec-hdr { text-align:center; font-weight:800; font-size:9px; border:1px solid #566E3D; border-bottom:none; padding:3px; color:#F2F1EF; font-family:'Exo 2',Arial,sans-serif; letter-spacing:.5px; }
   </style>
 </head>
 <body>
