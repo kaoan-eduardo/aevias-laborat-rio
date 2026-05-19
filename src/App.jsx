@@ -18,6 +18,7 @@ import RecebimentoAmostras from '@/pages/RecebimentoAmostras';
 import DetalhesRecebimento from '@/pages/DetalhesRecebimento';
 import Impressao from '@/pages/Impressao';
 import Equipamentos from '@/pages/Equipamentos';
+import EquipamentoForm from '@/pages/EquipamentoForm';
 import Verificacoes from '@/pages/Verificacoes';
 import Auditoria from '@/pages/Auditoria';
 
@@ -59,6 +60,8 @@ const AuthenticatedApp = () => {
         <Route path="/recebimento/:id" element={<DetalhesRecebimento />} />
         <Route path="/impressao/:tipo/:id" element={<Impressao />} />
         <Route path="/equipamentos" element={<Equipamentos />} />
+        <Route path="/equipamentos/novo" element={<EquipamentoForm />} />
+        <Route path="/equipamentos/:id/editar" element={<EquipamentoForm />} />
         <Route path="/verificacoes" element={<Verificacoes />} />
         <Route path="/auditoria" element={<Auditoria />} />
       </Route>

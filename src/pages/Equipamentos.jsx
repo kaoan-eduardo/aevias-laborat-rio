@@ -1,24 +1,23 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Wrench, Eye, Pencil, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import EquipamentoModal from '@/components/equipamentos/EquipamentoModal';
 import EquipamentoDetalhes from '@/components/equipamentos/EquipamentoDetalhes';
 import VerificacaoDetalhe from '@/components/equipamentos/verificacoes/VerificacaoDetalhe';
 import { STATUS_EQUIPAMENTO, isCalibracaoVencida, isCalibracaoProxima } from '@/utils/equipamentoHelpers';
 
 export default function Equipamentos() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [equipamentos, setEquipamentos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingEq, setEditingEq] = useState(null);
   const [detalhesEq, setDetalhesEq] = useState(null);
   const [verificacaoDetalhe, setVerificacaoDetalhe] = useState(null);
 
@@ -43,10 +42,6 @@ export default function Equipamentos() {
     return matchSearch && matchStatus;
   });
 
-  const handleNew = () => { setEditingEq(null); setModalOpen(true); };
-  const handleEdit = (eq) => { setEditingEq(eq); setModalOpen(true); setDetalhesEq(null); };
-  const handleSaved = () => { setModalOpen(false); setEditingEq(null); load(); };
-
   return (
     <>
       <div className="p-6 max-w-7xl mx-auto space-y-5">
@@ -56,7 +51,7 @@ export default function Equipamentos() {
             <p className="text-sm text-muted-foreground mt-0.5">Gestão e rastreabilidade de equipamentos de laboratório</p>
           </div>
           {canEdit && (
-            <Button onClick={handleNew} className="gap-2">
+            <Button onClick={() => navigate('/equipamentos/novo')} className="gap-2">
               <Plus className="w-4 h-4" />
               Novo Equipamento
             </Button>
@@ -153,7 +148,7 @@ export default function Equipamentos() {
                                 <Button
                                   variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary"
                                   title="Editar"
-                                  onClick={() => handleEdit(eq)}
+                                  onClick={() => navigate(`/equipamentos/${eq.id}/editar`)}
                                 >
                                   <Pencil className="w-3.5 h-3.5" />
                                 </Button>
@@ -171,19 +166,12 @@ export default function Equipamentos() {
         </Card>
       </div>
 
-      <EquipamentoModal
-        open={modalOpen}
-        onClose={() => { setModalOpen(false); setEditingEq(null); }}
-        equipamento={editingEq}
-        onSaved={handleSaved}
-      />
-
       {detalhesEq && (
         <EquipamentoDetalhes
           equipamento={detalhesEq}
           canEdit={canEdit}
           onClose={() => setDetalhesEq(null)}
-          onEdit={() => handleEdit(detalhesEq)}
+          onEdit={() => { navigate(`/equipamentos/${detalhesEq.id}/editar`); setDetalhesEq(null); }}
           onOpenVerificacao={v => setVerificacaoDetalhe(v)}
         />
       )}
