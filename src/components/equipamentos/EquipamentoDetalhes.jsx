@@ -1,16 +1,24 @@
 import { useState } from 'react';
-import { X, Pencil, AlertTriangle, CheckCircle, History, CheckSquare, Square } from 'lucide-react';
+import { X, Pencil, AlertTriangle, CheckCircle, History, CheckSquare, Square, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import DocUploadSection from './DocUploadSection';
 import VerificacoesLista from './verificacoes/VerificacoesLista';
+import { buildForm013Html } from './docForm013';
 import {
   STATUS_EQUIPAMENTO,
   PERIODICIDADE_LABELS,
   isCalibracaoVencida,
   isCalibracaoProxima,
 } from '@/utils/equipamentoHelpers';
+
+function openForm013(eq) {
+  const html = buildForm013Html(eq);
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+}
 
 const InfoRow = ({ label, value, mono }) => (
   <div>
@@ -58,6 +66,10 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
             <p className="text-sm text-muted-foreground mt-0.5">{eq.nome}</p>
           </div>
           <div className="flex items-center gap-2 ml-4 flex-shrink-0">
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => openForm013(eq)}>
+              <FileText className="w-3.5 h-3.5" />
+              FORM 013
+            </Button>
             {canEdit && (
               <Button variant="outline" size="sm" className="gap-1.5" onClick={onEdit}>
                 <Pencil className="w-3.5 h-3.5" />
@@ -71,20 +83,30 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
         </div>
 
         {/* Dados gerais */}
-        <div className="px-6 py-5">
+        <div className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <InfoRow label="Categoria" value={eq.categoria} />
-            <InfoRow label="Precisão" value={eq.precisao} />
-            <InfoRow label="Periodicidade Verificação" value={PERIODICIDADE_LABELS[eq.periodicidade_verificacao]} />
-            <InfoRow
-              label="Data de Calibração"
-              value={eq.data_calibracao ? new Date(eq.data_calibracao).toLocaleDateString('pt-BR') : null}
-            />
-            <InfoRow
-              label="Validade da Calibração"
-              value={eq.validade_calibracao ? new Date(eq.validade_calibracao).toLocaleDateString('pt-BR') : null}
-            />
+            <InfoRow label="Fabricante" value={eq.fabricante} />
+            <InfoRow label="Modelo" value={eq.modelo} />
+            <InfoRow label="Número de Série" value={eq.numero_serie} mono />
+            <InfoRow label="Software / Firmware" value={eq.software_firmware} />
+            <InfoRow label="Data de Entrada em Serviço" value={eq.data_entrada_servico ? new Date(eq.data_entrada_servico + 'T12:00:00').toLocaleDateString('pt-BR') : null} />
+            <InfoRow label="Resolução / Precisão" value={eq.precisao} />
+            <InfoRow label="Faixa Nominal Máxima" value={eq.faixa_nominal_maxima} />
+            <InfoRow label="Localização" value={eq.localizacao} />
+            <InfoRow label="Responsável pela Atualização" value={eq.responsavel_atualizacao} />
           </div>
+          <Separator />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <InfoRow label="Data de Calibração" value={eq.data_calibracao ? new Date(eq.data_calibracao).toLocaleDateString('pt-BR') : null} />
+            <InfoRow label="Validade da Calibração" value={eq.validade_calibracao ? new Date(eq.validade_calibracao).toLocaleDateString('pt-BR') : null} />
+            <InfoRow label="Frequência de Calibração" value={eq.frequencia_calibracao} />
+            <InfoRow label="EMA (Erro Máx. Admissível)" value={eq.erro_maximo_admissivel} />
+            <InfoRow label="Periodicidade Verificação" value={PERIODICIDADE_LABELS[eq.periodicidade_verificacao]} />
+          </div>
+          {eq.pontos_calibracao && <InfoRow label="Pontos de Calibração" value={eq.pontos_calibracao} />}
+          {eq.criterios_aceitacao && <InfoRow label="Critérios de Aceitação" value={eq.criterios_aceitacao} />}
+          {eq.observacoes && <InfoRow label="Observações" value={eq.observacoes} />}
         </div>
 
         {/* Obrigatoriedade de verificações */}

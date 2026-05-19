@@ -12,7 +12,20 @@ const EMPTY_FORM = {
   identificacao_interna: '',
   nome: '',
   categoria: '',
+  fabricante: '',
+  modelo: '',
+  numero_serie: '',
+  software_firmware: '',
+  data_entrada_servico: '',
+  faixa_nominal_maxima: '',
+  localizacao: '',
+  responsavel_atualizacao: '',
   precisao: '',
+  frequencia_calibracao: '',
+  pontos_calibracao: '',
+  criterios_aceitacao: '',
+  erro_maximo_admissivel: '',
+  observacoes: '',
   data_calibracao: '',
   validade_calibracao: '',
   periodicidade_verificacao: '',
@@ -87,73 +100,134 @@ export default function EquipamentoModal({ open, onClose, equipamento, onSaved }
         </DialogHeader>
 
         <div className="space-y-5">
-          {/* Dados gerais */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-xs">Identificação Interna *</Label>
-              <Input value={form.identificacao_interna} onChange={e => set('identificacao_interna', e.target.value)} placeholder="Ex: LC-001" className="font-mono-data" />
+
+          {/* Identificação */}
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Identificação</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Identificação Interna *</Label>
+                <Input value={form.identificacao_interna} onChange={e => set('identificacao_interna', e.target.value)} placeholder="Ex: LC-001" className="font-mono-data" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Nome *</Label>
+                <Input value={form.nome} onChange={e => set('nome', e.target.value)} placeholder="Nome do equipamento" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Categoria *</Label>
+                <Select value={form.categoria} onValueChange={(value) => set('categoria', value)}>
+                  <SelectTrigger className="w-full"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Vidraria">Vidraria</SelectItem>
+                    <SelectItem value="Soquete">Soquete</SelectItem>
+                    <SelectItem value="Cilindros">Cilindros</SelectItem>
+                    <SelectItem value="Banho Maria">Banho Maria</SelectItem>
+                    <SelectItem value="Estufa">Estufa</SelectItem>
+                    <SelectItem value="Balança">Balança</SelectItem>
+                    <SelectItem value="Termômetro">Termômetro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Fabricante</Label>
+                <Input value={form.fabricante || ''} onChange={e => set('fabricante', e.target.value)} placeholder="Ex: MARTE" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Modelo</Label>
+                <Input value={form.modelo || ''} onChange={e => set('modelo', e.target.value)} placeholder="Ex: AD16K" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Número de Série</Label>
+                <Input value={form.numero_serie || ''} onChange={e => set('numero_serie', e.target.value)} placeholder="Ex: 381814" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Software / Firmware</Label>
+                <Input value={form.software_firmware || ''} onChange={e => set('software_firmware', e.target.value)} placeholder="N.A." />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Data de Entrada em Serviço</Label>
+                <Input type="date" value={form.data_entrada_servico || ''} onChange={e => set('data_entrada_servico', e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Resolução / Precisão</Label>
+                <Input value={form.precisao || ''} onChange={e => set('precisao', e.target.value)} placeholder="Ex: 0,1 g" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Faixa Nominal Máxima</Label>
+                <Input value={form.faixa_nominal_maxima || ''} onChange={e => set('faixa_nominal_maxima', e.target.value)} placeholder="Ex: 10 000 g" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Localização</Label>
+                <Input value={form.localizacao || ''} onChange={e => set('localizacao', e.target.value)} placeholder="Ex: Laboratório Central" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Responsável pela Atualização</Label>
+                <Input value={form.responsavel_atualizacao || ''} onChange={e => set('responsavel_atualizacao', e.target.value)} placeholder="Nome do responsável" />
+              </div>
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Nome *</Label>
-              <Input value={form.nome} onChange={e => set('nome', e.target.value)} placeholder="Nome do equipamento" />
+          </div>
+
+          {/* Calibração */}
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Calibração</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Data de Calibração</Label>
+                <Input type="date" value={form.data_calibracao || ''} onChange={e => set('data_calibracao', e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Validade da Calibração</Label>
+                <Input type="date" value={form.validade_calibracao || ''} onChange={e => set('validade_calibracao', e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Frequência de Calibração</Label>
+                <Input value={form.frequencia_calibracao || ''} onChange={e => set('frequencia_calibracao', e.target.value)} placeholder="Ex: Anual" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Erro Máximo Admissível (EMA)</Label>
+                <Input value={form.erro_maximo_admissivel || ''} onChange={e => set('erro_maximo_admissivel', e.target.value)} placeholder="Ex: 0,500" />
+              </div>
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label className="text-xs">Pontos de Calibração</Label>
+                <Input value={form.pontos_calibracao || ''} onChange={e => set('pontos_calibracao', e.target.value)} placeholder="Ex: 100 ; 1 000 ; 2 000 ; 5 000 ; 10 000 g" />
+              </div>
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label className="text-xs">Critérios de Aceitação</Label>
+                <Input value={form.criterios_aceitacao || ''} onChange={e => set('criterios_aceitacao', e.target.value)} placeholder="Critérios de aceitação" />
+              </div>
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label className="text-xs">Observações</Label>
+                <Input value={form.observacoes || ''} onChange={e => set('observacoes', e.target.value)} placeholder="Observações gerais" />
+              </div>
             </div>
-            <div className="space-y-1.5">
-  <Label htmlFor="categoria" className="text-xs font-medium">
-    Categoria *
-  </Label>
-  
-  <Select 
-    value={form.categoria} 
-    onValueChange={(value) => set('categoria', value)}
-  >
-    <SelectTrigger id="categoria" className="w-full">
-      <SelectValue placeholder="Selecione uma categoria" />
-    </SelectTrigger>
-    
-    <SelectContent>
-      <SelectItem value="Vidraria">Vidraria</SelectItem>
-      <SelectItem value="Soquete">Soquete</SelectItem>
-      <SelectItem value="Cilindros">Cilindros</SelectItem>
-      <SelectItem value="Banho Maria">Banho Maria</SelectItem>
-      <SelectItem value="Estufa">Estufa</SelectItem>
-      <SelectItem value="Balança">Balança</SelectItem>
-      <SelectItem value="Termômetro">Termômetro</SelectItem>
-    </SelectContent>
-  </Select>
-</div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Precisão</Label>
-              <Input value={form.precisao} onChange={e => set('precisao', e.target.value)} placeholder="Ex: ±0,01 mm" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Data de Calibração</Label>
-              <Input type="date" value={form.data_calibracao} onChange={e => set('data_calibracao', e.target.value)} />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Validade da Calibração</Label>
-              <Input type="date" value={form.validade_calibracao} onChange={e => set('validade_calibracao', e.target.value)} />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Periodicidade da Verificação Interna</Label>
-              <Select value={form.periodicidade_verificacao} onValueChange={v => set('periodicidade_verificacao', v)}>
-                <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                <SelectContent>
-                  {Object.entries(PERIODICIDADE_LABELS).map(([k, v]) => (
-                    <SelectItem key={k} value={k}>{v}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Status</Label>
-              <Select value={form.status} onValueChange={v => set('status', v)}>
-                <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                <SelectContent>
-                  {Object.entries(STATUS_EQUIPAMENTO).map(([k, v]) => (
-                    <SelectItem key={k} value={k}>{v.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          </div>
+
+          {/* Verificação e Status */}
+          <div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Verificação e Status</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Periodicidade da Verificação Interna</Label>
+                <Select value={form.periodicidade_verificacao} onValueChange={v => set('periodicidade_verificacao', v)}>
+                  <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(PERIODICIDADE_LABELS).map(([k, v]) => (
+                      <SelectItem key={k} value={k}>{v}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Status</Label>
+                <Select value={form.status} onValueChange={v => set('status', v)}>
+                  <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(STATUS_EQUIPAMENTO).map(([k, v]) => (
+                      <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
