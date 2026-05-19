@@ -90,7 +90,7 @@ export function buildFASHtml(fas) {
     </tbody>
   </table>
 
-  < div class="sec-hdr" style="margin-top:6px">ENSAIOS</div>
+  <div class="sec-hdr" style="margin-top:6px">ENSAIOS</div>
   <table style="width:100%;border-collapse:collapse;margin-bottom:6px">
     <thead>
       <tr style="background:#BFCF99">
@@ -195,12 +195,12 @@ export default function FASDocumento({ fas, onClose }) {
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1.5px solid #000', paddingBottom: '6px', marginBottom: '8px' }}>
             <div>
-              <div style={{ fontWeight: 'bold', fontSize: '13px', letterSpacing: '1px', color: '#1a1a1a' }}>AFIRMAEVIAS</div>
-              <div style={{ fontSize: '7px', color: '#666' }}>e n g e n h a r i a  n i v e l</div>
-              <div style={{ fontSize: '7px', marginTop: '4px', color: '#888' }}>FORM 045 A- REV 00 - 07/07/2025</div>
+              <div style={{ fontWeight: '800', fontSize: '13px', letterSpacing: '1px', color: '#00233B', fontFamily: "'Exo 2', Arial, sans-serif" }}>AFIRMAEVIAS</div>
+              <div style={{ fontSize: '7px', color: '#566E3D', fontFamily: "'Poppins', Arial, sans-serif" }}>e n g e n h a r i a &nbsp; n i v e l</div>
+              <div style={{ fontSize: '7px', marginTop: '4px', color: '#888', fontFamily: "'Poppins', Arial, sans-serif" }}>FORM 045 A- REV 00 - 07/07/2025</div>
             </div>
             <div style={{ textAlign: 'center', flex: 1, padding: '0 16px' }}>
-              <div style={{ fontWeight: 'bold', fontSize: '13px' }}>FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
+              <div style={{ fontWeight: '800', fontSize: '13px', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>FORMULÁRIO DE APROVAÇÃO DE SERVIÇO</div>
             </div>
             <div style={{ border: '1px solid #000', padding: '6px 10px', textAlign: 'center', minWidth: '140px' }}>
               <div style={{ fontSize: '8px', fontWeight: 'bold' }}>Proposta Comercial / Rev.</div>
@@ -218,28 +218,28 @@ export default function FASDocumento({ fas, onClose }) {
                 ['E-mail para envio:', fas.email_envio || ''],
               ].map(([label, value], i) => (
                 <tr key={i}>
-                  <td style={{ border: '1px solid #ccc', padding: '3px 6px', width: '120px', fontWeight: 'bold', background: '#f5f5f5', whiteSpace: 'nowrap' }}>{label}</td>
-                  <td style={{ border: '1px solid #ccc', padding: '3px 8px' }}>{value}</td>
+                  <td style={{ border: '1px solid #bbb', padding: '3px 6px', width: '120px', fontWeight: '700', background: '#F2F1EF', whiteSpace: 'nowrap', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>{label}</td>
+                  <td style={{ border: '1px solid #bbb', padding: '3px 8px', fontFamily: "'Poppins', Arial, sans-serif" }}>{value}</td>
                 </tr>
               ))}
               <tr>
-                <td style={{ border: '1px solid #ccc', padding: '3px 6px', fontWeight: 'bold', background: '#f5f5f5' }}>Anotação de Responsabilidade Técnica (ART):</td>
-                <td style={{ border: '1px solid #ccc', padding: '3px 8px', textAlign: 'center' }}>
-                  <span style={{ border: '1px solid #aaa', padding: '1px 12px', background: '#e9e9e9' }}>{sim_nao(fas.exige_art)}</span>
+                <td style={{ border: '1px solid #bbb', padding: '3px 6px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>Anotação de Responsabilidade Técnica (ART):</td>
+                <td style={{ border: '1px solid #bbb', padding: '3px 8px', textAlign: 'center' }}>
+                  <span style={{ border: '1px solid #BFCF99', padding: '1px 12px', background: '#F2F1EF' }}>{sim_nao(fas.exige_art)}</span>
                 </td>
               </tr>
             </tbody>
           </table>
 
           {/* Ensaios header */}
-          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#811950ff', marginTop: '6px' }}>
+          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #00233B', borderBottom: 'none', padding: '3px', background: '#00233B', color: '#F2F1EF', marginTop: '6px', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
             ENSAIOS
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '6px' }}>
             <thead>
-              <tr style={{ background: '#f0f0f0' }}>
+              <tr style={{ background: '#BFCF99' }}>
                 {['Objetivo', 'Serviço', 'Norma', 'Quantidade', 'Unidade', 'Prazo', 'Decl. De Conf.', 'Símbolo'].map(h => (
-                  <th key={h} style={{ border: '1px solid #ccc', padding: '2px 4px', fontWeight: 'bold', textAlign: 'center', fontSize: '8px' }}>{h}</th>
+                  <th key={h} style={{ border: '1px solid #bbb', padding: '2px 4px', fontWeight: '700', textAlign: 'center', fontSize: '8px', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -267,22 +267,22 @@ export default function FASDocumento({ fas, onClose }) {
           </table>
 
           {/* Observações */}
-          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0' }}>
+          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #00233B', borderBottom: 'none', padding: '3px', background: '#00233B', color: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
             OBSERVAÇÕES DA PROPOSTA
           </div>
-          <div style={{ border: '1px solid #ccc', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px' }}>
+          <div style={{ border: '1px solid #bbb', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px', fontFamily: "'Poppins', Arial, sans-serif" }}>
             {fas.observacoes || ''}
           </div>
 
           {/* Andamento */}
-          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0' }}>
+          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #00233B', borderBottom: 'none', padding: '3px', background: '#00233B', color: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
             ANDAMENTO DAS ATIVIDADES
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '6px' }}>
             <thead>
-              <tr style={{ background: '#f0f0f0' }}>
-                <th style={{ border: '1px solid #ccc', padding: '2px 6px', width: '120px', textAlign: 'left' }}>Data</th>
-                <th style={{ border: '1px solid #ccc', padding: '2px 6px', textAlign: 'left' }}>Descrição</th>
+              <tr style={{ background: '#BFCF99' }}>
+                <th style={{ border: '1px solid #bbb', padding: '2px 6px', width: '120px', textAlign: 'left', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>Data</th>
+                <th style={{ border: '1px solid #bbb', padding: '2px 6px', textAlign: 'left', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>Descrição</th>
               </tr>
             </thead>
             <tbody>
@@ -308,10 +308,10 @@ export default function FASDocumento({ fas, onClose }) {
           </table>
 
           {/* Considerações */}
-          <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '9px', border: '1px solid #ccc', borderBottom: 'none', padding: '3px', background: '#f0f0f0' }}>
+          <div style={{ textAlign: 'center', fontWeight: '800', fontSize: '9px', border: '1px solid #00233B', borderBottom: 'none', padding: '3px', background: '#00233B', color: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", letterSpacing: '.5px' }}>
             CONSIDERAÇÕES
-           </div>
-          <div style={{ border: '1px solid #ccc', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px' }}>
+          </div>
+          <div style={{ border: '1px solid #bbb', minHeight: '65px', padding: '4px 6px', marginBottom: '6px', fontSize: '9px', fontFamily: "'Poppins', Arial, sans-serif" }}>
             {fas.consideracoes || ''}
           </div>
 
@@ -319,18 +319,18 @@ export default function FASDocumento({ fas, onClose }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '8px' }}>
             <tbody>
               <tr>
-                <td style={{ border: '1px solid #ccc', padding: '3px 6px', width: '120px', fontWeight: 'bold', background: '#f5f5f5' }}>Solicitante:</td>
-                <td style={{ border: '1px solid #ccc', padding: '3px 8px' }}>{fas.nome_solicitante || ''}</td>
+                <td style={{ border: '1px solid #bbb', padding: '3px 6px', width: '120px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>Solicitante:</td>
+                <td style={{ border: '1px solid #bbb', padding: '3px 8px', fontFamily: "'Poppins', Arial, sans-serif" }}>{fas.nome_solicitante || ''}</td>
               </tr>
               <tr>
-                <td style={{ border: '1px solid #ccc', padding: '3px 6px', fontWeight: 'bold', background: '#f5f5f5' }}>Data:</td>
-                <td style={{ border: '1px solid #ccc', padding: '3px 8px' }}>{fmt_date(fas.data_solicitacao)}</td>
+                <td style={{ border: '1px solid #bbb', padding: '3px 6px', fontWeight: '700', background: '#F2F1EF', fontFamily: "'Exo 2', Arial, sans-serif", color: '#00233B' }}>Data:</td>
+                <td style={{ border: '1px solid #bbb', padding: '3px 8px', fontFamily: "'Poppins', Arial, sans-serif" }}>{fmt_date(fas.data_solicitacao)}</td>
               </tr>
             </tbody>
           </table>
 
           {/* Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ccc', paddingTop: '4px', fontSize: '7px', color: '#888' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #BFCF99', paddingTop: '4px', fontSize: '7px', color: '#566E3D', fontFamily: "'Exo 2', Arial, sans-serif" }}>
             <span>FORM 045 - REV 06 - 09/06/2025</span>
             <span>Página 1 de 1</span>
           </div>
