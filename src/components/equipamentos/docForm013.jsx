@@ -174,7 +174,8 @@ export function buildForm013Html(eq) {
   </thead>
   <tbody>
     ${(() => {
-      const pts = (eq.pontos_calibracao || []).slice(0, 16);
+      const rawPts0 = eq.pontos_calibracao;
+      const pts = (Array.isArray(rawPts0) ? rawPts0 : []).slice(0, 16);
       const rows = Array.from({ length: Math.max(pts.length, 1) }, (_, i) => {
         const p = pts[i] || {};
         return `<tr style="height:14px">
@@ -196,7 +197,8 @@ export function buildForm013Html(eq) {
 
 <!-- CALIBRAÇÃO: colunas de erro obtido dinâmicas baseadas nos pontos de calibração -->
 ${(() => {
-  const pts = (eq.pontos_calibracao || []).slice(0, 16);
+  const rawPts = eq.pontos_calibracao;
+  const pts = (Array.isArray(rawPts) ? rawPts : []).slice(0, 16);
   const numPontos = Math.max(pts.length, 1);
   // cabeçalhos de erro obtido — um por ponto
   const erroCols = pts.length > 0
