@@ -189,9 +189,9 @@ export function buildForm013Html(eq) {
     <!-- Linha de grupo -->
     <tr>
       <th rowspan="2" style="vertical-align:middle;font-size:6.5px;text-align:center;background:#f2f1ef">IDENTIFICAÇÃO<br><span style="font-weight:normal;font-size:6px">Nº do certificado</span></th>
-      <th colspan="13" style="background:#c8d8e8;font-size:7px">ANÁLISE DAS INFORMAÇÕES DO CERTIFICADO</th>
+      <th colspan="13" style="background:#f2f1ef;font-size:7px">ANÁLISE DAS INFORMAÇÕES DO CERTIFICADO</th>
       <td style="border:none;background:#fff;padding:0"></td>
-      <th colspan="12" style="background:#c8d8e8;font-size:7px">ANÁLISE DOS RESULTADOS</th>
+      <th colspan="12" style="background:#f2f1ef;font-size:7px">ANÁLISE DOS RESULTADOS</th>
     </tr>
     <!-- Linha de sub-cabeçalhos -->
     <tr>
