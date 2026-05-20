@@ -64,7 +64,7 @@ export function buildForm013Html(eq) {
   .doc { width: 794px; background: #fff; padding: 10px 12px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
   table { border-collapse: collapse; width: 100%; }
   td, th { border: 1px solid #bbb; font-size: 7.5px; vertical-align: middle; }
-  .sec { background: #00233B; color: #F2F1EF; font-weight: 800; font-size: 8px; text-align: center; padding: 4px; letter-spacing: .8px; border: 1px solid #00233B; margin-bottom: 0; font-family: 'Exo 2', Arial, sans-serif; }
+  .sec { background: #00233B; color: #000F; font-weight: 800; font-size: 8px; text-align: center; padding: 4px; letter-spacing: .8px; border: 1px solid #00233B; margin-bottom: 0; font-family: 'Exo 2', Arial, sans-serif; }
   .id-badge { font-size: 22px; font-weight: 800; color: #00233B; font-family: 'Exo 2', Arial, sans-serif; letter-spacing: 1px; }
   .legend-lc { background: #BFCF99; color: #00233B; }
   .legend-qua { background: #566E3D; color: #fff; }
@@ -188,7 +188,7 @@ export function buildForm013Html(eq) {
   <thead>
     <!-- Linha de grupo -->
     <tr>
-      <th rowspan="2" style="vertical-align:middle;font-size:6.5px;text-align:center;background:#d0d8e4">IDENTIFICAÇÃO<br><span style="font-weight:normal;font-size:6px">Nº do certificado</span></th>
+      <th rowspan="2" style="vertical-align:middle;font-size:6.5px;text-align:center;background:#f2f1ef">IDENTIFICAÇÃO<br><span style="font-weight:normal;font-size:6px">Nº do certificado</span></th>
       <th colspan="13" style="background:#c8d8e8;font-size:7px">ANÁLISE DAS INFORMAÇÕES DO CERTIFICADO</th>
       <td style="border:none;background:#fff;padding:0"></td>
       <th colspan="12" style="background:#c8d8e8;font-size:7px">ANÁLISE DOS RESULTADOS</th>
