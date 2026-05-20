@@ -22,8 +22,6 @@ const VTH_MAN = (txt, extra = '') =>
 export function buildForm013Html(eq) {
   const hoje = new Date().toLocaleDateString('pt-BR');
 
-  // (linhas de calibração e resultados são geradas inline na tabela unificada)
-
   // ── Linhas de Manutenção ─────────────────────────────────────────────────
   const emptyManRow = `
     <tr style="height:18px">
@@ -81,7 +79,6 @@ export function buildForm013Html(eq) {
 
 <div class="doc">
 
-<!-- ═══ CABEÇALHO ═══ -->
 <table style="margin-bottom:4px">
   <tr>
     <td style="width:140px;padding:6px 10px;border:1.5px solid #00233B;text-align:center;vertical-align:middle;background:#FFF">
@@ -107,53 +104,51 @@ export function buildForm013Html(eq) {
   </tr>
 </table>
 
-<!-- ═══ IDENTIFICAÇÃO ═══ -->
-<table style="margin-bottom:0;border:1.5px solid #555">
+<table style="margin-bottom:0;border:1.5px solid #555;width:100%">
   <tr style="height:20px">
-    <td class="lbl" style="width:180px">Responsável pela atualização:</td>
+    <td class="lbl" style="width:160px">Responsável pela atualização:</td>
     <td style="width:200px">${eq.responsavel_atualizacao || ''}</td>
     <td class="lbl" style="width:120px">Atualizado em:</td>
     <td style="text-align:center">${hoje}</td>
-    <td rowspan="2" style="width:150px;border-left:2px solid #aaa;text-align:center;vertical-align:middle;padding:6px">
+  </tr>
+  <tr style="height:20px">
+    <td class="lbl">Nome do equipamento:</td>
+    <td>${eq.nome || ''}</td>
+    <td rowspan="2" colspan="2" style="text-align:center;vertical-align:middle;padding:6px;background:#fff;border-left:2px solid #aaa">
       <div style="font-size:7px;font-weight:bold;margin-bottom:4px">Identificação unívoca:</div>
       <div class="id-badge">${eq.identificacao_interna || ''}</div>
     </td>
   </tr>
   <tr style="height:20px">
-    <td class="lbl">Nome do equipamento:</td>
-    <td colspan="3">${eq.nome || ''}</td>
-  </tr>
-  <tr style="height:20px">
     <td class="lbl">Software e a versão do firmware (quando aplicável):</td>
-    <td colspan="4">${eq.software_firmware || 'N.A.'}</td>
+    <td>${eq.software_firmware || 'N.A.'}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Fabricante:</td>
     <td>${eq.fabricante || ''}</td>
     <td class="lbl">Resolução:</td>
-    <td colspan="2">${eq.precisao || ''}</td>
+    <td>${eq.precisao || ''}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Modelo:</td>
     <td>${eq.modelo || ''}</td>
     <td class="lbl">Faixa nominal máxima:</td>
-    <td colspan="2">${eq.faixa_nominal_maxima || ''}</td>
+    <td>${eq.faixa_nominal_maxima || ''}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Número de série:</td>
     <td>${eq.numero_serie || ''}</td>
     <td class="lbl">Frequência de calibração:</td>
-    <td colspan="2">${eq.frequencia_calibracao || ''}</td>
+    <td>${eq.frequencia_calibracao || ''}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Data de entrada em serviço:</td>
     <td>${fmt(eq.data_entrada_servico)}</td>
     <td class="lbl">Localização:</td>
-    <td colspan="2">${eq.localizacao || ''}</td>
+    <td>${eq.localizacao || ''}</td>
   </tr>
 </table>
 
-<!-- ═══ UNIDADE / TOLERÂNCIA ═══ -->
 <table style="margin-bottom:0;width:100%">
   <tr>
     <td style="border:1px solid #bbb;padding:2px 6px;font-weight:700;font-size:7.5px;background:#F2F1EF;width:160px;font-family:'Exo 2',Arial,sans-serif">UNIDADE DO EQUIPAMENTO:</td>
@@ -164,7 +159,6 @@ export function buildForm013Html(eq) {
   </tr>
 </table>
 
-<!-- ═══ PONTOS DE CALIBRAÇÃO + CRITÉRIOS ═══ -->
 <table style="margin-bottom:0;width:100%">
   <thead>
     <tr>
@@ -188,23 +182,18 @@ export function buildForm013Html(eq) {
   </tbody>
 </table>
 
-<!-- ═══ OBSERVAÇÕES ═══ -->
 <div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">OBSERVAÇÕES</div>
 <table style="margin-bottom:0"><tr><td style="height:32px;font-size:8px;border: 1px solid #bbb">${eq.observacoes || ''}</td></tr></table>
 
-<!-- ═══ CALIBRAÇÃO ═══ -->
 <div class="sec" style="margin-top:6px; background-color: #bfcf99;border: 1px solid #bbb">CALIBRAÇÃO</div>
 
-<!-- CALIBRAÇÃO: colunas de erro obtido dinâmicas baseadas nos pontos de calibração -->
 ${(() => {
   const rawPts = eq.pontos_calibracao;
   const pts = (Array.isArray(rawPts) ? rawPts : []).slice(0, 16);
   const numPontos = Math.max(pts.length, 1);
-  // cabeçalhos de erro obtido — um por ponto
   const erroCols = pts.length > 0
     ? pts.map((p, idx) => VTH(`Erro obtido — ${p.ponto || (idx + 1)}`))
     : [VTH('Erro obtido')];
-  const numResultCols = numPontos + 5; // erros + Atende + Periodicidade + Em uso + Observações + Data + Responsável = +5 fixas... we count: atende(1)+period(1)+em_uso(1)+obs(1)+data(1)+resp(1)=6
   const totalResultCols = numPontos + 6;
 
   const calRows = (eq.historico_calibracao || []).length > 0
@@ -292,7 +281,6 @@ ${(() => {
 </table>`;
 })()}
 
-<!-- ═══ MANUTENÇÃO ═══ -->
 <div class="sec" style="margin-top:6px;background-color: #bfcf99;border: 1px solid #bbb">MANUTENÇÃO</div>
 <table style="margin-bottom:0">
   <thead>
@@ -328,7 +316,6 @@ ${(() => {
   </tbody>
 </table>
 
-<!-- ═══ LEGENDA ═══ -->
 <table style="width:180px;margin-top:8px;border:none">
   <tr><td colspan="2" style="border:none;font-weight:bold;font-size:8px;padding:2px 0">Legenda</td></tr>
   <tr>
