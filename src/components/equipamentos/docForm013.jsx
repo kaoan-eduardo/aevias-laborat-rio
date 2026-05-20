@@ -214,7 +214,7 @@ export function buildForm013Html(eq) {
       ${VTH('Erro máximo admissível')}
       ${VTH('Erro máximo obtido')}
       ${VTH('Erro máximo admissível')}
-      ${VTH('Erro máximo obtido', 'background:#fff8c0')}
+      ${VTH('Erro máximo obtido')}
       ${VTH('Atende ao especificado?')}
       ${VTH('Periodicidade entre calibrações')}
       ${VTH('Item pode ser colocado em uso?')}
