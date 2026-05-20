@@ -153,13 +153,39 @@ export function buildForm013Html(eq) {
   </tr>
 </table>
 
-<!-- ═══ PONTOS DE CALIBRAÇÃO ═══ -->
-<div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">PONTOS DE CALIBRAÇÃO</div>
-<table style="margin-bottom:0"><tr><td style="height:36px;font-size:8px;text-align:center;border: 1px solid #bbb";'background:#bfcf99' >${eq.pontos_calibracao || ''}</td></tr></table>
+<!-- ═══ UNIDADE / TOLERÂNCIA ═══ -->
+<table style="margin-bottom:0;width:100%">
+  <tr>
+    <td style="border:1px solid #bbb;padding:2px 6px;font-weight:700;font-size:7.5px;background:#F2F1EF;width:160px;font-family:'Exo 2',Arial,sans-serif">UNIDADE DO EQUIPAMENTO:</td>
+    <td style="border:1px solid #bbb;padding:2px 6px;font-size:7.5px;width:140px">${eq.unidade_equipamento || 'Ex.: kg, kgf, ºC, etc.'}</td>
+    <td style="border:1px solid #bbb;padding:2px 6px;font-weight:700;font-size:7.5px;background:#F2F1EF;width:100px;font-family:'Exo 2',Arial,sans-serif">Tolerância:</td>
+    <td style="border:1px solid #bbb;padding:2px 6px;font-size:7.5px;width:100px">${eq.tolerancia || ''}</td>
+    <td style="border:1px solid #bbb;padding:2px 6px;font-size:7.5px"></td>
+  </tr>
+</table>
 
-<!-- ═══ CRITÉRIOS DE ACEITAÇÃO ═══ -->
-<div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">CRITÉRIOS DE ACEITAÇÃO</div>
-<table style="margin-bottom:0"><tr><td style="height:30px;font-size:8px;text-align:center;border: 1px solid #bbb">${eq.criterios_aceitacao || ''}</td></tr></table>
+<!-- ═══ PONTOS DE CALIBRAÇÃO + CRITÉRIOS ═══ -->
+<table style="margin-bottom:0;width:100%">
+  <thead>
+    <tr>
+      <th style="background:#BFCF99;color:#333;font-family:'Exo 2',Arial,sans-serif;font-size:8px;text-align:center;padding:3px;width:50%">PONTOS DE CALIBRAÇÃO</th>
+      <th style="background:#BFCF99;color:#333;font-family:'Exo 2',Arial,sans-serif;font-size:8px;text-align:center;padding:3px;width:50%">CRITÉRIOS DE ACEITAÇÃO</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${(() => {
+      const pts = (eq.pontos_calibracao || []).slice(0, 16);
+      const rows = Array.from({ length: Math.max(pts.length, 1) }, (_, i) => {
+        const p = pts[i] || {};
+        return `<tr style="height:14px">
+          <td style="border:1px solid #bbb;padding:2px 6px;font-size:7.5px;text-align:center">${p.ponto || ''}</td>
+          <td style="border:1px solid #bbb;padding:2px 6px;font-size:7.5px;text-align:center">${p.criterio || ''}</td>
+        </tr>`;
+      });
+      return rows.join('');
+    })()}
+  </tbody>
+</table>
 
 <!-- ═══ OBSERVAÇÕES ═══ -->
 <div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">OBSERVAÇÕES</div>
@@ -168,64 +194,24 @@ export function buildForm013Html(eq) {
 <!-- ═══ CALIBRAÇÃO ═══ -->
 <div class="sec" style="margin-top:6px; background-color: #bfcf99;border: 1px solid #bbb">CALIBRAÇÃO</div>
 
-<!-- CALIBRAÇÃO UNIFICADA: Informações + Resultados numa só tabela alinhada -->
-<table style="margin-bottom:0;table-layout:fixed;width:100%">
-  <colgroup>
-    <!-- col nº certificado -->
-    <col style="width:70px">
-    <!-- 13 colunas info certificado (Órgão a Aceito?) -->
-    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
-    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
-    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
-    <col style="width:26px">
-    <!-- separador visual -->
-    <col style="width:4px">
-    <!-- 12 colunas resultados -->
-    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:26px">
-    <col style="width:26px"><col style="width:26px"><col style="width:26px"><col style="width:30px">
-    <col style="width:26px"><col style="width:40px"><col style="width:26px"><col style="width:50px">
-  </colgroup>
-  <thead>
-    <!-- Linha de grupo -->
-    <tr>
-      <th rowspan="2" style="vertical-align:middle;font-size:6.5px;text-align:center;background:#f2f1ef">IDENTIFICAÇÃO<br><span style="font-weight:normal;font-size:6px">Nº do certificado</span></th>
-      <th colspan="13" style="background:#f2f1ef;font-size:7px">ANÁLISE DAS INFORMAÇÕES DO CERTIFICADO</th>
-      <td style="border:none;background:#fff;padding:0"></td>
-      <th colspan="12" style="background:#f2f1ef;font-size:7px">ANÁLISE DOS RESULTADOS</th>
-    </tr>
-    <!-- Linha de sub-cabeçalhos -->
-    <tr>
-      ${VTH('Órgão')}
-      ${VTH('Título')}
-      ${VTH('Identificação do lab.')}
-      ${VTH('Selo RBC e nº CAL')}
-      ${VTH('Identificação do certificado')}
-      ${VTH('Número de páginas')}
-      ${VTH('Nome e endereço do cliente')}
-      ${VTH('Descrição do item calibrado')}
-      ${VTH('Identificação do método utilizado')}
-      ${VTH('Data da calibração')}
-      ${VTH('Nome e função da pessoa que autorizou a emissão do certificado')}
-      ${VTH('Rastreabilidade das medições')}
-      ${VTH('Certificado pode ser aceito?')}
-      <td style="border:none;background:#fff;padding:0"></td>
-      ${VTH('Erro máximo admissível')}
-      ${VTH('Erro máximo obtido')}
-      ${VTH('Erro máximo admissível')}
-      ${VTH('Erro máximo obtido')}
-      ${VTH('Erro máximo admissível')}
-      ${VTH('Erro máximo obtido')}
-      ${VTH('Atende ao especificado?')}
-      ${VTH('Periodicidade entre calibrações')}
-      ${VTH('Item pode ser colocado em uso?')}
-      ${VTH('Observações')}
-      ${VTH('Data da análise')}
-      ${VTH('Responsável pela análise')}
-    </tr>
-  </thead>
-  <tbody>
-    ${(eq.historico_calibracao || []).length > 0
-      ? (eq.historico_calibracao || []).map((c) => `
+<!-- CALIBRAÇÃO: colunas de erro obtido dinâmicas baseadas nos pontos de calibração -->
+${(() => {
+  const pts = (eq.pontos_calibracao || []).slice(0, 16);
+  const numPontos = Math.max(pts.length, 1);
+  // cabeçalhos de erro obtido — um por ponto
+  const erroCols = pts.length > 0
+    ? pts.map((p, idx) => VTH(`Erro obtido — ${p.ponto || (idx + 1)}`))
+    : [VTH('Erro obtido')];
+  const numResultCols = numPontos + 5; // erros + Atende + Periodicidade + Em uso + Observações + Data + Responsável = +5 fixas... we count: atende(1)+period(1)+em_uso(1)+obs(1)+data(1)+resp(1)=6
+  const totalResultCols = numPontos + 6;
+
+  const calRows = (eq.historico_calibracao || []).length > 0
+    ? (eq.historico_calibracao || []).map((c) => {
+        const erros = (c.erros_obtidos || []);
+        const erroTds = Array.from({ length: numPontos }, (_, idx) =>
+          `<td style="border:1px solid #bbb;text-align:center;padding:2px">${erros[idx] || ''}</td>`
+        ).join('');
+        return `
     <tr style="font-size:7px">
       <td style="border:1px solid #bbb;padding:2px 3px">${c.numero_certificado || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.orgao || ''}</td>
@@ -242,33 +228,67 @@ export function buildForm013Html(eq) {
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.rastreabilidade)}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.certificado_aceito)}</td>
       <td style="border:none;background:#fff;padding:0"></td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_ref || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_obtido_1 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_1 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_obtido_2 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_2 || ''}</td>
+      ${erroTds}
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.atende_especificado)}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.periodicidade || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.item_em_uso)}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.observacoes_resultado || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.data_analise || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.responsavel_analise || ''}</td>
-    </tr>`).join('')
-      : Array(5).fill(`<tr style="height:18px">
+    </tr>`;
+      }).join('')
+    : Array(5).fill(`<tr style="height:18px">
       ${Array(14).fill('<td style="border:1px solid #bbb"></td>').join('')}
       <td style="border:none;background:#fff;padding:0"></td>
-      ${Array(12).fill('<td style="border:1px solid #bbb"></td>').join('')}
-    </tr>`).join('')}
-    ${(() => {
-      const extra = Math.max(0, 5 - (eq.historico_calibracao || []).length);
-      return Array(extra).fill(`<tr style="height:18px">
-      ${Array(14).fill('<td style="border:1px solid #bbb"></td>').join('')}
-      <td style="border:none;background:#fff;padding:0"></td>
-      ${Array(12).fill('<td style="border:1px solid #bbb"></td>').join('')}
+      ${Array(totalResultCols).fill('<td style="border:1px solid #bbb"></td>').join('')}
     </tr>`).join('');
-    })()}
+
+  const extraEmpty = Math.max(0, 5 - (eq.historico_calibracao || []).length);
+  const emptyRows = Array(extraEmpty).fill(`<tr style="height:18px">
+      ${Array(14).fill('<td style="border:1px solid #bbb"></td>').join('')}
+      <td style="border:none;background:#fff;padding:0"></td>
+      ${Array(totalResultCols).fill('<td style="border:1px solid #bbb"></td>').join('')}
+    </tr>`).join('');
+
+  return `
+<table style="margin-bottom:0;width:100%">
+  <thead>
+    <tr>
+      <th rowspan="2" style="vertical-align:middle;font-size:6.5px;text-align:center;background:#f2f1ef;min-width:70px">IDENTIFICAÇÃO<br><span style="font-weight:normal;font-size:6px">Nº do certificado</span></th>
+      <th colspan="13" style="background:#f2f1ef;font-size:7px">ANÁLISE DAS INFORMAÇÕES DO CERTIFICADO</th>
+      <td style="border:none;background:#fff;padding:0;width:4px"></td>
+      <th colspan="${totalResultCols}" style="background:#f2f1ef;font-size:7px">ANÁLISE DOS RESULTADOS</th>
+    </tr>
+    <tr>
+      ${VTH('Órgão')}
+      ${VTH('Título')}
+      ${VTH('Identificação do lab.')}
+      ${VTH('Selo RBC e nº CAL')}
+      ${VTH('Identificação do certificado')}
+      ${VTH('Número de páginas')}
+      ${VTH('Nome e endereço do cliente')}
+      ${VTH('Descrição do item calibrado')}
+      ${VTH('Identificação do método utilizado')}
+      ${VTH('Data da calibração')}
+      ${VTH('Nome e função da pessoa que autorizou a emissão do certificado')}
+      ${VTH('Rastreabilidade das medições')}
+      ${VTH('Certificado pode ser aceito?')}
+      <td style="border:none;background:#fff;padding:0"></td>
+      ${erroCols.join('')}
+      ${VTH('Atende ao especificado?')}
+      ${VTH('Periodicidade entre calibrações')}
+      ${VTH('Item pode ser colocado em uso?')}
+      ${VTH('Observações')}
+      ${VTH('Data da análise')}
+      ${VTH('Responsável pela análise')}
+    </tr>
+  </thead>
+  <tbody>
+    ${calRows}
+    ${emptyRows}
   </tbody>
-</table>
+</table>`;
+})()}
 
 <!-- ═══ MANUTENÇÃO ═══ -->
 <div class="sec" style="margin-top:6px;background-color: #bfcf99;border: 1px solid #bbb">MANUTENÇÃO</div>

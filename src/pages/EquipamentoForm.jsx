@@ -14,23 +14,22 @@ const EMPTY_FORM = {
   identificacao_interna: '', nome: '', categoria: '', fabricante: '', modelo: '',
   numero_serie: '', software_firmware: '', data_entrada_servico: '', faixa_nominal_maxima: '',
   localizacao: '', responsavel_atualizacao: '', precisao: '', frequencia_calibracao: '',
-  pontos_calibracao: '', criterios_aceitacao: '', erro_maximo_admissivel: '', observacoes: '',
+  unidade_equipamento: '', tolerancia: '',
+  pontos_calibracao: [], observacoes: '',
   data_calibracao: '', validade_calibracao: '', periodicidade_verificacao: '', status: 'em_uso',
   obrigatorio_verificacao_diaria: false, obrigatorio_verificacao_intermediaria: false,
   historico_calibracao: [], historico_manutencao: [],
 };
 
 const EMPTY_CAL = {
-  numero_certificado: '', orgao: '', titulo: '',
+  numero_certificado: '', orgao: '', titulo: false,
   identificacao_lab: false, selo_rbc: false, identificacao_certificado: false,
   numero_paginas: false, nome_endereco_cliente: false, descricao_item_calibrado: false,
   identificacao_metodo: false, data_calibracao: false, nome_autorizou: false,
   rastreabilidade: false, certificado_aceito: false,
-  erro_maximo_admissivel_ref: '', erro_maximo_obtido_1: '', erro_maximo_admissivel_1: '',
-  erro_maximo_obtido_2: '', erro_maximo_admissivel_2: '', erro_maximo_obtido_3: '',
-  atende_especificado: false, periodicidade: '', data_calibracao_resultado: '',
-  proxima_calibracao: '', item_em_uso: false, observacoes_resultado: '',
-  data_analise: '', responsavel_analise: '',
+  erros_obtidos: [],
+  atende_especificado: false, periodicidade: '', item_em_uso: false,
+  observacoes_resultado: '', data_analise: '', responsavel_analise: '',
 };
 
 const EMPTY_MAN = {
@@ -220,12 +219,79 @@ export default function EquipamentoForm() {
       <Card>
         <CardHeader className="pb-2"><CardTitle className="text-sm">Pontos de Calibração / Critérios / Observações</CardTitle></CardHeader>
         <CardContent className="space-y-4">
-          <Field label="Pontos de Calibração" col2>
-            <Input value={form.pontos_calibracao || ''} onChange={e => set('pontos_calibracao', e.target.value)} placeholder="Ex: 100 ; 1 000 ; 2 000 ; 5 000 ; 10 000 g" />
-          </Field>
-          <Field label="Critérios de Aceitação" col2>
-            <Input value={form.criterios_aceitacao || ''} onChange={e => set('criterios_aceitacao', e.target.value)} />
-          </Field>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Unidade do Equipamento">
+              <Input value={form.unidade_equipamento || ''} onChange={e => set('unidade_equipamento', e.target.value)} placeholder="Ex.: kg, kgf, ºC" />
+            </Field>
+            <Field label="Tolerância">
+              <Input value={form.tolerancia || ''} onChange={e => set('tolerancia', e.target.value)} placeholder="Ex.: 5%" />
+            </Field>
+          </div>
+
+          {/* Tabela de pontos x critérios */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <Label className="text-xs font-semibold">Pontos de Calibração × Critérios de Aceitação <span className="text-muted-foreground font-normal">(máx. 16 linhas)</span></Label>
+              {(form.pontos_calibracao || []).length < 16 && (
+                <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => set('pontos_calibracao', [...(form.pontos_calibracao || []), { ponto: '', criterio: '' }])}>
+                  <Plus className="w-3 h-3" /> Adicionar linha
+                </Button>
+              )}
+            </div>
+            {(form.pontos_calibracao || []).length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-3 border border-dashed border-border rounded-md">Nenhum ponto adicionado. Clique em "Adicionar linha".</p>
+            ) : (
+              <div className="border border-border rounded-md overflow-hidden">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="bg-accent/40">
+                      <th className="text-left px-3 py-1.5 font-semibold w-8 text-muted-foreground">#</th>
+                      <th className="text-left px-3 py-1.5 font-semibold w-1/2">Ponto de Calibração</th>
+                      <th className="text-left px-3 py-1.5 font-semibold w-1/2">Critério de Aceitação</th>
+                      <th className="w-8"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(form.pontos_calibracao || []).map((p, idx) => (
+                      <tr key={idx} className="border-t border-border">
+                        <td className="px-3 py-1 text-muted-foreground">{idx + 1}</td>
+                        <td className="px-2 py-1">
+                          <Input
+                            value={p.ponto || ''}
+                            onChange={e => {
+                              const arr = [...(form.pontos_calibracao || [])];
+                              arr[idx] = { ...arr[idx], ponto: e.target.value };
+                              set('pontos_calibracao', arr);
+                            }}
+                            placeholder="Ex.: 20"
+                            className="h-7 text-xs"
+                          />
+                        </td>
+                        <td className="px-2 py-1">
+                          <Input
+                            value={p.criterio || ''}
+                            onChange={e => {
+                              const arr = [...(form.pontos_calibracao || [])];
+                              arr[idx] = { ...arr[idx], criterio: e.target.value };
+                              set('pontos_calibracao', arr);
+                            }}
+                            placeholder="Ex.: 21"
+                            className="h-7 text-xs"
+                          />
+                        </td>
+                        <td className="px-1 py-1 text-center">
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive" onClick={() => set('pontos_calibracao', (form.pontos_calibracao || []).filter((_, i) => i !== idx))}>
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
           <Field label="Observações" col2>
             <Input value={form.observacoes || ''} onChange={e => set('observacoes', e.target.value)} />
           </Field>
@@ -303,25 +369,48 @@ export default function EquipamentoForm() {
               </div>
 
               <SectionTitle>Análise dos Resultados</SectionTitle>
+
+              {/* Erros obtidos — dinâmico por ponto de calibração */}
+              <div className="mb-3">
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label className="text-xs font-semibold">Erros Obtidos <span className="text-muted-foreground font-normal">(um por ponto de calibração)</span></Label>
+                </div>
+                {(form.pontos_calibracao || []).length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic">Cadastre os pontos de calibração primeiro para preencher os erros obtidos.</p>
+                ) : (
+                  <div className="border border-border rounded-md overflow-hidden">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="bg-accent/40">
+                          <th className="text-left px-3 py-1.5 font-semibold w-1/2">Ponto de Calibração</th>
+                          <th className="text-left px-3 py-1.5 font-semibold w-1/2">Erro Obtido</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(form.pontos_calibracao || []).map((p, idx) => (
+                          <tr key={idx} className="border-t border-border">
+                            <td className="px-3 py-1 text-muted-foreground">{p.ponto || `Ponto ${idx + 1}`}</td>
+                            <td className="px-2 py-1">
+                              <Input
+                                value={(c.erros_obtidos || [])[idx] || ''}
+                                onChange={e => {
+                                  const arr = [...(c.erros_obtidos || [])];
+                                  arr[idx] = e.target.value;
+                                  setCal(i, 'erros_obtidos', arr);
+                                }}
+                                placeholder="Ex.: 21,3"
+                                className="h-7 text-xs"
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <Field label="Erro máx. admissível (ref)">
-                  <Input value={c.erro_maximo_admissivel_ref || ''} onChange={e => setCal(i, 'erro_maximo_admissivel_ref', e.target.value)} />
-                </Field>
-                <Field label="Erro máx. obtido (1)">
-                  <Input value={c.erro_maximo_obtido_1 || ''} onChange={e => setCal(i, 'erro_maximo_obtido_1', e.target.value)} />
-                </Field>
-                <Field label="Erro máx. admissível (1)">
-                  <Input value={c.erro_maximo_admissivel_1 || ''} onChange={e => setCal(i, 'erro_maximo_admissivel_1', e.target.value)} />
-                </Field>
-                <Field label="Erro máx. obtido (2)">
-                  <Input value={c.erro_maximo_obtido_2 || ''} onChange={e => setCal(i, 'erro_maximo_obtido_2', e.target.value)} />
-                </Field>
-                <Field label="Erro máx. admissível (2)">
-                  <Input value={c.erro_maximo_admissivel_2 || ''} onChange={e => setCal(i, 'erro_maximo_admissivel_2', e.target.value)} />
-                </Field>
-                <Field label="Erro máx. obtido (3)">
-                  <Input value={c.erro_maximo_obtido_3 || ''} onChange={e => setCal(i, 'erro_maximo_obtido_3', e.target.value)} className="bg-yellow-50" />
-                </Field>
                 <Field label="Periodicidade entre calibrações">
                   <Input value={c.periodicidade || ''} onChange={e => setCal(i, 'periodicidade', e.target.value)} placeholder="Ex: Manter" />
                 </Field>

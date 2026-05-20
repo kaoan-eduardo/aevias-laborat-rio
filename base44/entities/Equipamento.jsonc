@@ -51,17 +51,28 @@
       "type": "string",
       "description": "Precis\u00e3o / Resolu\u00e7\u00e3o do equipamento"
     },
+    "unidade_equipamento": {
+      "type": "string",
+      "description": "Unidade do equipamento (ex: kg, kgf, \u00b0C)"
+    },
+    "tolerancia": {
+      "type": "string",
+      "description": "Toler\u00e2ncia (ex: 5%)"
+    },
     "pontos_calibracao": {
-      "type": "string",
-      "description": "Pontos de calibra\u00e7\u00e3o"
-    },
-    "criterios_aceitacao": {
-      "type": "string",
-      "description": "Crit\u00e9rios de aceita\u00e7\u00e3o"
-    },
-    "erro_maximo_admissivel": {
-      "type": "string",
-      "description": "Erro m\u00e1ximo admiss\u00edvel (EMA)"
+      "type": "array",
+      "description": "Pontos de calibra\u00e7\u00e3o e crit\u00e9rios de aceita\u00e7\u00e3o (m\u00e1x. 16 linhas)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ponto": {
+            "type": "string"
+          },
+          "criterio": {
+            "type": "string"
+          }
+        }
+      }
     },
     "observacoes": {
       "type": "string",
@@ -181,23 +192,12 @@
           "certificado_aceito": {
             "type": "boolean"
           },
-          "erro_maximo_admissivel_ref": {
-            "type": "string"
-          },
-          "erro_maximo_obtido_1": {
-            "type": "string"
-          },
-          "erro_maximo_admissivel_1": {
-            "type": "string"
-          },
-          "erro_maximo_obtido_2": {
-            "type": "string"
-          },
-          "erro_maximo_admissivel_2": {
-            "type": "string"
-          },
-          "erro_maximo_obtido_3": {
-            "type": "string"
+          "erros_obtidos": {
+            "type": "array",
+            "description": "Erros obtidos por ponto de calibra\u00e7\u00e3o (din\u00e2mico, at\u00e9 16)",
+            "items": {
+              "type": "string"
+            }
           },
           "atende_especificado": {
             "type": "boolean"
