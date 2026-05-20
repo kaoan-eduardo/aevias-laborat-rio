@@ -284,7 +284,7 @@ export function buildForm013Html(eq) {
     </tr>
     <tr>
       ${VTH_MAN('Data')}
-      ${VTH_MAN('Descrição do problema apresentado')}
+      ${VTH_MAN('Descrição do problema apresentado', 'background: #bfcf99')}
       ${VTH_MAN('FORM 011 - Etiqueta NC')}
       ${VTH_MAN('Responsável')}
       ${VTH_MAN('Status FORM 012')}
