@@ -91,7 +91,7 @@ export function buildForm013Html(eq) {
     FICHA DE EQUIPAMENTO
     </td>
     <td style="width:150px;border:1.5px solid #00233B;padding:4px 6px;vertical-align:top;font-size:7px;background:#FFF">
-    <div style="font-weight:700;text-align:center;border-bottom:1px solid #BFCF99;padding-bottom:2px;margin-bottom:3px;font-family:'Exo 2',Arial,sans-serif;color:#566E3D">Identificação do doc. Nº</div>
+    <div style="font-weight:700;text-align:center;border-bottom:1px solid #00233b;padding-bottom:2px;margin-bottom:3px;font-family:'Exo 2',Arial,sans-serif;color:#00233b">Identificação do doc. Nº</div>
     <div style="text-align:center;font-weight:800;font-size:9px;margin-bottom:3px;font-family:'Exo 2',Arial,sans-serif;color:#00233B">FORM 013</div>
       <table style="width:100%">
         <tr>
