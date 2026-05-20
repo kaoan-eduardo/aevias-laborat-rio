@@ -81,7 +81,8 @@ export default function EquipamentoForm() {
     if (isEdit) {
       base44.entities.Equipamento.get(id).then(eq => {
         if (eq) {
-          setForm({ ...EMPTY_FORM, ...eq });
+          const pontos = Array.isArray(eq.pontos_calibracao) ? eq.pontos_calibracao : [];
+          setForm({ ...EMPTY_FORM, ...eq, pontos_calibracao: pontos });
           setStatusOriginal(eq.status || 'em_uso');
         }
         setLoading(false);
