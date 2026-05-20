@@ -247,7 +247,6 @@ export function buildForm013Html(eq) {
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_1 || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_obtido_2 || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.erro_maximo_admissivel_2 || ''}</td>
-      <td style="border:1px solid #bbb;text-align:center;padding:2px;font-weight:bold;background:#fff8c0">${c.erro_maximo_obtido_3 || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.atende_especificado)}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.periodicidade || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.item_em_uso)}</td>
