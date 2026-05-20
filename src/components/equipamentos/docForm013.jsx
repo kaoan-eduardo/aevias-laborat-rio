@@ -155,7 +155,7 @@ export function buildForm013Html(eq) {
 
 <!-- ═══ PONTOS DE CALIBRAÇÃO ═══ -->
 <div class="sec" style="margin-top:4px">PONTOS DE CALIBRAÇÃO</div>
-<table style="margin-bottom:0"><tr><td style="height:36px;font-size:8px;text-align:center">${eq.pontos_calibracao || ''}</td></tr></table>
+<table style="margin-bottom:0"><tr><td style="height:36px;font-size:8px;text-align:center";'background:#bfcf99' >${eq.pontos_calibracao || ''}</td></tr></table>
 
 <!-- ═══ CRITÉRIOS DE ACEITAÇÃO ═══ -->
 <div class="sec" style="margin-top:4px">CRITÉRIOS DE ACEITAÇÃO</div>
