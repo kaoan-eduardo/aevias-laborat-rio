@@ -271,7 +271,7 @@ export function buildForm013Html(eq) {
 </table>
 
 <!-- ═══ MANUTENÇÃO ═══ -->
-<div class="sec" style="margin-top:6px;background-color: #bfcf99">MANUTENÇÃO;border: 1px solid #bbb</div>
+<div class="sec" style="margin-top:6px;background-color: #bfcf99;border: 1px solid #bbb">MANUTENÇÃO</div>
 <table style="margin-bottom:0">
   <thead>
     <tr>
