@@ -283,21 +283,21 @@ export function buildForm013Html(eq) {
       <th colspan="1" class="legend-lc" style="font-size:7px">LC</th>
     </tr>
     <tr>
-      ${VTH_MAN('Data')}
+      ${VTH_MAN('Data', 'background: #bfcf99')}
       ${VTH_MAN('Descrição do problema apresentado', 'background: #bfcf99')}
-      ${VTH_MAN('FORM 011 - Etiqueta NC')}
-      ${VTH_MAN('Responsável')}
-      ${VTH_MAN('Status FORM 012')}
-      ${VTH_MAN('Data da aprovação')}
-      ${VTH_MAN('Fornecedor')}
-      ${VTH_MAN('Ordem de compra')}
-      ${VTH_MAN('Data ordem de compra')}
-      ${VTH_MAN('Nota Fiscal')}
-      ${VTH_MAN('Data do recebimento')}
-      <th style="min-width:90px;font-size:7px">Detalhes da execução do Serviço</th>
-      ${VTH_MAN('Inspeção de recebimento')}
-      ${VTH_MAN('Análise Crítica')}
-      ${VTH_MAN('Status FORM 012')}
+      ${VTH_MAN('FORM 011 - Etiqueta NC', 'background: #bfcf99')}
+      ${VTH_MAN('Responsável', 'background: #bfcf99')}
+      ${VTH_MAN('Status FORM 012','background: #566E3D')}
+      ${VTH_MAN('Data da aprovação','background: #566E3D')}
+      ${VTH_MAN('Fornecedor','background: #e8dcc8')}
+      ${VTH_MAN('Ordem de compra','background: #e8dcc8')}
+      ${VTH_MAN('Data ordem de compra','background: #e8dcc8')}
+      ${VTH_MAN('Nota Fiscal','background: #e8dcc8')}
+      ${VTH_MAN('Data do recebimento','background: #e8dcc8')}
+      <th style="min-width:90px;font-size:7px;background: #e8dcc8">Detalhes da execução do Serviço</th>
+      ${VTH_MAN('Inspeção de recebimento','background: #bfcf99')}
+      ${VTH_MAN('Análise Crítica','background: #566E3D')}
+      ${VTH_MAN('Status FORM 012','background: #bfcf99')}
     </tr>
   </thead>
   <tbody>
