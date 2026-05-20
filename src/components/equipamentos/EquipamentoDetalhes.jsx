@@ -104,7 +104,18 @@ export default function EquipamentoDetalhes({ equipamento: initialEquipamento, c
             <InfoRow label="EMA (Erro Máx. Admissível)" value={eq.erro_maximo_admissivel} />
             <InfoRow label="Periodicidade Verificação" value={PERIODICIDADE_LABELS[eq.periodicidade_verificacao]} />
           </div>
-          {eq.pontos_calibracao && <InfoRow label="Pontos de Calibração" value={eq.pontos_calibracao} />}
+          {Array.isArray(eq.pontos_calibracao) && eq.pontos_calibracao.length > 0 && (
+            <div className="sm:col-span-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Pontos de Calibração</p>
+              <div className="flex flex-wrap gap-1.5">
+                {eq.pontos_calibracao.map((p, i) => (
+                  <span key={i} className="text-xs bg-muted rounded px-2 py-0.5 font-mono-data">
+                    {p.ponto || `P${i+1}`}{p.criterio ? ` → ${p.criterio}` : ''}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
           {eq.criterios_aceitacao && <InfoRow label="Critérios de Aceitação" value={eq.criterios_aceitacao} />}
           {eq.observacoes && <InfoRow label="Observações" value={eq.observacoes} />}
         </div>
