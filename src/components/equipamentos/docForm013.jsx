@@ -154,15 +154,15 @@ export function buildForm013Html(eq) {
 </table>
 
 <!-- ═══ PONTOS DE CALIBRAÇÃO ═══ -->
-<div class="sec" style="margin-top:4px; background-color: #bfcf99">PONTOS DE CALIBRAÇÃO</div>
+<div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">PONTOS DE CALIBRAÇÃO</div>
 <table style="margin-bottom:0"><tr><td style="height:36px;font-size:8px;text-align:center;border: 1px solid #bbb";'background:#bfcf99' >${eq.pontos_calibracao || ''}</td></tr></table>
 
 <!-- ═══ CRITÉRIOS DE ACEITAÇÃO ═══ -->
-<div class="sec" style="margin-top:4px; background-color: #bfcf99">CRITÉRIOS DE ACEITAÇÃO</div>
+<div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">CRITÉRIOS DE ACEITAÇÃO</div>
 <table style="margin-bottom:0"><tr><td style="height:30px;font-size:8px;text-align:center;border: 1px solid #bbb">${eq.criterios_aceitacao || ''}</td></tr></table>
 
 <!-- ═══ OBSERVAÇÕES ═══ -->
-<div class="sec" style="margin-top:4px; background-color: #bfcf99">OBSERVAÇÕES</div>
+<div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">OBSERVAÇÕES</div>
 <table style="margin-bottom:0"><tr><td style="height:32px;font-size:8px;border: 1px solid #bbb">${eq.observacoes || ''}</td></tr></table>
 
 <!-- ═══ CALIBRAÇÃO ═══ -->
