@@ -114,14 +114,14 @@ export function buildForm013Html(eq) {
     <td style="width:200px">${eq.responsavel_atualizacao || ''}</td>
     <td class="lbl" style="width:100px">Atualizado em:</td>
     <td style="text-align:center;width:80px">${hoje}</td>
+    <td rowspan="7" style="width:130px;border-left:2px solid #aaa;text-align:center;vertical-align:middle;padding:6px">
+      <div style="font-size:7px;font-weight:bold;margin-bottom:4px">Identificação unívoca:</div>
+      <div class="id-badge">${eq.identificacao_interna || ''}</div>
+    </td>
   </tr>
   <tr style="height:32px">
     <td class="lbl">Nome do equipamento:</td>
     <td colspan="3">${eq.nome || ''}</td>
-    <td rowspan="5" style="width:130px;border-left:2px solid #aaa;text-align:center;vertical-align:middle;padding:6px">
-      <div style="font-size:7px;font-weight:bold;margin-bottom:4px">Identificação unívoca:</div>
-      <div class="id-badge">${eq.identificacao_interna || ''}</div>
-    </td>
   </tr>
   <tr style="height:22px">
     <td class="lbl">Software e a versão do firmware (quando aplicável):</td>
