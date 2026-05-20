@@ -166,7 +166,7 @@ export function buildForm013Html(eq) {
 <table style="margin-bottom:0"><tr><td style="height:32px;font-size:8px">${eq.observacoes || ''}</td></tr></table>
 
 <!-- ═══ CALIBRAÇÃO ═══ -->
-<div class="sec" style="margin-top:6px">CALIBRAÇÃO</div>
+<div class="sec" style="margin-top:6px; background-color: #bfcf99">CALIBRAÇÃO</div>
 
 <!-- CALIBRAÇÃO UNIFICADA: Informações + Resultados numa só tabela alinhada -->
 <table style="margin-bottom:0;table-layout:fixed;width:100%">
