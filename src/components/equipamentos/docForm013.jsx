@@ -155,18 +155,18 @@ export function buildForm013Html(eq) {
 
 <!-- ═══ PONTOS DE CALIBRAÇÃO ═══ -->
 <div class="sec" style="margin-top:4px; background-color: #bfcf99">PONTOS DE CALIBRAÇÃO</div>
-<table style="margin-bottom:0"><tr><td style="height:36px;font-size:8px;text-align:center";'background:#bfcf99' >${eq.pontos_calibracao || ''}</td></tr></table>
+<table style="margin-bottom:0"><tr><td style="height:36px;font-size:8px;text-align:center;border: 1px solid #bbb";'background:#bfcf99' >${eq.pontos_calibracao || ''}</td></tr></table>
 
 <!-- ═══ CRITÉRIOS DE ACEITAÇÃO ═══ -->
 <div class="sec" style="margin-top:4px; background-color: #bfcf99">CRITÉRIOS DE ACEITAÇÃO</div>
-<table style="margin-bottom:0"><tr><td style="height:30px;font-size:8px;text-align:center">${eq.criterios_aceitacao || ''}</td></tr></table>
+<table style="margin-bottom:0"><tr><td style="height:30px;font-size:8px;text-align:center;border: 1px solid #bbb">${eq.criterios_aceitacao || ''}</td></tr></table>
 
 <!-- ═══ OBSERVAÇÕES ═══ -->
 <div class="sec" style="margin-top:4px; background-color: #bfcf99">OBSERVAÇÕES</div>
-<table style="margin-bottom:0"><tr><td style="height:32px;font-size:8px">${eq.observacoes || ''}</td></tr></table>
+<table style="margin-bottom:0"><tr><td style="height:32px;font-size:8px;border: 1px solid #bbb">${eq.observacoes || ''}</td></tr></table>
 
 <!-- ═══ CALIBRAÇÃO ═══ -->
-<div class="sec" style="margin-top:6px; background-color: #bfcf99">CALIBRAÇÃO</div>
+<div class="sec" style="margin-top:6px; background-color: #bfcf99;border: 1px solid #bbb">CALIBRAÇÃO</div>
 
 <!-- CALIBRAÇÃO UNIFICADA: Informações + Resultados numa só tabela alinhada -->
 <table style="margin-bottom:0;table-layout:fixed;width:100%">
