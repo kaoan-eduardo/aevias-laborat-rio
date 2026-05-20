@@ -109,43 +109,43 @@ export function buildForm013Html(eq) {
 
 <!-- ═══ IDENTIFICAÇÃO ═══ -->
 <table style="margin-bottom:0;border:1.5px solid #555">
-  <tr>
+  <tr style="height:20px">
     <td class="lbl" style="width:180px">Responsável pela atualização:</td>
     <td style="width:260px">${eq.responsavel_atualizacao || ''}</td>
     <td class="lbl" style="width:120px">Atualizado em:</td>
     <td style="text-align:center">${hoje}</td>
-    <td rowspan="7" style="width:130px;border-left:2px solid #aaa;text-align:center;vertical-align:middle;padding:6px">
+    <td rowspan="6" style="width:130px;border-left:2px solid #aaa;text-align:center;vertical-align:middle;padding:6px">
       <div style="font-size:7px;font-weight:bold;margin-bottom:4px">Identificação unívoca:</div>
       <div class="id-badge">${eq.identificacao_interna || ''}</div>
     </td>
   </tr>
-  <tr>
+  <tr style="height:22px">
     <td class="lbl">Nome do equipamento:</td>
     <td colspan="3">${eq.nome || ''}</td>
   </tr>
-  <tr>
+  <tr style="height:20px">
     <td class="lbl">Software e a versão do firmware (quando aplicável):</td>
     <td colspan="3">${eq.software_firmware || 'N.A.'}</td>
   </tr>
-  <tr>
+  <tr style="height:20px">
     <td class="lbl">Fabricante:</td>
     <td>${eq.fabricante || ''}</td>
     <td class="lbl">Resolução:</td>
     <td>${eq.precisao || ''}</td>
   </tr>
-  <tr>
+  <tr style="height:20px">
     <td class="lbl">Modelo:</td>
     <td>${eq.modelo || ''}</td>
     <td class="lbl">Faixa nominal máxima:</td>
     <td>${eq.faixa_nominal_maxima || ''}</td>
   </tr>
-  <tr>
+  <tr style="height:20px">
     <td class="lbl">Número de série:</td>
     <td>${eq.numero_serie || ''}</td>
     <td class="lbl">Frequência de calibração:</td>
     <td>${eq.frequencia_calibracao || ''}</td>
   </tr>
-  <tr>
+  <tr style="height:20px">
     <td class="lbl">Data de entrada em serviço:</td>
     <td>${fmt(eq.data_entrada_servico)}</td>
     <td class="lbl">Localização:</td>
