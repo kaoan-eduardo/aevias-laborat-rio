@@ -194,7 +194,7 @@
             "cargo": {
               "$in": [
                 "Analista da Qualidade",
-                "Coordenadora Te9cnica",
+                "Coordenadora Tecnica",
                 "Encarregado",
                 "Auxiliar da Qualidade",
                 "Laboratorista",
