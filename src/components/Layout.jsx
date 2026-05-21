@@ -40,7 +40,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
   const [cadastrosOpen, setCadastrosOpen] = useState(cadastrosActive);
 
   return (
-    <div className="flex flex-col h-full bg-[#00233B]">
+    <div className="flex flex-col h-full bg-[#00233B] rounded-[14px]">
       {/* Logo */}
       <div className={cn('px-5 py-6 border-b border-white/10', collapsed && 'px-3')}>
         {!collapsed ?
@@ -217,7 +217,7 @@ export default function Layout() {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col flex-shrink-0 relative transition-all duration-300 w-[250px] rounded-[14px]",
+          "hidden md:flex flex-col flex-shrink-0 relative transition-all duration-300 w-[250px] rounded-2xl",
           collapsed ? 'w-[72px]' : ""
         )}>
         
