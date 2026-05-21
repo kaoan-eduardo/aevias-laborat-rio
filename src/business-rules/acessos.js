@@ -23,14 +23,14 @@ export const PAGINAS_VISIVEIS = {
   'Laboratorista':           ['/equipamentos', '/verificacoes'],
   'Auxiliar de Laboratório': ['/equipamentos', '/verificacoes'],
   'Assistente de Laboratório': ['/equipamentos', '/verificacoes'],
-  'Estagiária':              ['/fas'],
-  'Coordenadora Comercial':  ['/fas'],
+  'Estagiária':              ['/fas','/clientes','/ensaios'],
+  'Coordenadora Comercial':  ['/fas','/clientes','/ensaios'],
 };
 
 // Cargos que podem EDITAR cada recurso
 export const PODE_EDITAR = {
   fas:           ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade', 'Estagiária', 'Coordenadora Comercial'],
-  recebimento:   ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade'],
+  recebimento:   ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade','Auxiliar de Laboratório'],
   equipamentos:  ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade'],
   verificacoes:  ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade', 'Laboratorista', 'Auxiliar de Laboratório', 'Assistente de Laboratório'],
   cadastros:     ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade'],
