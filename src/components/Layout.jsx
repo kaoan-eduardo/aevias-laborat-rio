@@ -121,7 +121,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
           const active = location.pathname.startsWith(item.path);
           return (
             <Link key={item.path} to={item.path} onClick={() => setMobileOpen(false)}
-              className={cn('flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-medium transition-all duration-150',
+              className={cn('flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-small transition-all duration-150',
                 active ? 'bg-white text-[#00233B] shadow-md' : 'text-white/65 hover:bg-white/10 hover:text-white'
               )}>
               <Icon className="w-4 h-4 flex-shrink-0" />
