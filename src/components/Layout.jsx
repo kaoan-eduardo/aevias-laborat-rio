@@ -61,7 +61,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 space-y-1 overflow-y-auto pt-4 pb-4 pl-3 pr-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {/* Início */}
         {visibleItems.filter((i) => i.path === '/').map((item) => {
           const Icon = item.icon;

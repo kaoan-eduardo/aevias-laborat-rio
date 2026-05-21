@@ -4,15 +4,15 @@ import { useAuth } from '@/lib/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Users, FlaskConical, FileText, Inbox, ChevronRight,
-  Zap, Bell, Clock
-} from 'lucide-react';
+  Zap, Bell, Clock } from
+'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const STATUS_CONFIG = {
   aberta: { label: 'Aberta', color: 'bg-amber-100 text-amber-700' },
   material_recebido: { label: 'Mat. Recebido', color: 'bg-blue-100 text-blue-700' },
   finalizada: { label: 'Finalizada', color: 'bg-emerald-100 text-emerald-700' },
-  cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-700' },
+  cancelada: { label: 'Cancelada', color: 'bg-red-100 text-red-700' }
 };
 
 export default function Dashboard() {
@@ -24,17 +24,17 @@ export default function Dashboard() {
   useEffect(() => {
     const load = async () => {
       const [clientes, ensaios, fas, amostras] = await Promise.all([
-        base44.entities.Cliente.list(),
-        base44.entities.Ensaio.list(),
-        base44.entities.FAS.list('-created_date', 20),
-        base44.entities.RecebimentoAmostra.list('-created_date', 20),
-      ]);
+      base44.entities.Cliente.list(),
+      base44.entities.Ensaio.list(),
+      base44.entities.FAS.list('-created_date', 20),
+      base44.entities.RecebimentoAmostra.list('-created_date', 20)]
+      );
       setStats({
         clientes: clientes.length,
         ensaios: ensaios.length,
         fas: fas.length,
         amostras: amostras.length,
-        fasRecentes: fas.slice(0, 5),
+        fasRecentes: fas.slice(0, 5)
       });
       setLoading(false);
     };
@@ -52,21 +52,21 @@ export default function Dashboard() {
   const role = user?.role || 'auxiliar';
 
   const STAT_CARDS = [
-    { label: 'Clientes', value: stats.clientes, sub: 'cadastrados', icon: Users, path: '/clientes', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
-    { label: 'Ensaios', value: stats.ensaios, sub: 'no catálogo', icon: FlaskConical, path: '/ensaios', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
-    { label: 'FAS', value: stats.fas, sub: 'fichas registradas', icon: FileText, path: '/fas', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
-    { label: 'Amostras recebidas', value: stats.amostras, sub: 'esta semana', icon: Inbox, path: '/recebimento', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
-  ];
+  { label: 'Clientes', value: stats.clientes, sub: 'cadastrados', icon: Users, path: '/clientes', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
+  { label: 'Ensaios', value: stats.ensaios, sub: 'no catálogo', icon: FlaskConical, path: '/ensaios', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
+  { label: 'FAS', value: stats.fas, sub: 'fichas registradas', icon: FileText, path: '/fas', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
+  { label: 'Amostras recebidas', value: stats.amostras, sub: 'esta semana', icon: Inbox, path: '/recebimento', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' }];
+
 
   const QUICK_ACTIONS = [
-    { label: 'Nova FAS', icon: FileText, path: '/fas/nova', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
-    { label: 'Novo Ensaio', icon: FlaskConical, path: '/ensaios', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
-    { label: 'Adicionar Cliente', icon: Users, path: '/clientes', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
-    { label: 'Receber Amostra', icon: Inbox, path: '/recebimento', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
-  ];
+  { label: 'Nova FAS', icon: FileText, path: '/fas/nova', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
+  { label: 'Novo Ensaio', icon: FlaskConical, path: '/ensaios', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' },
+  { label: 'Adicionar Cliente', icon: Users, path: '/clientes', color: 'text-[#566E3D]', bg: 'bg-[#566E3D]/10' },
+  { label: 'Receber Amostra', icon: Inbox, path: '/recebimento', color: 'text-[#00233B]', bg: 'bg-[#00233B]/10' }];
+
 
   return (
-    <div className="min-h-full bg-[#F2F1EF] p-6 space-y-6">
+    <div className="min-h-full bg-[#F2F1EF] space-y-6 pt-6 pb-6 pl-6 pr-10">
 
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-[#00233B] text-white shadow-xl" style={{ minHeight: 200 }}>
@@ -75,8 +75,8 @@ export default function Dashboard() {
           src="https://media.base44.com/images/public/69fdf070216c826565ee0876/edb5bf300_Imagemapp.jpg"
           alt="laboratório"
           className="absolute right-0 top-0 h-full w-[45%] object-cover opacity-60"
-          style={{ filter: 'saturate(0.3) hue-rotate(190deg) brightness(0.5)' }}
-        />
+          style={{ filter: 'saturate(0.3) hue-rotate(190deg) brightness(0.5)' }} />
+        
        {/* Overlay gradient com 50% de opacidade na cor final */}
 <div className="absolute right-0 top-0 h-full w-[55%] bg-gradient-to-l from-transparent to-[#00233B]/75" />
 
@@ -93,7 +93,7 @@ export default function Dashboard() {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {STAT_CARDS.map(card => {
+        {STAT_CARDS.map((card) => {
           const Icon = card.icon;
           return (
             <Link key={card.label} to={card.path}>
@@ -110,8 +110,8 @@ export default function Dashboard() {
                 <p className="text-xs font-semibold text-[#00233B]/70 leading-tight">{card.label}</p>
                 <p className="text-xs text-muted-foreground">{card.sub}</p>
               </div>
-            </Link>
-          );
+            </Link>);
+
         })}
       </div>
 
@@ -130,16 +130,16 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          {loading ? (
-            <div className="space-y-3">
-              {[1,2,3].map(i => <div key={i} className="h-14 bg-[#F2F1EF] rounded-xl animate-pulse" />)}
-            </div>
-          ) : stats.fasRecentes.length === 0 ? (
-            <p className="text-muted-foreground text-sm text-center py-8">Nenhuma FAS cadastrada ainda.</p>
-          ) : (
-            <div className="space-y-2">
-              {stats.fasRecentes.map(fas => (
-                <Link key={fas.id} to={`/fas/${fas.id}`}>
+          {loading ?
+          <div className="space-y-3">
+              {[1, 2, 3].map((i) => <div key={i} className="h-14 bg-[#F2F1EF] rounded-xl animate-pulse" />)}
+            </div> :
+          stats.fasRecentes.length === 0 ?
+          <p className="text-muted-foreground text-sm text-center py-8">Nenhuma FAS cadastrada ainda.</p> :
+
+          <div className="space-y-2">
+              {stats.fasRecentes.map((fas) =>
+            <Link key={fas.id} to={`/fas/${fas.id}`}>
                   <div className="flex items-center justify-between px-4 py-3.5 rounded-2xl bg-[#F2F1EF] hover:bg-[#EFEBDC] transition-all group cursor-pointer">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -158,9 +158,9 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </Link>
-              ))}
+            )}
             </div>
-          )}
+          }
         </div>
 
         {/* Right Column */}
@@ -172,7 +172,7 @@ export default function Dashboard() {
               <h3 className="font-exo text-base font-bold text-white">Ações rápidas</h3>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {QUICK_ACTIONS.map(action => {
+              {QUICK_ACTIONS.map((action) => {
                 const Icon = action.icon;
                 return (
                   <Link key={action.label} to={action.path}>
@@ -182,8 +182,8 @@ export default function Dashboard() {
                       </div>
                       <p className="text-white text-xs font-medium leading-tight">{action.label}</p>
                     </div>
-                  </Link>
-                );
+                  </Link>);
+
               })}
             </div>
           </div>
@@ -197,15 +197,15 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="space-y-4">
-              {stats.fasRecentes.slice(0, 1).map(fas => (
-                <div key={fas.id} className="flex items-start gap-3">
+              {stats.fasRecentes.slice(0, 1).map((fas) =>
+              <div key={fas.id} className="flex items-start gap-3">
                   <div className="w-2 h-2 rounded-full bg-[#BFCF99] mt-1.5 flex-shrink-0" />
                   <div>
                     <p className="text-xs font-semibold text-[#00233B]">{fas.numero_fas} foi {STATUS_CONFIG[fas.status]?.label?.toLowerCase()}</p>
                     <p className="text-xs text-muted-foreground">recentemente</p>
                   </div>
                 </div>
-              ))}
+              )}
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 rounded-full bg-[#566E3D] mt-1.5 flex-shrink-0" />
                 <div>
@@ -224,6 +224,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
