@@ -8,26 +8,24 @@ import {
 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
+import { podeVerPagina } from '@/business-rules/acessos';
 
 // Itens do grupo "Cadastros"
 const CADASTROS_ITEMS = [
-{ path: '/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'user'] },
-{ path: '/ensaios', label: 'Ensaios', icon: FlaskConical, roles: ['admin', 'user'] },
-{ path: '/materiais', label: 'Materiais', icon: Package, roles: ['admin', 'user'] }];
-
+{ path: '/clientes', label: 'Clientes', icon: Users },
+{ path: '/ensaios', label: 'Ensaios', icon: FlaskConical },
+{ path: '/materiais', label: 'Materiais', icon: Package }];
 
 const NAV_ITEMS = [
-{ path: '/', label: 'Início', icon: LayoutDashboard, roles: ['admin', 'user'] },
-{ path: '/fas', label: 'FAS', icon: FileText, roles: ['admin', 'user'] },
-{ path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox, roles: ['admin', 'user'] },
-{ path: '/equipamentos', label: 'Equipamentos', icon: Wrench, roles: ['admin', 'user'] },
-{ path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck, roles: ['admin', 'user'] }];
-
+{ path: '/', label: 'Início', icon: LayoutDashboard },
+{ path: '/fas', label: 'FAS', icon: FileText },
+{ path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox },
+{ path: '/equipamentos', label: 'Equipamentos', icon: Wrench },
+{ path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck }];
 
 const BOTTOM_NAV_ITEMS = [
-{ path: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['admin'] },
-{ path: '/auditoria', label: 'Auditoria', icon: ShieldCheck, roles: ['admin'] }];
-
+{ path: '/usuarios', label: 'Usuários', icon: UserCog, adminOnly: true },
+{ path: '/auditoria', label: 'Auditoria', icon: ShieldCheck }];
 
 const ROLE_LABELS = {
   admin: { label: 'Administrador', color: 'bg-[#566E3D]/20 text-[#BFCF99]' },
