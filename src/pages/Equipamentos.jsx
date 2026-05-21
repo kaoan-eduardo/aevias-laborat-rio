@@ -29,8 +29,8 @@ export default function Equipamentos() {
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.Equipamento.list('-created_date');
-    setEquipamentos(data);
+    const res = await base44.functions.invoke('listarEquipamentos', {});
+    setEquipamentos(res.data?.equipamentos || []);
     setLoading(false);
   };
 
