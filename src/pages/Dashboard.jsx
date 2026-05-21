@@ -66,7 +66,7 @@ export default function Dashboard() {
 
 
   return (
-    <div className="min-h-full bg-[#F2F1EF] space-y-6 pt-6 pb-6 pr-6 pl-10">
+    <div className="min-h-full bg-[#F2F1EF] space-y-6 pt-6 pb-6 pr-6 pl-4">
 
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-[#00233B] text-white shadow-xl" style={{ minHeight: 200 }}>
