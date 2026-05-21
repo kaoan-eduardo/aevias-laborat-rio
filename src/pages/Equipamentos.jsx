@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Wrench, Eye, Pencil, AlertTriangle, FileSpreadsheet } from 'lucide-react';
+import { Plus, Search, Wrench, Eye, Pencil, AlertTriangle, FileSpreadsheet, Bell } from 'lucide-react';
 import { openForm012 } from '@/components/equipamentos/Form012Document';
+import ConfiguracaoAlertaEmail from '@/components/equipamentos/ConfiguracaoAlertaEmail';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,6 +22,7 @@ export default function Equipamentos() {
   const [statusFilter, setStatusFilter] = useState('todos');
   const [detalhesEq, setDetalhesEq] = useState(null);
   const [verificacaoDetalhe, setVerificacaoDetalhe] = useState(null);
+  const [showAlertaConfig, setShowAlertaConfig] = useState(false);
 
   const role = user?.role || 'auxiliar';
   const canEdit = role === 'admin' || role === 'gestor';
@@ -52,6 +54,17 @@ export default function Equipamentos() {
             <p className="text-sm text-muted-foreground mt-0.5">Gestão e rastreabilidade de equipamentos de laboratório</p>
           </div>
           <div className="flex items-center gap-2">
+            {canEdit && (
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                title="Configurar alertas de calibração"
+                onClick={() => setShowAlertaConfig(true)}
+              >
+                <Bell className="w-4 h-4" />
+              </Button>
+            )}
             <Button
               variant="outline"
               className="gap-2"
@@ -185,6 +198,10 @@ export default function Equipamentos() {
           onEdit={() => { navigate(`/equipamentos/${detalhesEq.id}/editar`); setDetalhesEq(null); }}
           onOpenVerificacao={v => setVerificacaoDetalhe(v)}
         />
+      )}
+
+      {showAlertaConfig && canEdit && (
+        <ConfiguracaoAlertaEmail onClose={() => setShowAlertaConfig(false)} />
       )}
 
       {verificacaoDetalhe && (

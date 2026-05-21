@@ -1,0 +1,52 @@
+{
+  "name": "ConfiguracaoEmail",
+  "type": "object",
+  "properties": {
+    "tipo": {
+      "type": "string",
+      "description": "Tipo da configura\u00e7\u00e3o (ex: alerta_calibracao)"
+    },
+    "emails_destinatarios": {
+      "type": "array",
+      "description": "Lista de emails que receber\u00e3o os alertas",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ativo": {
+      "type": "boolean",
+      "default": true,
+      "description": "Se o envio autom\u00e1tico est\u00e1 ativo"
+    },
+    "dias_antecedencia": {
+      "type": "number",
+      "default": 60,
+      "description": "Quantos dias antes da validade enviar o alerta"
+    }
+  },
+  "required": [
+    "tipo"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
