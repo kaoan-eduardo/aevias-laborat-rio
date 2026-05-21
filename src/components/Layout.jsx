@@ -40,7 +40,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
   const [cadastrosOpen, setCadastrosOpen] = useState(cadastrosActive);
 
   return (
-    <div className="flex flex-col h-full bg-[#00233B] mx-auto my-1">
+    <div className="flex flex-col h-full bg-[#00233B]">
       {/* Logo */}
       <div className={cn('px-5 py-6 border-b border-white/10', collapsed && 'px-3')}>
         {!collapsed ?
