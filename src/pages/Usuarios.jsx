@@ -31,7 +31,7 @@ export default function Usuarios() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { if (isAdmin) load(); else setLoading(false); }, [isAdmin]);
 
   const displayName = (u) => u.nome_exibicao || u.full_name || '—';
 
