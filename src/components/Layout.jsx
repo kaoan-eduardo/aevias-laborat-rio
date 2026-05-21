@@ -90,7 +90,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
               <BookOpen className="w-4 h-4 flex-shrink-0" />
               {!collapsed &&
             <>
-                  <span className="flex-1 text-left">Cadastros</span>
+                  <span className="flex-1 text-left text-xs">Cadastros</span>
                   <ChevronDown className={cn('w-3.5 h-3.5 transition-transform duration-200', cadastrosOpen && 'rotate-180')} />
                 </>
             }
