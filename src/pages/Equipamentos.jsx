@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Wrench, Eye, Pencil, AlertTriangle } from 'lucide-react';
+import { Plus, Search, Wrench, Eye, Pencil, AlertTriangle, FileSpreadsheet } from 'lucide-react';
+import { openForm012 } from '@/components/equipamentos/Form012Document';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -50,12 +51,22 @@ export default function Equipamentos() {
             <h1 className="text-2xl font-bold text-foreground">Equipamentos</h1>
             <p className="text-sm text-muted-foreground mt-0.5">Gestão e rastreabilidade de equipamentos de laboratório</p>
           </div>
-          {canEdit && (
-            <Button onClick={() => navigate('/equipamentos/novo')} className="gap-2">
-              <Plus className="w-4 h-4" />
-              Novo Equipamento
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => openForm012(equipamentos, user?.full_name || '')}
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              FORM 012
             </Button>
-          )}
+            {canEdit && (
+              <Button onClick={() => navigate('/equipamentos/novo')} className="gap-2">
+                <Plus className="w-4 h-4" />
+                Novo Equipamento
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Filtros */}
