@@ -19,12 +19,12 @@ export const PAGINAS_VISIVEIS = {
   'Coordenadora Técnica':    ['/', '/fas', '/recebimento', '/equipamentos', '/verificacoes', '/clientes', '/ensaios', '/materiais'],
   'Encarregado':             ['/', '/fas', '/recebimento', '/equipamentos', '/verificacoes', '/clientes', '/ensaios', '/materiais'],
   'Auxiliar da Qualidade':   ['/', '/fas', '/recebimento', '/equipamentos', '/verificacoes', '/clientes', '/ensaios', '/materiais'],
-  'Analista da Qualidade':   ['/auditoria', '/verificacoes', '/equipamentos'],
-  'Laboratorista':           ['/equipamentos', '/verificacoes'],
-  'Auxiliar de Laboratório': ['/equipamentos', '/verificacoes'],
-  'Assistente de Laboratório': ['/equipamentos', '/verificacoes'],
-  'Estagiária':              ['/fas','/clientes','/ensaios'],
-  'Coordenadora Comercial':  ['/fas','/clientes','/ensaios'],
+  'Analista da Qualidade':   ['/','/auditoria', '/verificacoes', '/equipamentos'],
+  'Laboratorista':           ['/','/equipamentos', '/verificacoes'],
+  'Auxiliar de Laboratório': ['/','/equipamentos', '/verificacoes'],
+  'Assistente de Laboratório': ['/','/equipamentos', '/verificacoes'],
+  'Estagiária':              ['/','/fas','/clientes','/ensaios'],
+  'Coordenadora Comercial':  ['/','/fas','/clientes','/ensaios'],
 };
 
 // Cargos que podem EDITAR cada recurso
