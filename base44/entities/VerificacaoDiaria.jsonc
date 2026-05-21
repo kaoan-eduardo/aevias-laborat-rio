@@ -193,12 +193,13 @@
           "user_condition": {
             "cargo": {
               "$in": [
-                "Coordenadora T\u00e9cnica",
+                "Analista da Qualidade",
+                "Coordenadora Te9cnica",
                 "Encarregado",
                 "Auxiliar da Qualidade",
                 "Laboratorista",
-                "Auxiliar de Laborat\u00f3rio",
-                "Assistente de Laborat\u00f3rio"
+                "Auxiliar de Laboratorio",
+                "Assistente de Laboratorio"
               ]
             }
           }
@@ -216,12 +217,12 @@
           "user_condition": {
             "cargo": {
               "$in": [
-                "Coordenadora T\u00e9cnica",
+                "Coordenadora Tecnica",
                 "Encarregado",
                 "Auxiliar da Qualidade",
                 "Laboratorista",
-                "Auxiliar de Laborat\u00f3rio",
-                "Assistente de Laborat\u00f3rio"
+                "Auxiliar de Laboratorio",
+                "Assistente de Laboratorio"
               ]
             }
           }
@@ -239,7 +240,7 @@
           "user_condition": {
             "cargo": {
               "$in": [
-                "Coordenadora T\u00e9cnica",
+                "Coordenadora Tecnica",
                 "Encarregado",
                 "Auxiliar da Qualidade"
               ]
