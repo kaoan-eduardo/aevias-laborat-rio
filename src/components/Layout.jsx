@@ -217,8 +217,8 @@ export default function Layout() {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          'hidden md:flex flex-col flex-shrink-0 relative transition-all duration-300',
-          collapsed ? 'w-[72px]' : 'w-[240px]'
+          "hidden md:flex flex-col flex-shrink-0 relative transition-all duration-300 w-[250px]",
+          collapsed ? 'w-[72px]' : ""
         )}>
         
         <SidebarContent {...sidebarProps} />
