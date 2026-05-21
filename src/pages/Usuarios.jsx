@@ -44,7 +44,7 @@ export default function Usuarios() {
   const handleEdit = (u) => { setEditingUsuario(u); setModalOpen(true); };
 
   const handleToggle = async (u) => {
-    await base44.entities.User.update(u.id, { ativo: !u.ativo });
+    await base44.functions.invoke('atualizarUsuario', { userId: u.id, data: { ativo: !u.ativo } });
     load();
   };
 

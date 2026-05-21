@@ -46,7 +46,7 @@ export default function UsuarioModal({ open, onClose, usuario, onSaved, currentU
 
   const handleSave = async () => {
     setSaving(true);
-    await base44.entities.User.update(usuario.id, form);
+    await base44.functions.invoke('atualizarUsuario', { userId: usuario.id, data: form });
     setSaving(false);
     onSaved();
     onClose();
