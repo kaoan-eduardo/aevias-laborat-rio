@@ -13,12 +13,16 @@
     "cargo": {
       "type": "string",
       "enum": [
+        "Analista da Qualidade",
         "Coordenadora T\u00e9cnica",
+        "Coordenadora Comercial",
+        "Estagi\u00e1ria",
+        "Encarregado",
+        "Auxiliar da Qualidade",
         "Laboratorista",
-        "Assistente de Laborat\u00f3rio",
         "Auxiliar de Laborat\u00f3rio",
-        "Auxiliar de Servi\u00e7os Gerais",
-        "Auxiliar da Qualidade"
+        "Assistente de Laborat\u00f3rio",
+        "Auxiliar de Servi\u00e7os Gerais"
       ],
       "description": "Cargo do usu\u00e1rio"
     },
