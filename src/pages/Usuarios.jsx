@@ -26,8 +26,8 @@ export default function Usuarios() {
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.User.list('-created_date');
-    setUsuarios(data);
+    const res = await base44.functions.invoke('listarUsuarios', {});
+    setUsuarios(res.data?.usuarios || []);
     setLoading(false);
   };
 
