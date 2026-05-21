@@ -353,7 +353,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Analista da Qualidade",
                 "Coordenadora Tecnica",
@@ -374,7 +374,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Analista da Qualidade",
                 "Coordenadora Tecnica",
@@ -400,7 +400,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora Tecnica",
                 "Encarregado",
@@ -420,7 +420,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora Tecnica",
                 "Encarregado",

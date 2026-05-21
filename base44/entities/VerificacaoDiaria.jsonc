@@ -166,7 +166,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
@@ -191,7 +191,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Analista da Qualidade",
                 "Coordenadora Tecnica",
@@ -215,7 +215,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora Tecnica",
                 "Encarregado",
@@ -238,7 +238,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora Tecnica",
                 "Encarregado",

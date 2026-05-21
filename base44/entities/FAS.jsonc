@@ -159,7 +159,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora Comercial",
                 "Estagi\u00e1ria"
@@ -178,7 +178,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
@@ -200,7 +200,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
                 "Coordenadora Comercial",
@@ -223,7 +223,7 @@
         },
         {
           "user_condition": {
-            "cargo": {
+            "data.cargo": {
               "$in": [
                 "Coordenadora T\u00e9cnica",
                 "Encarregado",
