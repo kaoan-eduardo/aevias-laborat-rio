@@ -13,6 +13,7 @@ const ROLES = [
 ];
 
 const CARGOS = [
+  'Analista da Qualidade',
   'Coordenadora Técnica',
   'Coordenadora Comercial',
   'Estagiária',
