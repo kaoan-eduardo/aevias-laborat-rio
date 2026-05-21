@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
     }
 
     const config = configs[0];
-    const destinatarios = config.emails_destinatarios || [];
+    const destinatarios = config.emails_destinatarios || ['aryenne.muniz@afirmaevias.com.br','alexandre.debortoli@afirmaevias.com.br','juan.carneiro@afirmaevias.com.br'];
     const diasAntecedencia = config.dias_antecedencia || 60;
 
     if (destinatarios.length === 0) {
