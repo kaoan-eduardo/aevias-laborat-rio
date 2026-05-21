@@ -202,9 +202,11 @@ export default function Layout() {
   const { user } = useAuth();
 
   const role = user?.role || 'user';
-  const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(role));
-  const visibleCadastros = CADASTROS_ITEMS.filter((item) => item.roles.includes(role));
-  const visibleBottomItems = BOTTOM_NAV_ITEMS.filter((item) => item.roles.includes(role));
+  const visibleItems = NAV_ITEMS.filter((item) => podeVerPagina(user, item.path));
+  const visibleCadastros = CADASTROS_ITEMS.filter((item) => podeVerPagina(user, item.path));
+  const visibleBottomItems = BOTTOM_NAV_ITEMS.filter((item) =>
+    item.adminOnly ? role === 'admin' : podeVerPagina(user, item.path)
+  );
   const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['user'];
 
   const handleLogout = () => base44.auth.logout();
