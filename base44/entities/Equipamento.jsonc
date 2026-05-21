@@ -355,7 +355,7 @@
           "user_condition": {
             "cargo": {
               "$in": [
-                "Coordenadora T\u00e9cnica",
+                "Coordenadora Tecnica",
                 "Encarregado",
                 "Auxiliar da Qualidade"
               ]
@@ -375,6 +375,7 @@
           "user_condition": {
             "cargo": {
               "$in": [
+                "Analista da Qualidade",
                 "Coordenadora Tecnica",
                 "Coordenadora Comercial",
                 "Estagiaria",
