@@ -185,7 +185,7 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
                     <Input type="number" value={amostraTemp.quantidade} onChange={(e) => setAmostraTemp((a) => ({ ...a, quantidade: e.target.value }))} className="mt-1 h-8" />
                   </div>
                   <div>
-                    <Label className="text-xs">Observação</Label>
+                    <Label className="text-xs">Identificação da Amostra</Label>
                     <Input value={amostraTemp.observacao_recebimento} onChange={(e) => setAmostraTemp((a) => ({ ...a, observacao_recebimento: e.target.value }))} className="mt-1 h-8" />
                   </div>
                   <div>
