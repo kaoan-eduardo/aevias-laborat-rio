@@ -100,7 +100,10 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Novo Protocolo de Recebimento</DialogTitle>
+          <DialogTitle>
+            Novo Protocolo de Recebimento
+            <span className="ml-2 text-base font-mono text-muted-foreground">#{gerarNumeroProtocolo(totalRecebimentos)}</span>
+          </DialogTitle>
           <p className="text-sm text-muted-foreground">Preencha as informações do recebimento. O gestor completará os dados de ensaios e FAS.</p>
         </DialogHeader>
 
