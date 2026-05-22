@@ -28,6 +28,8 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
     amostras: []
   });
 
+  const [materialSearch, setMaterialSearch] = useState('');
+
   const [amostraTemp, setAmostraTemp] = useState({
     material_id: '', material_nome: '', procedencia: '',
     quantidade: '', observacao_recebimento: '',
@@ -93,6 +95,7 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
   const handleClose = () => {
     setForm({ cliente_id: '', cliente_nome: '', data_registro: hoje(), numero_projeto: '', data_entrada: hoje(), responsavel_amostragem: '', observacoes: '', amostras: [] });
     setAmostraTemp({ material_id: '', material_nome: '', procedencia: '', quantidade: '', observacao_recebimento: '', data_coleta: hoje(), peso_kg: '', quantidade_suficiente: true });
+    setMaterialSearch('');
     onClose();
   };
 
@@ -154,11 +157,24 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
                   <div>
                     <Label className="text-xs">Material *</Label>
                     <Select value={amostraTemp.material_id} onValueChange={handleMaterialChange}>
-                      <SelectTrigger className="mt-1 h-8"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                      <SelectContent>
-                        {materiais.map((m) => <SelectItem key={m.id} value={m.id}>{m.nome}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
+                       <SelectTrigger className="mt-1 h-8"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                       <SelectContent>
+                         <div className="px-2 py-1">
+                           <input
+                             className="w-full text-xs border border-input rounded px-2 py-1 outline-none focus:ring-1 focus:ring-ring"
+                             placeholder="Buscar material..."
+                             value={materialSearch}
+                             onChange={e => setMaterialSearch(e.target.value)}
+                             onKeyDown={e => e.stopPropagation()}
+                           />
+                         </div>
+                         {[...materiais]
+                           .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
+                           .filter(m => m.nome.toLowerCase().includes(materialSearch.toLowerCase()))
+                           .map(m => <SelectItem key={m.id} value={m.id}>{m.nome}</SelectItem>)
+                         }
+                       </SelectContent>
+                     </Select>
                   </div>
                   <div>
                     <Label className="text-xs">Procedência *</Label>
