@@ -18,21 +18,25 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
     if (!file) return;
     if (!nomeDoc.trim()) {
       alert('Informe um nome para o documento antes de fazer o upload.');
+      e.target.value = '';
       return;
     }
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    const novosDoc = [...docs, {
-      nome: nomeDoc.trim(),
-      url: file_url,
-      tamanho: file.size,
-      data_upload: new Date().toISOString().split('T')[0],
-    }];
-    await base44.entities.Equipamento.update(equipamentoId, { [field]: novosDoc });
-    onUpdate(field, novosDoc);
-    setNomeDoc('');
-    setUploading(false);
-    e.target.value = '';
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const novosDoc = [...docs, {
+        nome: nomeDoc.trim(),
+        url: file_url,
+        tamanho: file.size,
+        data_upload: new Date().toISOString().split('T')[0],
+      }];
+      await base44.entities.Equipamento.update(equipamentoId, { [field]: novosDoc });
+      onUpdate(field, novosDoc);
+      setNomeDoc('');
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
   };
 
   const handleDelete = async (idx) => {
@@ -69,7 +73,7 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
             placeholder="Nome do documento..."
             className="h-8 text-xs flex-1"
           />
-          <input ref={inputRef} type="file" className="hidden" onChange={handleUpload} />
+          <input ref={inputRef} type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" onChange={handleUpload} />
           <Button
             size="sm"
             variant="outline"
