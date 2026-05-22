@@ -126,10 +126,10 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
               <Label className="text-xs">Data do Registro</Label>
               <Input type="date" value={form.data_registro} onChange={(e) => setForm((f) => ({ ...f, data_registro: e.target.value }))} className="mt-1" />
             </div>
-            <div className="hidden">
-              <Label className="text-xs">Número do Projeto</Label>
-              <Input value={form.numero_projeto} onChange={(e) => setForm((f) => ({ ...f, numero_projeto: e.target.value }))} className="mt-1" placeholder="Ex: 001/26" />
-            </div>
+            
+
+
+            
             <div>
               <Label className="text-xs">Data da Entrada *</Label>
               <Input type="date" value={form.data_entrada} onChange={(e) => setForm((f) => ({ ...f, data_entrada: e.target.value }))} className="mt-1" />
