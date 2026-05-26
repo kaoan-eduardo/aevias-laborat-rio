@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Camera, Upload, Trash2, Loader2, ZoomIn, X } from 'lucide-react';
+import { Camera, Upload, Trash2, Loader2, ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Para uso no modal de novo recebimento (sem ID ainda):
@@ -11,9 +11,23 @@ import { Button } from '@/components/ui/button';
 
 export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }) {
   const [uploading, setUploading] = useState(false);
-  const [lightbox, setLightbox] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(null); // idx a excluir
+  const [lightboxIdx, setLightboxIdx] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const inputRef = useRef(null);
+
+  const lightboxPrev = () => setLightboxIdx(i => (i > 0 ? i - 1 : fotos.length - 1));
+  const lightboxNext = () => setLightboxIdx(i => (i < fotos.length - 1 ? i + 1 : 0));
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const handler = (e) => {
+      if (e.key === 'ArrowLeft') lightboxPrev();
+      else if (e.key === 'ArrowRight') lightboxNext();
+      else if (e.key === 'Escape') setLightboxIdx(null);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [lightboxIdx, fotos.length]);
 
   const handleUpload = async (e) => {
     const files = Array.from(e.target.files || []);
@@ -100,10 +114,10 @@ export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
                 <button
-                  type="button"
-                  className="p-1.5 bg-white/90 rounded-full hover:bg-white transition-colors"
-                  onClick={() => setLightbox(foto.url)}
-                  title="Ampliar"
+                 type="button"
+                 className="p-1.5 bg-white/90 rounded-full hover:bg-white transition-colors"
+                 onClick={() => setLightboxIdx(idx)}
+                 title="Ampliar"
                 >
                   <ZoomIn className="w-3.5 h-3.5 text-foreground" />
                 </button>
@@ -163,23 +177,51 @@ export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }
       )}
 
       {/* Lightbox */}
-      {lightbox && (
+      {lightboxIdx !== null && (
         <div
-          className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4"
-          onClick={() => setLightbox(null)}
+          className="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4"
+          onClick={() => setLightboxIdx(null)}
         >
+          {/* Fechar */}
           <button
-            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
-            onClick={() => setLightbox(null)}
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
+            onClick={() => setLightboxIdx(null)}
           >
             <X className="w-5 h-5" />
           </button>
+
+          {/* Contador */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm z-10">
+            {lightboxIdx + 1} / {fotos.length}
+          </div>
+
+          {/* Seta esquerda */}
+          {fotos.length > 1 && (
+            <button
+              className="absolute left-3 p-2 bg-white/10 hover:bg-white/25 rounded-full text-white transition-colors z-10"
+              onClick={e => { e.stopPropagation(); lightboxPrev(); }}
+            >
+              <ChevronLeft className="w-7 h-7" />
+            </button>
+          )}
+
+          {/* Imagem */}
           <img
-            src={lightbox}
-            alt="Foto ampliada"
-            className="max-w-full max-h-full rounded-lg shadow-2xl"
+            src={fotos[lightboxIdx]?.url}
+            alt={fotos[lightboxIdx]?.nome || `Foto ${lightboxIdx + 1}`}
+            className="max-w-full max-h-full rounded-lg shadow-2xl object-contain"
             onClick={e => e.stopPropagation()}
           />
+
+          {/* Seta direita */}
+          {fotos.length > 1 && (
+            <button
+              className="absolute right-3 p-2 bg-white/10 hover:bg-white/25 rounded-full text-white transition-colors z-10"
+              onClick={e => { e.stopPropagation(); lightboxNext(); }}
+            >
+              <ChevronRight className="w-7 h-7" />
+            </button>
+          )}
         </div>
       )}
     </div>
