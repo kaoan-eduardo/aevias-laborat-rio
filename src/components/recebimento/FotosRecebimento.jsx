@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }) {
   const [uploading, setUploading] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null); // idx a excluir
   const inputRef = useRef(null);
 
   const handleUpload = async (e) => {
@@ -107,12 +108,12 @@ export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }
                   <ZoomIn className="w-3.5 h-3.5 text-foreground" />
                 </button>
                 <button
-                  type="button"
-                  className="p-1.5 bg-white/90 rounded-full hover:bg-red-50 transition-colors"
-                  onClick={() => handleDelete(idx)}
-                  title="Remover"
+                 type="button"
+                 className="p-1.5 bg-white/90 rounded-full hover:bg-red-50 transition-colors"
+                 onClick={() => setConfirmDelete(idx)}
+                 title="Remover"
                 >
-                  <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                 <Trash2 className="w-3.5 h-3.5 text-destructive" />
                 </button>
               </div>
             </div>
@@ -127,6 +128,36 @@ export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }
             ) : (
               <Upload className="w-5 h-5 text-muted-foreground" />
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Confirmação de exclusão */}
+      {confirmDelete !== null && (
+        <div className="fixed inset-0 z-[110] bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-xl shadow-xl p-6 max-w-sm w-full space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-destructive/10 rounded-full">
+                <Trash2 className="w-5 h-5 text-destructive" />
+              </div>
+              <div>
+                <p className="font-semibold text-sm">Excluir foto?</p>
+                <p className="text-xs text-muted-foreground">Esta ação não pode ser desfeita.</p>
+              </div>
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button type="button" variant="outline" size="sm" onClick={() => setConfirmDelete(null)}>
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={() => { handleDelete(confirmDelete); setConfirmDelete(null); }}
+              >
+                Excluir
+              </Button>
+            </div>
           </div>
         </div>
       )}
