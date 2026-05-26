@@ -75,7 +75,7 @@ export default function NovaFAS() {
   const addItem = () => {
     setForm(f => ({
       ...f,
-      itens: [...f.itens, { ensaio_id: '', ensaio_nome: '', norma: '', quantidade: 1, unidade: '', prazo_dias: '', exige_simbolo: false, declaracao_confidencialidade: false }]
+      itens: [...f.itens, { ensaio_id: '', ensaio_nome: '', norma: '', quantidade: 1, unidade: '', prazo_dias: '', exige_simbolo: false, declaracao_confidencialidade: false, objetivo: '' }]
     }));
   };
 
@@ -101,7 +101,7 @@ export default function NovaFAS() {
   };
 
   const handleSave = async () => {
-    if (!form.cliente_id || !form.numero_proposta || !form.objetivo) return;
+    if (!form.cliente_id || !form.numero_proposta) return;
     setSaving(true);
     const payload = {
       ...form,
@@ -190,16 +190,6 @@ export default function NovaFAS() {
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <Label>Objetivo *</Label>
-            <Textarea
-              value={form.objetivo}
-              onChange={e => set('objetivo', e.target.value)}
-              placeholder="Descreva o objetivo do serviço..."
-              rows={3}
-            />
-          </div>
-
           <div className="flex flex-wrap gap-6">
           <div className="flex items-center gap-3">
             <Switch checked={form.exige_art} onCheckedChange={v => set('exige_art', v)} />
@@ -266,6 +256,16 @@ export default function NovaFAS() {
                       <Input type="number" value={item.prazo_dias} onChange={e => updateItem(idx, 'prazo_dias', Number(e.target.value))} className="h-9 font-mono-data" />
                     </div>
                   </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Objetivo *</Label>
+                    <Textarea
+                      value={item.objetivo || ''}
+                      onChange={e => updateItem(idx, 'objetivo', e.target.value)}
+                      placeholder="Descreva o objetivo deste ensaio..."
+                      rows={2}
+                      className="text-sm"
+                    />
+                  </div>
                   <div className="flex flex-wrap gap-6 pt-1">
                     <div className="flex items-center gap-2">
                       <Switch checked={!!item.exige_simbolo} onCheckedChange={v => updateItem(idx, 'exige_simbolo', v)} />
@@ -318,7 +318,7 @@ export default function NovaFAS() {
         <Button variant="outline" onClick={() => navigate('/fas')}>Cancelar</Button>
         <Button
           onClick={handleSave}
-          disabled={saving || !form.cliente_id || !form.numero_proposta || !form.objetivo}
+          disabled={saving || !form.cliente_id || !form.numero_proposta}
           className="gap-2"
         >
           <Send className="w-4 h-4" />

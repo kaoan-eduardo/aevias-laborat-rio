@@ -229,16 +229,6 @@ export default function DetalhesFAS() {
         </Card>
       )}
 
-      {/* Objetivo */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">Objetivo</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-foreground">{fas.objetivo || '—'}</p>
-        </CardContent>
-      </Card>
-
       {/* Ensaios */}
       <Card>
         <CardHeader className="pb-3">
@@ -248,40 +238,37 @@ export default function DetalhesFAS() {
           {!fas.itens || fas.itens.length === 0 ? (
             <p className="p-4 text-muted-foreground text-sm">Nenhum ensaio vinculado.</p>
           ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border bg-muted/50">
-                  <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Ensaio</th>
-                  <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Norma</th>
-                  <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Qtd</th>
-                  <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Unidade</th>
-                  <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Prazo</th>
-                  <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Símbolo Acred.</th>
-                  <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Confidencial.</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {fas.itens.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-muted/20">
-                    <td className="px-4 py-3 font-medium text-foreground">{item.ensaio_nome || '—'}</td>
-                    <td className="px-4 py-3 text-muted-foreground font-mono-data text-xs">{item.norma || '—'}</td>
-                    <td className="px-4 py-3 text-center font-mono-data">{item.quantidade}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{item.unidade || '—'}</td>
-                    <td className="px-4 py-3 text-center font-mono-data text-muted-foreground">{item.prazo_dias ? `${item.prazo_dias}d` : '—'}</td>
-                    <td className="px-4 py-3 text-center">
+            <div className="divide-y divide-border">
+              {fas.itens.map((item, idx) => (
+                <div key={idx} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="font-semibold text-foreground">{item.ensaio_nome || '—'}</p>
+                      <p className="text-xs text-muted-foreground font-mono-data mt-0.5">{item.norma || '—'}</p>
+                    </div>
+                    <div className="flex gap-2 flex-wrap justify-end">
                       <Badge className={item.exige_simbolo ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}>
-                        {item.exige_simbolo ? 'Sim' : 'Não'}
+                        {item.exige_simbolo ? 'Símbolo Acred.' : 'Sem símbolo'}
                       </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-center">
                       <Badge className={item.declaracao_confidencialidade ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}>
-                        {item.declaracao_confidencialidade ? 'Sim' : 'Não'}
+                        {item.declaracao_confidencialidade ? 'Confidencial' : 'Sem confidencial.'}
                       </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                  <div className="flex gap-6 text-sm text-muted-foreground">
+                    <span>Qtd: <strong className="text-foreground font-mono-data">{item.quantidade}</strong></span>
+                    <span>Unidade: <strong className="text-foreground">{item.unidade || '—'}</strong></span>
+                    <span>Prazo: <strong className="text-foreground font-mono-data">{item.prazo_dias ? `${item.prazo_dias}d` : '—'}</strong></span>
+                  </div>
+                  {item.objetivo && (
+                    <div className="bg-muted/40 rounded-md px-3 py-2">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-0.5">Objetivo</p>
+                      <p className="text-sm text-foreground">{item.objetivo}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </CardContent>
       </Card>
