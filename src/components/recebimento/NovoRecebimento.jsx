@@ -260,11 +260,14 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
               fotos={form.fotos}
               onChange={(novasFotos) => setForm(f => ({ ...f, fotos: novasFotos }))}
             />
+            {form.fotos.length === 0 && (
+              <p className="text-xs text-destructive mt-1">* Obrigatório adicionar ao menos uma foto do material recebido.</p>
+            )}
           </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose}>Cancelar</Button>
-          <Button onClick={handleSalvar} disabled={!form.cliente_id || !form.data_entrada || loading}>
+          <Button onClick={handleSalvar} disabled={!form.cliente_id || !form.data_entrada || form.fotos.length === 0 || loading}>
             {loading ? 'Salvando...' : 'Registrar Recebimento'}
           </Button>
         </DialogFooter>
