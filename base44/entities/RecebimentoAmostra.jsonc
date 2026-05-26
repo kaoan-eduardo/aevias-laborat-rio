@@ -107,6 +107,24 @@
           }
         }
       }
+    },
+    "fotos": {
+      "type": "array",
+      "description": "Fotos do material recebido",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "data_upload": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "required": [

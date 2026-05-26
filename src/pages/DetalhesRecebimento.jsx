@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, CheckCircle, Search, X } from 'lucide-react';
+import FotosRecebimento from '@/components/recebimento/FotosRecebimento';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -387,6 +388,20 @@ export default function DetalhesRecebimento() {
               <p className="text-sm text-foreground">{recebimento.observacoes}</p>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Fotos */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Fotos do Material</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FotosRecebimento
+            fotos={recebimento.fotos || []}
+            recebimentoId={recebimento.id}
+            onChange={(novasFotos) => setRecebimento(r => ({ ...r, fotos: novasFotos }))}
+          />
         </CardContent>
       </Card>
 

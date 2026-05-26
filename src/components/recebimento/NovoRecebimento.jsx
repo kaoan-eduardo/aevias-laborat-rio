@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Plus, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { gerarNumeroProtocolo, obterDataHoje } from '@/utils/fasHelpers';
+import FotosRecebimento from './FotosRecebimento';
 
 const hoje = obterDataHoje;
 
@@ -25,7 +26,8 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
     data_entrada: hoje(),
     responsavel_amostragem: '',
     observacoes: '',
-    amostras: []
+    amostras: [],
+    fotos: []
   });
 
   const [materialSearch, setMaterialSearch] = useState('');
@@ -93,7 +95,7 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
   };
 
   const handleClose = () => {
-    setForm({ cliente_id: '', cliente_nome: '', data_registro: hoje(), numero_projeto: '', data_entrada: hoje(), responsavel_amostragem: '', observacoes: '', amostras: [] });
+    setForm({ cliente_id: '', cliente_nome: '', data_registro: hoje(), numero_projeto: '', data_entrada: hoje(), responsavel_amostragem: '', observacoes: '', amostras: [], fotos: [] });
     setAmostraTemp({ material_id: '', material_nome: '', procedencia: '', quantidade: '', observacao_recebimento: '', data_coleta: hoje(), peso_kg: '', quantidade_suficiente: true });
     setMaterialSearch('');
     onClose();
@@ -252,6 +254,13 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
             }
           </div>
         </div>
+
+          <div className="border-t pt-4">
+            <FotosRecebimento
+              fotos={form.fotos}
+              onChange={(novasFotos) => setForm(f => ({ ...f, fotos: novasFotos }))}
+            />
+          </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={handleClose}>Cancelar</Button>
