@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, XCircle, Package, FileCheck, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Package, FileCheck, AlertTriangle, Pencil } from 'lucide-react';
 import FASAnexos from '@/components/fas/FASAnexos';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -102,6 +102,12 @@ export default function DetalhesFAS() {
 
         {/* Ações */}
         <div className="flex gap-2 flex-wrap">
+          {isComercial && fas.status !== 'cancelada' && fas.status !== 'finalizada' && (
+            <Button variant="outline" className="gap-2" onClick={() => navigate(`/fas/${fas.id}/editar`)}>
+              <Pencil className="w-4 h-4" />
+              Editar FAS
+            </Button>
+          )}
           {isGestor && fas.status === 'aberta' && (
             <Button className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-white" onClick={marcarMaterialRecebido}>
               <Package className="w-4 h-4" />

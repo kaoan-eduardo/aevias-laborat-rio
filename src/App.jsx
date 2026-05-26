@@ -21,6 +21,7 @@ import Equipamentos from '@/pages/Equipamentos';
 import EquipamentoForm from '@/pages/EquipamentoForm';
 import Verificacoes from '@/pages/Verificacoes';
 import Auditoria from '@/pages/Auditoria';
+import EditarFAS from '@/pages/EditarFAS';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -54,6 +55,7 @@ const AuthenticatedApp = () => {
         <Route path="/fas" element={<FAS />} />
         <Route path="/fas/nova" element={<NovaFAS />} />
         <Route path="/fas/:id" element={<DetalhesFAS />} />
+        <Route path="/fas/:id/editar" element={<EditarFAS />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/materiais" element={<Materiais />} />
         <Route path="/recebimento" element={<RecebimentoAmostras />} />
