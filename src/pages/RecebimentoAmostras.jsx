@@ -102,7 +102,6 @@ export default function RecebimentoAmostras() {
                     <th className="px-4 py-3 w-8"></th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Protocolo</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Cliente</th>
-                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Projeto</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Data Entrada</th>
                     <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Amostras</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Status</th>
@@ -125,7 +124,6 @@ export default function RecebimentoAmostras() {
                           </td>
                           <td className="px-4 py-3 font-mono-data text-xs font-semibold text-primary">{r.numero_protocolo}</td>
                           <td className="px-4 py-3 font-medium text-foreground text-xs">{r.cliente_nome || '—'}</td>
-                          <td className="px-4 py-3 text-muted-foreground text-xs">{r.numero_projeto || '—'}</td>
                           <td className="px-4 py-3 text-muted-foreground text-xs">
                             {r.data_entrada ? new Date(r.data_entrada).toLocaleDateString('pt-BR') : '—'}
                           </td>
@@ -143,7 +141,7 @@ export default function RecebimentoAmostras() {
                         </tr>
                         {expanded && amostras.length > 0 && (
                           <tr key={r.id + '_expanded'} className="bg-muted/20">
-                            <td colSpan={8} className="px-6 pb-3 pt-1">
+                            <td colSpan={7} className="px-6 pb-3 pt-1">
                               <div className="rounded-md border border-border overflow-hidden">
                                 <table className="w-full text-xs">
                                   <thead>
