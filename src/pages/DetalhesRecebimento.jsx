@@ -92,6 +92,13 @@ export default function DetalhesRecebimento() {
   const [editando, setEditando] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [clientes, setClientes] = useState([]);
+  const [editandoFas, setEditandoFas] = useState(false);
+  const [editFasId, setEditFasId] = useState('');
+  const [editEnsaios, setEditEnsaios] = useState([]);
+  const [editPossuiFas, setEditPossuiFas] = useState(null);
+  const [editEnsaioSearch, setEditEnsaioSearch] = useState('');
+  const [fasListEdit, setFasListEdit] = useState([]);
+  const [ensaiosEdit, setEnsaiosEdit] = useState([]);
 
   const role = user?.role || 'auxiliar';
   const isGestor = role === 'admin' || role === 'gestor';
@@ -230,6 +237,55 @@ export default function DetalhesRecebimento() {
     await base44.entities.RecebimentoAmostra.update(recebimento.id, updates);
     setRecebimento(r => ({ ...r, ...updates }));
     setEditando(false);
+    setSaving(false);
+  };
+
+  const handleAbrirEdicaoFas = async () => {
+    setEditFasId(recebimento.fas_id || '');
+    setEditEnsaios(recebimento.ensaios_selecionados || []);
+    setEditPossuiFas(recebimento.fas_id ? true : (recebimento.ensaios_selecionados?.length > 0 ? false : null));
+    setEditEnsaioSearch('');
+    const [fasData, ensaiosData] = await Promise.all([
+      base44.entities.FAS.filter({ cliente_id: recebimento.cliente_id }),
+      base44.entities.Ensaio.list('nome')
+    ]);
+    setFasListEdit(fasData.filter(f => f.status === 'aberta' || f.id === recebimento.fas_id));
+    setEnsaiosEdit(ensaiosData.filter(e => e.ativo !== false));
+    setEditandoFas(true);
+  };
+
+  const toggleEnsaioEdit = (ensaio) => {
+    setEditEnsaios(prev => {
+      const exists = prev.find(e => e.ensaio_id === ensaio.id);
+      if (exists) return prev.filter(e => e.ensaio_id !== ensaio.id);
+      return [...prev, { ensaio_id: ensaio.id, ensaio_nome: ensaio.nome, norma: ensaio.norma }];
+    });
+  };
+
+  const handleFasChangeEdit = (fid) => {
+    setEditFasId(fid);
+    const fas = fasListEdit.find(f => f.id === fid);
+    if (fas?.itens?.length > 0) {
+      setEditEnsaios(fas.itens.filter(i => i.ensaio_id).map(i => ({ ensaio_id: i.ensaio_id, ensaio_nome: i.ensaio_nome, norma: i.norma })));
+    }
+  };
+
+  const handleSalvarEdicaoFas = async () => {
+    if (editEnsaios.length === 0) return;
+    setSaving(true);
+    const fasEscolhida = editPossuiFas ? fasListEdit.find(f => f.id === editFasId) : null;
+    await base44.entities.RecebimentoAmostra.update(recebimento.id, {
+      fas_id: fasEscolhida?.id || null,
+      numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
+      ensaios_selecionados: editEnsaios,
+    });
+    setRecebimento(r => ({
+      ...r,
+      fas_id: fasEscolhida?.id || null,
+      numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
+      ensaios_selecionados: editEnsaios,
+    }));
+    setEditandoFas(false);
     setSaving(false);
   };
 
@@ -440,22 +496,32 @@ export default function DetalhesRecebimento() {
       )}
 
       {/* Dados do gestor já preenchidos */}
-      {(recebimento.status === 'iniciado' || recebimento.status === 'concluido' || recebimento.status === 'cancelado') && recebimento.ensaios_selecionados?.length > 0 && (
+      {(recebimento.status === 'iniciado' || recebimento.status === 'concluido' || recebimento.status === 'cancelado') && (
         <Card className="border-green-200 bg-green-50/40">
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3 flex flex-row items-center justify-between">
             <CardTitle className="text-base text-green-800">Informações do Gestor</CardTitle>
+            {isGestor && recebimento.status !== 'cancelado' && (
+              <Button variant="outline" size="sm" className="gap-1.5" onClick={handleAbrirEdicaoFas}>
+                <Pencil className="w-3.5 h-3.5" />
+                Editar FAS / Ensaios
+              </Button>
+            )}
           </CardHeader>
           <CardContent className="space-y-3">
-            <InfoRow label="Nº FAS / Proposta Comercial" value={recebimento.numero_fas} mono />
+            <InfoRow label="Nº FAS / Proposta Comercial" value={recebimento.numero_fas || '—'} mono />
             <div>
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Ensaios Selecionados</p>
-              <div className="flex flex-wrap gap-1.5">
-                {(recebimento.ensaios_selecionados || []).map(e => (
-                  <Badge key={e.ensaio_id} variant="outline" className="text-xs font-normal">
-                    {e.ensaio_nome}{e.norma ? ` · ${e.norma}` : ''}
-                  </Badge>
-                ))}
-              </div>
+              {recebimento.ensaios_selecionados?.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5">
+                  {recebimento.ensaios_selecionados.map(e => (
+                    <Badge key={e.ensaio_id} variant="outline" className="text-xs font-normal">
+                      {e.ensaio_nome}{e.norma ? ` · ${e.norma}` : ''}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">Nenhum ensaio definido.</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -550,6 +616,108 @@ export default function DetalhesRecebimento() {
         </CardContent>
       </Card>
     </div>
+
+    {/* Modal de Edição de FAS / Ensaios */}
+    <Dialog open={editandoFas} onOpenChange={setEditandoFas}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Editar FAS e Ensaios — {recebimento?.numero_protocolo}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          {/* Possui FAS? */}
+          <div>
+            <Label className="text-sm font-medium">Esta amostra possui FAS vinculada?</Label>
+            <div className="flex gap-3 mt-2">
+              <button
+                onClick={() => { setEditPossuiFas(true); setEditFasId(''); setEditEnsaios([]); }}
+                className={`px-5 py-2 rounded-md text-sm font-medium border transition-colors ${editPossuiFas === true ? 'bg-primary text-primary-foreground border-primary' : 'bg-white text-foreground border-border hover:border-primary/50'}`}
+              >Sim</button>
+              <button
+                onClick={() => { setEditPossuiFas(false); setEditFasId(''); setEditEnsaios([]); }}
+                className={`px-5 py-2 rounded-md text-sm font-medium border transition-colors ${editPossuiFas === false ? 'bg-primary text-primary-foreground border-primary' : 'bg-white text-foreground border-border hover:border-primary/50'}`}
+              >Não</button>
+            </div>
+          </div>
+
+          {/* Select FAS */}
+          {editPossuiFas === true && (
+            <div>
+              <Label className="text-xs">FAS vinculada *</Label>
+              {fasListEdit.length === 0 ? (
+                <p className="mt-1 text-xs text-muted-foreground italic">Nenhuma FAS disponível para este cliente.</p>
+              ) : (
+                <Select value={editFasId} onValueChange={handleFasChangeEdit}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Selecione a FAS..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {fasListEdit.map(f => (
+                      <SelectItem key={f.id} value={f.id}>
+                        {f.numero_fas || f.numero_proposta}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+          )}
+
+          {/* Seletor de ensaios */}
+          {editPossuiFas !== null && (
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <Label className="text-xs">
+                  Ensaios a Realizar *
+                  {editEnsaios.length > 0 && <span className="ml-1 text-primary font-semibold">({editEnsaios.length} selecionados)</span>}
+                </Label>
+                {editEnsaios.length > 0 && (
+                  <button onClick={() => setEditEnsaios([])} className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1">
+                    <X className="w-3 h-3" /> Limpar
+                  </button>
+                )}
+              </div>
+              {editEnsaios.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {editEnsaios.map(e => (
+                    <span key={e.ensaio_id} className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full">
+                      {e.ensaio_nome}
+                      <button onClick={() => setEditEnsaios(prev => prev.filter(s => s.ensaio_id !== e.ensaio_id))}>
+                        <X className="w-2.5 h-2.5" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="relative mb-2">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                <Input value={editEnsaioSearch} onChange={e => setEditEnsaioSearch(e.target.value)} placeholder="Filtrar ensaios..." className="pl-8 h-8 text-xs" />
+              </div>
+              <div className="border rounded-md bg-white max-h-52 overflow-y-auto divide-y divide-border">
+                {ensaiosEdit.filter(e => e.nome?.toLowerCase().includes(editEnsaioSearch.toLowerCase()) || e.norma?.toLowerCase().includes(editEnsaioSearch.toLowerCase())).map(e => {
+                  const checked = editEnsaios.some(s => s.ensaio_id === e.id);
+                  return (
+                    <label key={e.id} className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${checked ? 'bg-primary/5' : 'hover:bg-muted/40'}`}>
+                      <input type="checkbox" checked={checked} onChange={() => toggleEnsaioEdit(e)} className="flex-shrink-0 accent-primary" />
+                      <span className="flex-1 min-w-0">
+                        <span className={`text-xs font-medium ${checked ? 'text-primary' : 'text-foreground'}`}>{e.nome}</span>
+                        {e.norma && <span className="text-xs text-muted-foreground ml-1.5">{e.norma}</span>}
+                      </span>
+                      {checked && <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setEditandoFas(false)}>Cancelar</Button>
+          <Button onClick={handleSalvarEdicaoFas} disabled={saving || editEnsaios.length === 0 || (editPossuiFas === true && !editFasId)}>
+            {saving ? 'Salvando...' : 'Salvar Alterações'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
 
     {/* Modal de Edição do Protocolo */}
 
