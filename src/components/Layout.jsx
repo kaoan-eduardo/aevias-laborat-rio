@@ -40,7 +40,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
   return (
     <div className="flex flex-col h-full bg-[#00233B] rounded-[14px]">
       {/* Logo */}
-      <div className={cn("border-b border-white/10 flex items-center justify-center pr-5 pt-5 pl-5 pb-4", collapsed && 'px-3')}>
+      <div className={cn("border-b border-white/10 flex items-center justify-center px-5 py-5", collapsed && 'px-3')}>
         {!collapsed ?
         <img
           src="https://media.base44.com/images/public/69fdf070216c826565ee0876/2e0d01e80_AE-LogoHor_Negativo.png"
