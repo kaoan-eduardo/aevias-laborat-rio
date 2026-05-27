@@ -10,8 +10,10 @@ import { useNavigate } from 'react-router-dom';
 import NovoRecebimento from '@/components/recebimento/NovoRecebimento';
 
 const STATUS_CONFIG = {
-  pendente_gestor: { label: 'Pendente Gestor', color: 'bg-yellow-100 text-yellow-700' },
-  concluido: { label: 'Concluído', color: 'bg-green-100 text-green-700' },
+  a_definir:  { label: 'A Definir',  color: 'bg-gray-100 text-gray-600' },
+  iniciado:   { label: 'Iniciado',   color: 'bg-blue-100 text-blue-700' },
+  concluido:  { label: 'Concluído',  color: 'bg-green-100 text-green-700' },
+  cancelado:  { label: 'Cancelado',  color: 'bg-red-100 text-red-600' },
 };
 
 export default function RecebimentoAmostras() {
@@ -40,7 +42,7 @@ export default function RecebimentoAmostras() {
     r.numero_projeto?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const pendentes = filtered.filter(r => r.status === 'pendente_gestor').length;
+  const pendentes = filtered.filter(r => r.status === 'a_definir').length;
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-5">
@@ -61,7 +63,7 @@ export default function RecebimentoAmostras() {
       {(role === 'gestor' || role === 'admin') && pendentes > 0 && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 flex items-center gap-3">
           <span className="text-yellow-700 text-sm font-medium">
-            ⚠️ {pendentes} protocolo{pendentes > 1 ? 's' : ''} aguardando seu preenchimento de ensaios e Nº FAS.
+            ⚠️ {pendentes} protocolo{pendentes > 1 ? 's' : ''} aguardando definição de FAS e ensaios.
           </span>
         </div>
       )}

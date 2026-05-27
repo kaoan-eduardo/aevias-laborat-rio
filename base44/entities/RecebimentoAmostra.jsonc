@@ -9,11 +9,13 @@
     "status": {
       "type": "string",
       "enum": [
-        "pendente_gestor",
-        "concluido"
+        "a_definir",
+        "iniciado",
+        "concluido",
+        "cancelado"
       ],
-      "default": "pendente_gestor",
-      "description": "Status do preenchimento do protocolo"
+      "default": "a_definir",
+      "description": "Status do protocolo: a_definir (material registrado), iniciado (gestor definiu FAS/ensaios), concluido (ensaios conclu\u00eddos), cancelado"
     },
     "cliente_id": {
       "type": "string",
@@ -67,6 +69,11 @@
           },
           "norma": {
             "type": "string"
+          },
+          "concluido": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indica se este ensaio espec\u00edfico foi conclu\u00eddo (para uso futuro de atualiza\u00e7\u00e3o autom\u00e1tica)"
           }
         }
       }

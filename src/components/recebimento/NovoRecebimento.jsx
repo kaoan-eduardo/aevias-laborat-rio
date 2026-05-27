@@ -88,7 +88,7 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
       ...form,
       amostras: amostrasFinais,
       numero_protocolo: gerarNumeroProtocolo(totalRecebimentos),
-      status: 'pendente_gestor'
+      status: 'a_definir'
     });
     setLoading(false);
     onSaved();

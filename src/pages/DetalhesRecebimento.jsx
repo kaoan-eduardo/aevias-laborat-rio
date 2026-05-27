@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trash2, CheckCircle, Search, X } from 'lucide-react';
+import { ArrowLeft, Trash2, CheckCircle, Search, X, Play, Ban } from 'lucide-react';
 import FotosRecebimento from '@/components/recebimento/FotosRecebimento';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -66,8 +66,10 @@ const BoolBadge = ({ value }) => (
 );
 
 const STATUS_CONFIG = {
-  pendente_gestor: { label: 'Pendente Gestor', color: 'bg-yellow-100 text-yellow-700' },
-  concluido: { label: 'Concluído', color: 'bg-green-100 text-green-700' },
+  a_definir:  { label: 'A Definir',  color: 'bg-gray-100 text-gray-600' },
+  iniciado:   { label: 'Iniciado',   color: 'bg-blue-100 text-blue-700' },
+  concluido:  { label: 'Concluído',  color: 'bg-green-100 text-green-700' },
+  cancelado:  { label: 'Cancelado',  color: 'bg-red-100 text-red-600' },
 };
 
 export default function DetalhesRecebimento() {
@@ -86,6 +88,8 @@ export default function DetalhesRecebimento() {
 
   const role = user?.role || 'auxiliar';
   const isGestor = role === 'admin' || role === 'gestor';
+  // Cargos técnicos que podem alterar status de execução
+  const isTecnico = role === 'coordenadora_tecnica' || role === 'encarregado' || role === 'auxiliar_qualidade' || role === 'admin';
 
   useEffect(() => {
     const load = async () => {
@@ -101,9 +105,9 @@ export default function DetalhesRecebimento() {
     load();
   }, [id]);
 
-  // Carrega FAS em aberto do cliente e todos os ensaios quando gestor abre pendente
+  // Carrega FAS em aberto do cliente e todos os ensaios quando gestor abre em status a_definir
   useEffect(() => {
-    if (!isGestor || !recebimento || recebimento.status !== 'pendente_gestor') return;
+    if (!isGestor || !recebimento || recebimento.status !== 'a_definir') return;
     const loadGestorData = async () => {
       const [fasData, ensaiosData] = await Promise.all([
         base44.entities.FAS.filter({ cliente_id: recebimento.cliente_id, status: 'aberta' }),
@@ -147,7 +151,7 @@ export default function DetalhesRecebimento() {
         fas_id: possuiFas ? fasId : null,
         numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
         ensaios_selecionados: ensaiosSelecionados,
-        status: 'concluido'
+        status: 'iniciado'
       })
     ];
 
@@ -168,9 +172,19 @@ export default function DetalhesRecebimento() {
       fas_id: possuiFas ? fasId : null,
       numero_fas: fasEscolhida?.numero_fas || fasEscolhida?.numero_proposta || '',
       ensaios_selecionados: ensaiosSelecionados,
-      status: 'concluido'
+      status: 'iniciado'
     }));
     setSaving(false);
+  };
+
+  const handleConcluir = async () => {
+    await base44.entities.RecebimentoAmostra.update(recebimento.id, { status: 'concluido' });
+    setRecebimento(r => ({ ...r, status: 'concluido' }));
+  };
+
+  const handleCancelar = async () => {
+    await base44.entities.RecebimentoAmostra.update(recebimento.id, { status: 'cancelado' });
+    setRecebimento(r => ({ ...r, status: 'cancelado' }));
   };
 
   const ensaiosFiltrados = ensaios.filter(e =>
@@ -214,12 +228,46 @@ export default function DetalhesRecebimento() {
         </div>
       </div>
 
+      {/* Ações de status para técnicos */}
+      {isTecnico && recebimento.status === 'iniciado' && (
+        <div className="flex gap-3 flex-wrap">
+          <Button className="gap-2 bg-green-600 hover:bg-green-700" onClick={handleConcluir}>
+            <CheckCircle className="w-4 h-4" />
+            Marcar como Concluído
+          </Button>
+          <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50" onClick={handleCancelar}>
+            <Ban className="w-4 h-4" />
+            Cancelar Protocolo
+          </Button>
+        </div>
+      )}
+      {(isGestor || isTecnico) && recebimento.status === 'concluido' && (
+        <div className="flex gap-3 flex-wrap">
+          <Button variant="outline" className="gap-2 text-red-600 border-red-200 hover:bg-red-50" onClick={handleCancelar}>
+            <Ban className="w-4 h-4" />
+            Cancelar Protocolo
+          </Button>
+        </div>
+      )}
+      {isGestor && recebimento.status === 'cancelado' && (
+        <div className="flex gap-3 flex-wrap">
+          <Button variant="outline" className="gap-2 text-blue-600 border-blue-200 hover:bg-blue-50" onClick={async () => {
+            const novoStatus = recebimento.fas_id ? 'iniciado' : 'a_definir';
+            await base44.entities.RecebimentoAmostra.update(recebimento.id, { status: novoStatus });
+            setRecebimento(r => ({ ...r, status: novoStatus }));
+          }}>
+            <Play className="w-4 h-4" />
+            Reabrir Protocolo
+          </Button>
+        </div>
+      )}
+
       {/* Seção do Gestor — preenchimento pendente */}
-      {isGestor && recebimento.status === 'pendente_gestor' && (
+      {isGestor && recebimento.status === 'a_definir' && (
         <Card className="border-yellow-300 bg-yellow-50">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-yellow-800">⚠️ Preenchimento pendente — Informações do Gestor</CardTitle>
-            <p className="text-xs text-yellow-700">Complete os campos abaixo para concluir o protocolo.</p>
+            <CardTitle className="text-base text-yellow-800">⚠️ Definição pendente — FAS e Ensaios</CardTitle>
+            <p className="text-xs text-yellow-700">Vincule uma FAS e selecione os ensaios para iniciar o protocolo.</p>
           </CardHeader>
           <CardContent className="space-y-4">
 
@@ -336,7 +384,7 @@ export default function DetalhesRecebimento() {
                 className="gap-2 bg-yellow-600 hover:bg-yellow-700"
               >
                 <CheckCircle className="w-4 h-4" />
-                {saving ? 'Salvando...' : 'Confirmar e Concluir Protocolo'}
+                {saving ? 'Salvando...' : 'Confirmar e Iniciar Protocolo'}
               </Button>
             </div>
           </CardContent>
@@ -344,7 +392,7 @@ export default function DetalhesRecebimento() {
       )}
 
       {/* Dados do gestor já preenchidos */}
-      {recebimento.status === 'concluido' && (
+      {(recebimento.status === 'iniciado' || recebimento.status === 'concluido' || recebimento.status === 'cancelado') && recebimento.ensaios_selecionados?.length > 0 && (
         <Card className="border-green-200 bg-green-50/40">
           <CardHeader className="pb-3">
             <CardTitle className="text-base text-green-800">Informações do Gestor</CardTitle>
