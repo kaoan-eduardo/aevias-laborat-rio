@@ -66,10 +66,12 @@ const BoolBadge = ({ value }) => (
 );
 
 const STATUS_CONFIG = {
-  a_definir:  { label: 'A Definir',  color: 'bg-gray-100 text-gray-600' },
-  iniciado:   { label: 'Iniciado',   color: 'bg-blue-100 text-blue-700' },
-  concluido:  { label: 'Concluído',  color: 'bg-green-100 text-green-700' },
-  cancelado:  { label: 'Cancelado',  color: 'bg-red-100 text-red-600' },
+  a_definir:      { label: 'A Definir',      color: 'bg-gray-100 text-gray-600' },
+  iniciado:       { label: 'Iniciado',       color: 'bg-blue-100 text-blue-700' },
+  concluido:      { label: 'Concluído',      color: 'bg-green-100 text-green-700' },
+  cancelado:      { label: 'Cancelado',      color: 'bg-red-100 text-red-600' },
+  // legados — compatibilidade com registros antigos
+  pendente_gestor: { label: 'A Definir',     color: 'bg-gray-100 text-gray-600' },
 };
 
 export default function DetalhesRecebimento() {
@@ -210,7 +212,7 @@ export default function DetalhesRecebimento() {
     <div className="p-6 text-center text-muted-foreground">Protocolo não encontrado.</div>
   );
 
-  const statusConf = STATUS_CONFIG[recebimento.status] || STATUS_CONFIG.pendente_gestor;
+  const statusConf = STATUS_CONFIG[recebimento.status] || STATUS_CONFIG.a_definir;
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-5">
