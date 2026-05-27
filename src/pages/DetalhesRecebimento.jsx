@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trash2, CheckCircle, Search, X, Play, Ban } from 'lucide-react';
+import { ArrowLeft, Trash2, CheckCircle, Search, X, Play, Ban, Pencil } from 'lucide-react';
 import FotosRecebimento from '@/components/recebimento/FotosRecebimento';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 
 function ClienteInfo({ clienteId, clienteNome }) {
   const [cliente, setCliente] = useState(null);
@@ -87,6 +89,9 @@ export default function DetalhesRecebimento() {
   const [ensaiosSelecionados, setEnsaiosSelecionados] = useState([]);
   const [ensaioSearch, setEnsaioSearch] = useState('');
   const [saving, setSaving] = useState(false);
+  const [editando, setEditando] = useState(false);
+  const [editForm, setEditForm] = useState({});
+  const [clientes, setClientes] = useState([]);
 
   const role = user?.role || 'auxiliar';
   const isGestor = role === 'admin' || role === 'gestor';
@@ -194,6 +199,36 @@ export default function DetalhesRecebimento() {
     e.norma?.toLowerCase().includes(ensaioSearch.toLowerCase())
   );
 
+  const handleAbrirEdicao = async () => {
+    setEditForm({
+      cliente_id: recebimento.cliente_id || '',
+      cliente_nome: recebimento.cliente_nome || '',
+      data_entrada: recebimento.data_entrada || '',
+      data_registro: recebimento.data_registro || '',
+      numero_projeto: recebimento.numero_projeto || '',
+      responsavel_amostragem: recebimento.responsavel_amostragem || '',
+      observacoes: recebimento.observacoes || '',
+    });
+    if (clientes.length === 0) {
+      const c = await base44.entities.Cliente.list('razao_social');
+      setClientes(c.filter(x => x.ativo !== false));
+    }
+    setEditando(true);
+  };
+
+  const handleSalvarEdicao = async () => {
+    setSaving(true);
+    const clienteEscolhido = clientes.find(c => c.id === editForm.cliente_id);
+    const updates = {
+      ...editForm,
+      cliente_nome: clienteEscolhido?.razao_social || editForm.cliente_nome,
+    };
+    await base44.entities.RecebimentoAmostra.update(recebimento.id, updates);
+    setRecebimento(r => ({ ...r, ...updates }));
+    setEditando(false);
+    setSaving(false);
+  };
+
   const handleDeleteAmostra = async (amostraId) => {
     const updatedAmostras = recebimento.amostras.filter(a => a.id !== amostraId);
     await base44.entities.RecebimentoAmostra.update(recebimento.id, { amostras: updatedAmostras });
@@ -215,6 +250,7 @@ export default function DetalhesRecebimento() {
   const statusConf = STATUS_CONFIG[recebimento.status] || STATUS_CONFIG.a_definir;
 
   return (
+    <>
     <div className="p-6 max-w-5xl mx-auto space-y-5">
       {/* Header */}
       <div className="flex items-start gap-4">
@@ -225,6 +261,12 @@ export default function DetalhesRecebimento() {
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-2xl font-bold text-foreground font-mono-data">{recebimento.numero_protocolo}</h1>
             <Badge className={statusConf.color}>{statusConf.label}</Badge>
+            {isGestor && recebimento.status !== 'cancelado' && (
+              <Button variant="outline" size="sm" className="gap-1.5" onClick={handleAbrirEdicao}>
+                <Pencil className="w-3.5 h-3.5" />
+                Editar Protocolo
+              </Button>
+            )}
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{recebimento.cliente_nome}</p>
         </div>
@@ -504,5 +546,59 @@ export default function DetalhesRecebimento() {
         </CardContent>
       </Card>
     </div>
+
+    {/* Modal de Edição do Protocolo */}
+
+    <Dialog open={editando} onOpenChange={setEditando}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Editar Protocolo {recebimento.numero_protocolo}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div>
+            <Label className="text-xs">Cliente</Label>
+            <Select value={editForm.cliente_id} onValueChange={v => setEditForm(f => ({ ...f, cliente_id: v }))}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Selecione o cliente..." />
+              </SelectTrigger>
+              <SelectContent>
+                {clientes.map(c => (
+                  <SelectItem key={c.id} value={c.id}>{c.razao_social}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label className="text-xs">Data de Entrada</Label>
+              <Input type="date" className="mt-1" value={editForm.data_entrada} onChange={e => setEditForm(f => ({ ...f, data_entrada: e.target.value }))} />
+            </div>
+            <div>
+              <Label className="text-xs">Data de Registro</Label>
+              <Input type="date" className="mt-1" value={editForm.data_registro} onChange={e => setEditForm(f => ({ ...f, data_registro: e.target.value }))} />
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs">Número do Projeto</Label>
+            <Input className="mt-1" value={editForm.numero_projeto} onChange={e => setEditForm(f => ({ ...f, numero_projeto: e.target.value }))} placeholder="Ex: PRJ-2026-001" />
+          </div>
+          <div>
+            <Label className="text-xs">Responsável pela Amostragem</Label>
+            <Input className="mt-1" value={editForm.responsavel_amostragem} onChange={e => setEditForm(f => ({ ...f, responsavel_amostragem: e.target.value }))} />
+          </div>
+          <div>
+            <Label className="text-xs">Observações</Label>
+            <Textarea className="mt-1 resize-none" rows={3} value={editForm.observacoes} onChange={e => setEditForm(f => ({ ...f, observacoes: e.target.value }))} />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setEditando(false)}>Cancelar</Button>
+          <Button onClick={handleSalvarEdicao} disabled={saving}>
+            {saving ? 'Salvando...' : 'Salvar Alterações'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
