@@ -41,17 +41,17 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
     <div className="flex flex-col h-full bg-[#00233B] rounded-[14px]">
       {/* Logo */}
       <div className={cn('px-5 py-5 border-b border-white/10 flex items-center justify-center', collapsed && 'px-3')}>
-        {!collapsed ? (
-          <img
-            src="https://media.base44.com/images/public/69fdf070216c826565ee0876/2e0d01e80_AE-LogoHor_Negativo.png"
-            alt="Afirma E-vias"
-            className="h-10 object-contain"
-          />
-        ) : (
-          <div className="w-9 h-9 rounded-xl bg-[#566E3D] flex items-center justify-center">
+        {!collapsed ?
+        <img
+          src="https://media.base44.com/images/public/69fdf070216c826565ee0876/2e0d01e80_AE-LogoHor_Negativo.png"
+          alt="Afirma E-vias"
+          className="h-10 object-contain mt-1" /> :
+
+
+        <div className="w-9 h-9 rounded-xl bg-[#566E3D] flex items-center justify-center">
             <span className="text-white font-exo font-bold text-xs">AE</span>
           </div>
-        )}
+        }
       </div>
 
       {/* Nav */}
@@ -201,7 +201,7 @@ export default function Layout() {
   const visibleItems = NAV_ITEMS.filter((item) => podeVerPagina(user, item.path));
   const visibleCadastros = CADASTROS_ITEMS.filter((item) => podeVerPagina(user, item.path));
   const visibleBottomItems = BOTTOM_NAV_ITEMS.filter((item) =>
-    item.adminOnly ? role === 'admin' : podeVerPagina(user, item.path)
+  item.adminOnly ? role === 'admin' : podeVerPagina(user, item.path)
   );
   const roleInfo = ROLE_LABELS[role] || ROLE_LABELS['user'];
 
@@ -246,8 +246,8 @@ export default function Layout() {
           <img
             src="https://media.base44.com/images/public/69fdf070216c826565ee0876/2e0d01e80_AE-LogoHor_Negativo.png"
             alt="Afirma E-vias"
-            className="h-7 object-contain"
-          />
+            className="h-7 object-contain" />
+          
         </header>
 
         <main className="flex-1 overflow-auto">
