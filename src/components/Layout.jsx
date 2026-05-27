@@ -40,22 +40,18 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
   return (
     <div className="flex flex-col h-full bg-[#00233B] rounded-[14px]">
       {/* Logo */}
-      <div className={cn('px-5 py-6 border-b border-white/10', collapsed && 'px-3')}>
-        {!collapsed ?
-        <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#566E3D] flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-exo font-bold text-sm">AE</span>
-            </div>
-            <div>
-              <p className="font-exo font-bold text-white text-base leading-tight">Afirma E-vias</p>
-              <p className="text-white/50 text-xs">Laboratório Central</p>
-            </div>
-          </div> :
-
-        <div className="w-10 h-10 rounded-2xl bg-[#566E3D] flex items-center justify-center mx-auto">
-            <span className="text-white font-exo font-bold text-sm">AE</span>
+      <div className={cn('px-5 py-5 border-b border-white/10 flex items-center justify-center', collapsed && 'px-3')}>
+        {!collapsed ? (
+          <img
+            src="https://media.base44.com/images/public/69fdf070216c826565ee0876/2e0d01e80_AE-LogoHor_Negativo.png"
+            alt="Afirma E-vias"
+            className="h-10 object-contain"
+          />
+        ) : (
+          <div className="w-9 h-9 rounded-xl bg-[#566E3D] flex items-center justify-center">
+            <span className="text-white font-exo font-bold text-xs">AE</span>
           </div>
-        }
+        )}
       </div>
 
       {/* Nav */}
@@ -247,12 +243,11 @@ export default function Layout() {
           <button onClick={() => setMobileOpen(true)}>
             <Menu className="w-10 h-10 text-white" />
           </button>
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-xl bg-[#566E3D] flex items-center justify-center">
-              <span className="text-white font-bold text-xs">AE</span>
-            </div>
-            <span className="font-exo font-bold text-white text-sm">Afirma E-vias</span>
-          </div>
+          <img
+            src="https://media.base44.com/images/public/69fdf070216c826565ee0876/2e0d01e80_AE-LogoHor_Negativo.png"
+            alt="Afirma E-vias"
+            className="h-7 object-contain"
+          />
         </header>
 
         <main className="flex-1 overflow-auto">
