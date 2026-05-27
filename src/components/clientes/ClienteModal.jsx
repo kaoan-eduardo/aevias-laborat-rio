@@ -20,6 +20,7 @@ export default function ClienteModal({ open, onClose, cliente, onSaved, totalCli
   const [form, setForm] = useState({
     codigo: '', razao_social: '', cnpj: '', endereco: '',
     responsavel: '', email: '', telefone: '', ativo: true,
+    periodo_descarte_dias_uteis: 5,
   });
   const [saving, setSaving] = useState(false);
 
@@ -35,12 +36,14 @@ export default function ClienteModal({ open, onClose, cliente, onSaved, totalCli
           email: cliente.email || '',
           telefone: cliente.telefone || '',
           ativo: cliente.ativo !== false,
+          periodo_descarte_dias_uteis: cliente.periodo_descarte_dias_uteis ?? 5,
         });
       } else {
         setForm({
           codigo: generateCodigo(totalClientes),
           razao_social: '', cnpj: '', endereco: '',
           responsavel: '', email: '', telefone: '', ativo: true,
+          periodo_descarte_dias_uteis: 5,
         });
       }
     }
@@ -104,6 +107,18 @@ export default function ClienteModal({ open, onClose, cliente, onSaved, totalCli
           <div className="space-y-1.5">
             <Label>E-mail</Label>
             <Input type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="contato@empresa.com" />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Período de Descarte (dias úteis)</Label>
+            <Input
+              type="number"
+              min={1}
+              value={form.periodo_descarte_dias_uteis}
+              onChange={e => set('periodo_descarte_dias_uteis', parseInt(e.target.value) || 5)}
+              placeholder="5"
+              className="font-mono-data"
+            />
+            <p className="text-xs text-muted-foreground">Prazo em dias úteis para descarte das amostras após a conclusão dos ensaios.</p>
           </div>
         </div>
         <div className="flex justify-end gap-3 pt-2">
