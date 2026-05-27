@@ -115,6 +115,10 @@ export default function DetalhesRecebimento() {
   // Carrega FAS em aberto do cliente e todos os ensaios quando gestor abre em status a_definir
   useEffect(() => {
     if (!isGestor || !recebimento || recebimento.status !== 'a_definir') return;
+    // Resetar a escolha de FAS ao entrar no modo a_definir
+    setPossuiFas(null);
+    setFasId('');
+    setEnsaiosSelecionados([]);
     const loadGestorData = async () => {
       const [fasData, ensaiosData] = await Promise.all([
         base44.entities.FAS.filter({ cliente_id: recebimento.cliente_id, status: 'aberta' }),
@@ -124,7 +128,7 @@ export default function DetalhesRecebimento() {
       setEnsaios(ensaiosData.filter(e => e.ativo !== false));
     };
     loadGestorData();
-  }, [isGestor, recebimento]);
+  }, [isGestor, recebimento?.status, recebimento?.cliente_id]);
 
   const toggleEnsaio = (ensaio) => {
     setEnsaiosSelecionados(prev => {
