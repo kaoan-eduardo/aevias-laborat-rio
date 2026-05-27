@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { getClientes, getEnsaios, getFasDoCliente } from '@/hooks/useOfflineCache';
 import { useAuth } from '@/lib/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, CheckCircle, Search, X, Play, Ban, Pencil } from 'lucide-react';
@@ -129,11 +128,11 @@ export default function DetalhesRecebimento() {
     setEnsaiosSelecionados([]);
     const loadGestorData = async () => {
       const [fasData, ensaiosData] = await Promise.all([
-        getFasDoCliente(recebimento.cliente_id, f => f.status === 'aberta'),
-        getEnsaios()
+        base44.entities.FAS.filter({ cliente_id: recebimento.cliente_id, status: 'aberta' }),
+        base44.entities.Ensaio.list('nome')
       ]);
       setFasList(fasData);
-      setEnsaios(ensaiosData);
+      setEnsaios(ensaiosData.filter(e => e.ativo !== false));
     };
     loadGestorData();
   }, [isGestor, recebimento?.status, recebimento?.cliente_id]);
@@ -223,8 +222,8 @@ export default function DetalhesRecebimento() {
       observacoes: recebimento.observacoes || '',
     });
     if (clientes.length === 0) {
-      const c = await getClientes();
-      setClientes(c);
+      const c = await base44.entities.Cliente.list('razao_social');
+      setClientes(c.filter(x => x.ativo !== false));
     }
     setEditando(true);
   };
@@ -248,11 +247,11 @@ export default function DetalhesRecebimento() {
     setEditPossuiFas(recebimento.fas_id ? true : (recebimento.ensaios_selecionados?.length > 0 ? false : null));
     setEditEnsaioSearch('');
     const [fasData, ensaiosData] = await Promise.all([
-      getFasDoCliente(recebimento.cliente_id, f => f.status === 'aberta' || f.id === recebimento.fas_id),
-      getEnsaios()
+      base44.entities.FAS.filter({ cliente_id: recebimento.cliente_id }),
+      base44.entities.Ensaio.list('nome')
     ]);
-    setFasListEdit(fasData);
-    setEnsaiosEdit(ensaiosData);
+    setFasListEdit(fasData.filter(f => f.status === 'aberta' || f.id === recebimento.fas_id));
+    setEnsaiosEdit(ensaiosData.filter(e => e.ativo !== false));
     setEditandoFas(true);
   };
 

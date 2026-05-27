@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { getClientes, getMateriais } from '@/hooks/useOfflineCache';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,7 +13,7 @@ import FotosRecebimento from './FotosRecebimento';
 
 const hoje = obterDataHoje;
 
-export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimentos, criarAmostraOffline }) {
+export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimentos }) {
   const [clientes, setClientes] = useState([]);
   const [materiais, setMateriais] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,10 +40,15 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
 
   useEffect(() => {
     if (!open) return;
-    Promise.all([getClientes(), getMateriais()]).then(([c, m]) => {
-      setClientes(c);
+    const load = async () => {
+      const [c, m] = await Promise.all([
+      base44.entities.Cliente.list(),
+      base44.entities.Material.list()]
+      );
+      setClientes(c.filter((cl) => cl.ativo !== false));
       setMateriais(m);
-    });
+    };
+    load();
   }, [open]);
 
   const handleClienteChange = (clienteId) => {
@@ -80,20 +84,12 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
       amostrasFinais = [...amostrasFinais, { ...amostraTemp, id: Math.random().toString(36).substr(2, 9) }];
     }
 
-    const dadosForm = { ...form, amostras: amostrasFinais };
-
-    if (!navigator.onLine && criarAmostraOffline) {
-      // Modo offline: persiste no IndexedDB e enfileira para sync
-      await criarAmostraOffline(dadosForm, totalRecebimentos);
-    } else {
-      // Modo online: envia direto ao backend
-      await base44.entities.RecebimentoAmostra.create({
-        ...dadosForm,
-        numero_protocolo: gerarNumeroProtocolo(totalRecebimentos),
-        status: 'a_definir',
-      });
-    }
-
+    await base44.entities.RecebimentoAmostra.create({
+      ...form,
+      amostras: amostrasFinais,
+      numero_protocolo: gerarNumeroProtocolo(totalRecebimentos),
+      status: 'a_definir'
+    });
     setLoading(false);
     onSaved();
   };

@@ -9,9 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import NovoRecebimento from '@/components/recebimento/NovoRecebimento';
 import { addWorkingDays, isDisposalAllowed } from '@/utils/workingDays';
-import { useAmostrasOffline } from '@/hooks/useAmostrasOffline';
-import OfflineStatusBar from '@/components/recebimento/OfflineStatusBar';
-import SyncBadge from '@/components/recebimento/SyncBadge';
 
 const STATUS_CONFIG = {
   a_definir:       { label: 'A Definir',  color: 'bg-gray-100 text-gray-600' },
@@ -33,7 +30,6 @@ export default function RecebimentoAmostras() {
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState({});
-  const { amostrasLocais, criarAmostra, pendentesCount } = useAmostrasOffline();
 
   const toggleExpand = (id) => setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
 
@@ -93,8 +89,6 @@ export default function RecebimentoAmostras() {
         )}
       </div>
 
-      <OfflineStatusBar pendentesCount={pendentesCount} />
-
       {(role === 'gestor' || role === 'admin') && pendentes > 0 && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 flex items-center gap-3">
           <span className="text-yellow-700 text-sm font-medium">
@@ -138,34 +132,11 @@ export default function RecebimentoAmostras() {
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Data Descarte</th>
                     <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Lib. Descarte?</th>
                     <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Descartado?</th>
-                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Sync</th>
                     <th className="px-4 py-3 text-right font-semibold text-muted-foreground">Ação</th>
-                    </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                    {/* Amostras locais pendentes (offline-first) */}
-                    {(amostrasLocais || []).filter(a => a.statusSync !== 'synced').map(a => (
-                    <tr key={a.idLocal} className="bg-orange-50/40 hover:bg-orange-50 transition-colors">
-                      <td className="px-3 py-3"></td>
-                      <td className="px-4 py-3 font-mono-data text-xs font-semibold text-primary">{a.numero_protocolo}</td>
-                      <td className="px-4 py-3 font-medium text-foreground text-xs">{a.cliente_nome || '—'}</td>
-                      <td className="px-4 py-3 text-muted-foreground text-xs">
-                        {a.data_entrada ? new Date(a.data_entrada).toLocaleDateString('pt-BR') : '—'}
-                      </td>
-                      <td className="px-4 py-3 text-center font-mono-data">{(a.amostras || []).length}</td>
-                      <td className="px-4 py-3">
-                        <Badge className="bg-gray-100 text-gray-500 text-xs">A Definir</Badge>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-muted-foreground/50">—</td>
-                      <td className="px-4 py-3 text-center text-xs text-muted-foreground/50">—</td>
-                      <td className="px-4 py-3 text-center text-xs text-muted-foreground/50">—</td>
-                      <td className="px-4 py-3">
-                        <SyncBadge statusSync={a.statusSync} />
-                      </td>
-                      <td className="px-4 py-3 text-right text-muted-foreground/40 text-xs italic">Offline</td>
-                    </tr>
-                    ))}
-                    {filtered.map(r => {
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {filtered.map(r => {
                     const expanded = !!expandedRows[r.id];
                     const amostras = r.amostras || [];
                     const dataDescarte = getDataDescarte(r);
@@ -228,18 +199,15 @@ export default function RecebimentoAmostras() {
                               <span className="text-muted-foreground/50 text-xs">—</span>
                             )}
                           </td>
-                          <td className="px-4 py-3">
-                            <SyncBadge statusSync="synced" />
-                          </td>
                           <td className="px-4 py-3 text-right">
                             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/recebimento/${r.id}`)}>
                               <Eye className="w-3.5 h-3.5" />
                             </Button>
                           </td>
-                          </tr>
+                        </tr>
                         {expanded && amostras.length > 0 && (
                           <tr key={r.id + '_expanded'} className="bg-muted/20">
-                            <td colSpan={11} className="px-6 pb-3 pt-1">
+                            <td colSpan={10} className="px-6 pb-3 pt-1">
                               <div className="rounded-md border border-border overflow-hidden">
                                 <table className="w-full text-xs">
                                   <thead>
@@ -290,7 +258,6 @@ export default function RecebimentoAmostras() {
         onClose={() => setModalOpen(false)}
         onSaved={() => { setModalOpen(false); load(); }}
         totalRecebimentos={recebimentos.length}
-        criarAmostraOffline={criarAmostra}
       />
     </div>
   );
