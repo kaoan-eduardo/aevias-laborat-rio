@@ -8,20 +8,24 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import NovoRecebimento from '@/components/recebimento/NovoRecebimento';
+import { addWorkingDays, isDisposalAllowed } from '@/utils/workingDays';
 
 const STATUS_CONFIG = {
   a_definir:       { label: 'A Definir',  color: 'bg-gray-100 text-gray-600' },
   iniciado:        { label: 'Iniciado',   color: 'bg-blue-100 text-blue-700' },
   concluido:       { label: 'Concluído',  color: 'bg-green-100 text-green-700' },
   cancelado:       { label: 'Cancelado',  color: 'bg-red-100 text-red-600' },
-  // legado
   pendente_gestor: { label: 'A Definir',  color: 'bg-gray-100 text-gray-600' },
 };
+
+// Roles que podem marcar "Descartado"
+const CAN_DISCARD_ROLES = ['admin', 'gestor', 'coordenador_tecnico', 'encarregado', 'auxiliar_qualidade', 'auxiliar'];
 
 export default function RecebimentoAmostras() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [recebimentos, setRecebimentos] = useState([]);
+  const [clientes, setClientes] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,15 +35,28 @@ export default function RecebimentoAmostras() {
 
   const role = user?.role || 'auxiliar';
   const canCreate = role === 'auxiliar' || role === 'admin' || role === 'gestor';
+  const canDiscard = CAN_DISCARD_ROLES.includes(role);
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.RecebimentoAmostra.list('-created_date');
+    const [data, clientesData] = await Promise.all([
+      base44.entities.RecebimentoAmostra.list('-created_date'),
+      base44.entities.Cliente.list(),
+    ]);
+    // Mapear clientes por ID para acesso rápido
+    const clienteMap = {};
+    clientesData.forEach(c => { clienteMap[c.id] = c; });
+    setClientes(clienteMap);
     setRecebimentos(data);
     setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
+
+  const handleToggleDescartado = async (r) => {
+    await base44.entities.RecebimentoAmostra.update(r.id, { descartado: !r.descartado });
+    load();
+  };
 
   const filtered = recebimentos.filter(r =>
     r.numero_protocolo?.toLowerCase().includes(search.toLowerCase()) ||
@@ -49,8 +66,16 @@ export default function RecebimentoAmostras() {
 
   const pendentes = filtered.filter(r => r.status === 'a_definir').length;
 
+  // Calcula data de descarte para um protocolo
+  const getDataDescarte = (r) => {
+    if (r.status !== 'concluido' || !r.data_conclusao) return null;
+    const cliente = clientes[r.cliente_id];
+    const diasUteis = cliente?.periodo_descarte_dias_uteis ?? 5;
+    return addWorkingDays(new Date(r.data_conclusao), diasUteis);
+  };
+
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-5">
+    <div className="p-6 max-w-full mx-auto space-y-5">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Recebimento de Amostras</h1>
@@ -64,7 +89,6 @@ export default function RecebimentoAmostras() {
         )}
       </div>
 
-      {/* Alerta para gestor */}
       {(role === 'gestor' || role === 'admin') && pendentes > 0 && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 flex items-center gap-3">
           <span className="text-yellow-700 text-sm font-medium">
@@ -105,6 +129,9 @@ export default function RecebimentoAmostras() {
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Data Entrada</th>
                     <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Amostras</th>
                     <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Status</th>
+                    <th className="px-4 py-3 text-left font-semibold text-muted-foreground">Data Descarte</th>
+                    <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Lib. Descarte?</th>
+                    <th className="px-4 py-3 text-center font-semibold text-muted-foreground">Descartado?</th>
                     <th className="px-4 py-3 text-right font-semibold text-muted-foreground">Ação</th>
                   </tr>
                 </thead>
@@ -112,6 +139,9 @@ export default function RecebimentoAmostras() {
                   {filtered.map(r => {
                     const expanded = !!expandedRows[r.id];
                     const amostras = r.amostras || [];
+                    const dataDescarte = getDataDescarte(r);
+                    const liberado = dataDescarte ? isDisposalAllowed(dataDescarte) : false;
+
                     return (
                       <>
                         <tr key={r.id} className="hover:bg-muted/30 transition-colors">
@@ -133,6 +163,42 @@ export default function RecebimentoAmostras() {
                               {STATUS_CONFIG[r.status]?.label || r.status}
                             </Badge>
                           </td>
+                          {/* Data Descarte */}
+                          <td className="px-4 py-3 text-xs text-muted-foreground">
+                            {dataDescarte
+                              ? dataDescarte.toLocaleDateString('pt-BR')
+                              : <span className="text-muted-foreground/50">—</span>
+                            }
+                          </td>
+                          {/* Liberado Descarte? */}
+                          <td className="px-4 py-3 text-center">
+                            {dataDescarte ? (
+                              <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${liberado ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-600'}`}>
+                                {liberado ? 'Sim' : 'Não'}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground/50 text-xs">—</span>
+                            )}
+                          </td>
+                          {/* Descartado? */}
+                          <td className="px-4 py-3 text-center">
+                            {r.status === 'concluido' ? (
+                              canDiscard ? (
+                                <button
+                                  onClick={() => handleToggleDescartado(r)}
+                                  className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer border transition-colors ${r.descartado ? 'bg-gray-200 text-gray-600 border-gray-300 hover:bg-gray-300' : 'bg-white text-gray-400 border-gray-200 hover:bg-gray-50'}`}
+                                >
+                                  {r.descartado ? 'Sim' : 'Não'}
+                                </button>
+                              ) : (
+                                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${r.descartado ? 'bg-gray-200 text-gray-600' : 'bg-white text-gray-400 border border-gray-200'}`}>
+                                  {r.descartado ? 'Sim' : 'Não'}
+                                </span>
+                              )
+                            ) : (
+                              <span className="text-muted-foreground/50 text-xs">—</span>
+                            )}
+                          </td>
                           <td className="px-4 py-3 text-right">
                             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/recebimento/${r.id}`)}>
                               <Eye className="w-3.5 h-3.5" />
@@ -141,7 +207,7 @@ export default function RecebimentoAmostras() {
                         </tr>
                         {expanded && amostras.length > 0 && (
                           <tr key={r.id + '_expanded'} className="bg-muted/20">
-                            <td colSpan={7} className="px-6 pb-3 pt-1">
+                            <td colSpan={10} className="px-6 pb-3 pt-1">
                               <div className="rounded-md border border-border overflow-hidden">
                                 <table className="w-full text-xs">
                                   <thead>

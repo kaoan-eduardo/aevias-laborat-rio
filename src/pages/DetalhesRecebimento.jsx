@@ -196,8 +196,9 @@ export default function DetalhesRecebimento() {
   };
 
   const handleConcluir = async () => {
-    await base44.entities.RecebimentoAmostra.update(recebimento.id, { status: 'concluido' });
-    setRecebimento(r => ({ ...r, status: 'concluido' }));
+    const hoje = new Date().toISOString().split('T')[0];
+    await base44.entities.RecebimentoAmostra.update(recebimento.id, { status: 'concluido', data_conclusao: hoje });
+    setRecebimento(r => ({ ...r, status: 'concluido', data_conclusao: hoje }));
   };
 
   const handleCancelar = async () => {
