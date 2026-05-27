@@ -13,7 +13,7 @@ import FotosRecebimento from './FotosRecebimento';
 
 const hoje = obterDataHoje;
 
-export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimentos }) {
+export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimentos, criarAmostraOffline }) {
   const [clientes, setClientes] = useState([]);
   const [materiais, setMateriais] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -84,12 +84,20 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
       amostrasFinais = [...amostrasFinais, { ...amostraTemp, id: Math.random().toString(36).substr(2, 9) }];
     }
 
-    await base44.entities.RecebimentoAmostra.create({
-      ...form,
-      amostras: amostrasFinais,
-      numero_protocolo: gerarNumeroProtocolo(totalRecebimentos),
-      status: 'a_definir'
-    });
+    const dadosForm = { ...form, amostras: amostrasFinais };
+
+    if (!navigator.onLine && criarAmostraOffline) {
+      // Modo offline: persiste no IndexedDB e enfileira para sync
+      await criarAmostraOffline(dadosForm, totalRecebimentos);
+    } else {
+      // Modo online: envia direto ao backend
+      await base44.entities.RecebimentoAmostra.create({
+        ...dadosForm,
+        numero_protocolo: gerarNumeroProtocolo(totalRecebimentos),
+        status: 'a_definir',
+      });
+    }
+
     setLoading(false);
     onSaved();
   };
