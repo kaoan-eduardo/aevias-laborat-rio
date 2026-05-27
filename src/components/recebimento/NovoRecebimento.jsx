@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { db } from '@/lib/db';
+import { getClientes, getMateriais } from '@/hooks/useOfflineCache';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,32 +41,10 @@ export default function NovoRecebimento({ open, onClose, onSaved, totalRecebimen
 
   useEffect(() => {
     if (!open) return;
-    const load = async () => {
-      if (navigator.onLine) {
-        // Online: busca da API e atualiza cache local
-        const [c, m] = await Promise.all([
-          base44.entities.Cliente.list(),
-          base44.entities.Material.list(),
-        ]);
-        const clientesAtivos = c.filter((cl) => cl.ativo !== false);
-        setClientes(clientesAtivos);
-        setMateriais(m);
-        // Atualiza cache no IndexedDB
-        await db.clientes_cache.clear();
-        await db.clientes_cache.bulkPut(clientesAtivos);
-        await db.materiais_cache.clear();
-        await db.materiais_cache.bulkPut(m);
-      } else {
-        // Offline: carrega do cache IndexedDB
-        const [c, m] = await Promise.all([
-          db.clientes_cache.toArray(),
-          db.materiais_cache.toArray(),
-        ]);
-        setClientes(c);
-        setMateriais(m);
-      }
-    };
-    load();
+    Promise.all([getClientes(), getMateriais()]).then(([c, m]) => {
+      setClientes(c);
+      setMateriais(m);
+    });
   }, [open]);
 
   const handleClienteChange = (clienteId) => {

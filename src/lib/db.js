@@ -16,3 +16,11 @@ db.version(2).stores({
   clientes_cache: 'id, ativo',
   materiais_cache: 'id',
 });
+
+db.version(3).stores({
+  amostras: '++_localId, idLocal, statusSync, numero_protocolo, cliente_id',
+  syncQueue: '++id, action, timestamp',
+  clientes_cache: 'id, ativo',
+  materiais_cache: 'id',
+  ensaios_cache: 'id, ativo',
+});
