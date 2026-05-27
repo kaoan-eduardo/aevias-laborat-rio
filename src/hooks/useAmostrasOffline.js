@@ -13,7 +13,29 @@ export async function dispararSincronizacao() {
   for (const item of fila) {
     try {
       if (item.action === 'CREATE_AMOSTRA') {
-        const criado = await base44.entities.RecebimentoAmostra.create(item.payload);
+        const payload = { ...item.payload };
+
+        // Faz upload das fotos que estavam pendentes (base64 → URL)
+        if (payload.fotos?.length) {
+          payload.fotos = await Promise.all(
+            payload.fotos.map(async (foto) => {
+              if (!foto.pendente_upload) return foto;
+              try {
+                // Converte dataURL base64 de volta para File/Blob
+                const res = await fetch(foto.url);
+                const blob = await res.blob();
+                const file = new File([blob], foto.nome || 'foto.jpg', { type: blob.type });
+                const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                return { url: file_url, nome: foto.nome, data_upload: foto.data_upload };
+              } catch {
+                // Se falhar o upload da foto individual, mantém a foto sem a flag
+                return { url: foto.url, nome: foto.nome, data_upload: foto.data_upload };
+              }
+            })
+          );
+        }
+
+        const criado = await base44.entities.RecebimentoAmostra.create(payload);
 
         // Atualiza o registro local: statusSync → 'synced', salva id definitivo do backend
         await db.amostras

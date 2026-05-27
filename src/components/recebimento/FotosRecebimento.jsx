@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Camera, Upload, Trash2, Loader2, ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Camera, Upload, Trash2, Loader2, ZoomIn, X, ChevronLeft, ChevronRight, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Para uso no modal de novo recebimento (sem ID ainda):
@@ -29,26 +29,48 @@ export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }
     return () => window.removeEventListener('keydown', handler);
   }, [lightboxIdx, fotos.length]);
 
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
   const handleUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
     setUploading(true);
     try {
-      const uploads = await Promise.all(
-        files.map(async (file) => {
-          const { file_url } = await base44.integrations.Core.UploadFile({ file });
-          return {
-            url: file_url,
+      if (!navigator.onLine) {
+        // Offline: converte para base64 e salva localmente
+        const uploads = await Promise.all(
+          files.map(async (file) => ({
+            url: await toBase64(file),
             nome: file.name,
             data_upload: new Date().toISOString().split('T')[0],
-          };
-        })
-      );
-      const novasFotos = [...fotos, ...uploads];
-      if (recebimentoId) {
-        await base44.entities.RecebimentoAmostra.update(recebimentoId, { fotos: novasFotos });
+            pendente_upload: true,
+          }))
+        );
+        onChange([...fotos, ...uploads]);
+      } else {
+        // Online: envia direto para o servidor
+        const uploads = await Promise.all(
+          files.map(async (file) => {
+            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+            return {
+              url: file_url,
+              nome: file.name,
+              data_upload: new Date().toISOString().split('T')[0],
+            };
+          })
+        );
+        const novasFotos = [...fotos, ...uploads];
+        if (recebimentoId) {
+          await base44.entities.RecebimentoAmostra.update(recebimentoId, { fotos: novasFotos });
+        }
+        onChange(novasFotos);
       }
-      onChange(novasFotos);
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -112,6 +134,11 @@ export default function FotosRecebimento({ fotos = [], recebimentoId, onChange }
                 alt={foto.nome || `Foto ${idx + 1}`}
                 className="w-full h-full object-cover"
               />
+              {foto.pendente_upload && (
+                <div className="absolute top-1 left-1 bg-amber-500/90 rounded-full p-0.5" title="Aguardando conexão para enviar">
+                  <WifiOff className="w-2.5 h-2.5 text-white" />
+                </div>
+              )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100">
                 <button
                  type="button"
