@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Upload, Download, FileText, Loader2, Trash2 } from 'lucide-react';
+import { Upload, Download, FileText, Loader2, Trash2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatSize } from '@/utils/equipamentoHelpers';
@@ -9,6 +9,7 @@ import { formatSize } from '@/utils/equipamentoHelpers';
 export default function DocUploadSection({ title, field, docs = [], equipamentoId, canEdit, onUpdate }) {
   const [uploading, setUploading] = useState(false);
   const [nomeDoc, setNomeDoc] = useState('');
+  const [erro, setErro] = useState('');
   const inputRef = useRef(null);
 
   const sortedDocs = [...docs].sort((a, b) => new Date(b.data_upload) - new Date(a.data_upload));
@@ -17,10 +18,11 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
     const file = e.target.files?.[0];
     if (!file) return;
     if (!nomeDoc.trim()) {
-      alert('Informe um nome para o documento antes de fazer o upload.');
+      setErro('Informe um nome para o documento antes de fazer o upload.');
       e.target.value = '';
       return;
     }
+    setErro('');
     setUploading(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
@@ -33,6 +35,8 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
       await base44.entities.Equipamento.update(equipamentoId, { [field]: novosDoc });
       onUpdate(field, novosDoc);
       setNomeDoc('');
+    } catch (err) {
+      setErro(`Erro ao anexar: ${err?.message || 'Tente novamente.'}`);
     } finally {
       setUploading(false);
       e.target.value = '';
@@ -66,24 +70,32 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
       </div>
 
       {canEdit && (
-        <div className="flex gap-2">
-          <Input
-            value={nomeDoc}
-            onChange={e => setNomeDoc(e.target.value)}
-            placeholder="Nome do documento..."
-            className="h-8 text-xs flex-1"
-          />
-          <input ref={inputRef} type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" onChange={handleUpload} />
-          <Button
-            size="sm"
-            variant="outline"
-            className="gap-1.5 h-8 text-xs flex-shrink-0"
-            disabled={uploading || !nomeDoc.trim()}
-            onClick={() => inputRef.current?.click()}
-          >
-            {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
-            {uploading ? 'Enviando...' : 'Anexar'}
-          </Button>
+        <div className="space-y-1.5">
+          <div className="flex gap-2">
+            <Input
+              value={nomeDoc}
+              onChange={e => { setNomeDoc(e.target.value); setErro(''); }}
+              placeholder="Nome do documento..."
+              className="h-8 text-xs flex-1"
+            />
+            <input ref={inputRef} type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" onChange={handleUpload} />
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 h-8 text-xs flex-shrink-0"
+              disabled={uploading || !nomeDoc.trim()}
+              onClick={() => inputRef.current?.click()}
+            >
+              {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+              {uploading ? 'Enviando...' : 'Anexar'}
+            </Button>
+          </div>
+          {erro && (
+            <div className="flex items-center gap-1.5 text-xs text-destructive">
+              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+              {erro}
+            </div>
+          )}
         </div>
       )}
 
