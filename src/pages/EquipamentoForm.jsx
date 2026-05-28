@@ -179,7 +179,7 @@ export default function EquipamentoForm() {
               <Select value={form.categoria} onValueChange={v => set('categoria', v)}>
                 <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
                 <SelectContent>
-                  {['Vidraria','Soquete','Cilindros','Banho Maria','Estufa','Balança','Termômetro','Densímetro','Outros'].map(c => (
+                  {['Vidraria','Soquete','Cilindros','Banho Maria','Estufa','Balança','Termômetro','Densímetro','Prensa','Peso Padrão','Outros'].map(c => (
                     <SelectItem key={c} value={c}>{c}</SelectItem>
                   ))}
                 </SelectContent>
