@@ -30,7 +30,7 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
         nome: nomeDoc.trim(),
         url: file_url,
         tamanho: file.size,
-        data_upload: new Date().toISOString().split('T')[0],
+        data_upload: new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).split(' ')[0],
       }];
       await base44.entities.Equipamento.update(equipamentoId, { [field]: novosDoc });
       onUpdate(field, novosDoc);
