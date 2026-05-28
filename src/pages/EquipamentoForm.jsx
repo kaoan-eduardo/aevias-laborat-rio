@@ -197,8 +197,16 @@ export default function EquipamentoForm() {
             <Field label="Software / Firmware">
               <Input value={form.software_firmware || ''} onChange={e => set('software_firmware', e.target.value)} placeholder="N.A." />
             </Field>
-            <Field label="Data de Entrada em Serviço">
-              <Input type="date" value={form.data_entrada_servico || ''} onChange={e => set('data_entrada_servico', e.target.value)} />
+            <Field label="Ano de Entrada em Serviço">
+              <Input
+                type="number"
+                min="1900"
+                max={new Date().getFullYear()}
+                value={form.data_entrada_servico || ''}
+                onChange={e => set('data_entrada_servico', e.target.value)}
+                placeholder="Ex: 2020"
+                className="font-mono"
+              />
             </Field>
             <Field label="Resolução / Precisão">
               <Input value={form.precisao || ''} onChange={e => set('precisao', e.target.value)} placeholder="Ex: 0,1 g" />
