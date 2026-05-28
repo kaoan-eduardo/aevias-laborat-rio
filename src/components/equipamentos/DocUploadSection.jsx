@@ -83,8 +83,15 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
               size="sm"
               variant="outline"
               className="gap-1.5 h-8 text-xs flex-shrink-0"
-              disabled={uploading || !nomeDoc.trim()}
-              onClick={() => inputRef.current?.click()}
+              disabled={uploading}
+              onClick={() => {
+                if (!nomeDoc.trim()) {
+                  setErro('Informe um nome para o documento antes de fazer o upload.');
+                  return;
+                }
+                setErro('');
+                inputRef.current?.click();
+              }}
             >
               {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
               {uploading ? 'Enviando...' : 'Anexar'}
