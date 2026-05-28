@@ -107,43 +107,43 @@ export function buildForm013Html(eq) {
 <table style="margin-bottom:6px;border:1.5px solid #555;width:100%">
   <tr style="height:20px">
     <td class="lbl" style="width:160px">Responsável pela atualização:</td>
-    <td style="width:200px">${eq.responsavel_atualizacao || ''}</td>
+    <td style="width:200px;text-align:center">${eq.responsavel_atualizacao || ''}</td>
     <td class="lbl" style="width:120px">Atualizado em:</td>
     <td style="text-align:center">${hoje}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Nome do equipamento:</td>
-    <td>${eq.nome || ''}</td>
+    <td style="text-align:center">${eq.nome || ''}</td>
     <td class="lbl" rowspan="2">Identificação unívoca:</td>
     <td rowspan="2" style="text-align:center;font-weight:bold;color:#00233B;font-size:8.5px;padding:2px">${eq.identificacao_interna || ''}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Software e a versão do firmware (quando aplicável):</td>
-    <td>${eq.software_firmware || 'N.A.'}</td>
+    <td style="text-align:center">${eq.software_firmware || 'N.A.'}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Fabricante:</td>
-    <td>${eq.fabricante || ''}</td>
+    <td style="text-align:center">${eq.fabricante || ''}</td>
     <td class="lbl">Resolução:</td>
-    <td>${eq.precisao || ''}</td>
+    <td style="text-align:center">${eq.precisao || ''}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Modelo:</td>
-    <td>${eq.modelo || ''}</td>
+    <td style="text-align:center">${eq.modelo || ''}</td>
     <td class="lbl">Faixa nominal máxima:</td>
-    <td>${eq.faixa_nominal_maxima || ''}</td>
+    <td style="text-align:center">${eq.faixa_nominal_maxima || ''}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Número de série:</td>
-    <td>${eq.numero_serie || ''}</td>
+    <td style="text-align:center">${eq.numero_serie || ''}</td>
     <td class="lbl">Frequência de calibração:</td>
-    <td>${eq.frequencia_calibracao || ''}</td>
+    <td style="text-align:center">${eq.frequencia_calibracao || ''}</td>
   </tr>
   <tr style="height:20px">
     <td class="lbl">Data de entrada em serviço:</td>
-    <td>${fmt(eq.data_entrada_servico)}</td>
+    <td style="text-align:center">${fmt(eq.data_entrada_servico)}</td>
     <td class="lbl">Localização:</td>
-    <td>${eq.localizacao || ''}</td>
+    <td style="text-align:center">${eq.localizacao || ''}</td>
   </tr>
 </table>
 
