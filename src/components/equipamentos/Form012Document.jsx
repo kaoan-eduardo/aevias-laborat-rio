@@ -158,7 +158,7 @@ export function buildForm012Html(equipamentos, fallbackResponsavel) {
     let ultimaDiaria = 'NA';
     let proximaDiaria = 'NA';
     if (eq.obrigatorio_verificacao_diaria) {
-      periDiaria = 1;
+      periDiaria = Diária;
     }
 
     // Manutenção
