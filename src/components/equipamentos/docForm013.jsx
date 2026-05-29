@@ -202,7 +202,7 @@ ${(() => {
         ).join('');
         return `
     <tr style="font-size:7px">
-      <td style="border:1px solid #bbb;padding:2px 3px">${c.numero_certificado || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px 3px">${c.numero_certificado || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.orgao || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.titulo)}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_lab)}</td>
@@ -243,7 +243,7 @@ ${(() => {
   const certRows = (eq.historico_calibracao || []).length > 0
     ? (eq.historico_calibracao || []).map((c) => `
     <tr style="font-size:7px">
-      <td style="border:1px solid #bbb;padding:2px 3px">${c.numero_certificado || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px 3px">${c.numero_certificado || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.orgao || ''}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.titulo)}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.identificacao_lab)}</td>
