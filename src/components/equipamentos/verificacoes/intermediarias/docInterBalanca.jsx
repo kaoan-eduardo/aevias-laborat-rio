@@ -117,10 +117,9 @@ export function buildInterBalancaHtml(v) {
 
     ${medicaoRows}
 
-    <div class="section-header" style="margin-top:8px">SITUAÇÃO</div>
-    <table>
+    <table style="margin-top:8px">
       <tr>
-        <td style="width:100px;padding:6px 8px;font-size:8px">SITUAÇÃO</td>
+        <td style="width:100px;padding:6px 8px;font-size:8px;font-weight:700;background:#BFCF99;text-align:center">SITUAÇÃO</td>
         <td style="font-weight:700;font-size:8px;text-align:center;background:#BFCF99">ANÁLISE CRÍTICA</td>
       </tr>
       <tr style="height:30px">
