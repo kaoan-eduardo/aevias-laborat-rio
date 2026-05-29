@@ -101,9 +101,12 @@ export function buildInterBalancaHtml(v) {
       <tr>
         <td style="width:50%;text-align:center;font-weight:700;font-size:8px;background:#f9f9f9;padding:6px">
           LOCALIZAÇÃO DOS PONTOS DE LEITURA<br><br>
-          <span style="font-size:20px;letter-spacing:4px">①②<br>③<br>④⑤</span>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <span style="font-size:20px;letter-spacing:8px">①②<br>&nbsp;③<br>④⑤</span>
+          <div style="display:flex;justify-content:center;align-items:center;gap:10px">
+            <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/8b170a954_image.png"
+                 style="height:80px;object-fit:contain" alt="Pontos circular" />
+            <img src="https://media.base44.com/images/public/69fdf070216c826565ee0876/6d87b1506_image.png"
+                 style="height:80px;object-fit:contain" alt="Pontos retangular" />
+          </div>
         </td>
         <td style="width:50%;text-align:center;font-weight:700;font-size:9px;background:#f9f9f9;padding:6px">
           VARIAÇÃO PERMITIDA<br><br>
