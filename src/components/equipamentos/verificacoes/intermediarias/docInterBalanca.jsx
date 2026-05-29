@@ -16,13 +16,11 @@ export function buildInterBalancaHtml(v) {
       <div class="section-header" style="margin-top:4px">CHECAGEM INTERMEDIÁRIA</div>
       <table>
         <tr>
-          <th style="width:90px">Medição</th>
-          <th style="width:100px">Valor certificado (g)</th>
+          <th style="width:90px" rowspan="2">Medição</th>
+          <th style="width:100px" rowspan="2">Valor certificado (g)</th>
           <th colspan="5">Valor observado nas posições (g)</th>
         </tr>
         <tr>
-          <td style="text-align:center"></td>
-          <td style="text-align:center"></td>
           <th style="width:60px">1</th>
           <th style="width:60px">2</th>
           <th style="width:60px">3</th>
@@ -63,8 +61,8 @@ export function buildInterBalancaHtml(v) {
       <tr>
         <td class="lbl" style="width:110px">Responsável</td>
         <td>${v.analise_critica_responsavel || ''}</td>
-        <td class="lbl" style="width:50px">Data</td>
-        <td style="width:100px">${v.analise_critica_data ? fmt_date(v.analise_critica_data) : ''}</td>
+        <td class="lbl" style="width:130px">Mês/Ano da Verificação</td>
+        <td style="width:100px">${fmt_mes_ano(v.mes_ano)}</td>
       </tr>
     </table>
 
