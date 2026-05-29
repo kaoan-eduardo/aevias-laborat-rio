@@ -23,14 +23,20 @@ export function useEquipamentos() {
 
   const filteredEquipamentos = useMemo(() => {
     const query = searchQuery.toLowerCase();
-    return equipamentos.filter(eq => {
-      const matchesSearch =
-        eq.identificacao_interna?.toLowerCase().includes(query) ||
-        eq.nome?.toLowerCase().includes(query) ||
-        eq.categoria?.toLowerCase().includes(query);
-      const matchesStatus = statusFilter === 'todos' || eq.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
+    return equipamentos
+      .filter(eq => {
+        const matchesSearch =
+          eq.identificacao_interna?.toLowerCase().includes(query) ||
+          eq.nome?.toLowerCase().includes(query) ||
+          eq.categoria?.toLowerCase().includes(query);
+        const matchesStatus = statusFilter === 'todos' || eq.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      })
+      .sort((a, b) => {
+        const numA = parseInt((a.identificacao_interna || '').replace(/\D/g, ''), 10) || 0;
+        const numB = parseInt((b.identificacao_interna || '').replace(/\D/g, ''), 10) || 0;
+        return numA - numB;
+      });
   }, [equipamentos, searchQuery, statusFilter]);
 
   return {
