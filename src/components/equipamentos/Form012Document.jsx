@@ -68,8 +68,45 @@ function getLastVerificacaoInterna(eq) {
   return { periodo, ultima: 'NA', proxima: 'NA' };
 }
 
-export function buildForm012Html(equipamentos, responsavel) {
-  const hoje = new Date().toLocaleDateString('pt-BR');
+// Campos que constam no FORM 012 — qualquer alteração neles deve atualizar a data do documento
+const FORM012_FIELDS = [
+  'status', 'nome', 'identificacao_interna',
+  'historico_calibracao', 'data_calibracao', 'validade_calibracao', 'frequencia_calibracao',
+  'historico_manutencao',
+  'obrigatorio_verificacao_intermediaria', 'periodicidade_verificacao',
+  'obrigatorio_verificacao_diaria',
+  'responsavel_atualizacao',
+];
+
+/**
+ * Retorna a data de atualização mais recente entre todos os equipamentos
+ * considerando apenas a data de última edição (updated_date) do registro.
+ * O responsável é o `responsavel_atualizacao` do equipamento mais recente
+ * (com fallback para o nome do usuário logado passado como parâmetro).
+ */
+function getForm012Meta(equipamentos, fallbackResponsavel) {
+  let latestDate = null;
+  let latestResponsavel = fallbackResponsavel || '';
+
+  for (const eq of equipamentos) {
+    const d = eq.updated_date ? new Date(eq.updated_date) : null;
+    if (d && !isNaN(d)) {
+      if (!latestDate || d > latestDate) {
+        latestDate = d;
+        latestResponsavel = eq.responsavel_atualizacao || fallbackResponsavel || '';
+      }
+    }
+  }
+
+  const dataFormatada = latestDate
+    ? latestDate.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+    : new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+  return { dataFormatada, responsavel: latestResponsavel };
+}
+
+export function buildForm012Html(equipamentos, fallbackResponsavel) {
+  const { dataFormatada: hoje, responsavel } = getForm012Meta(equipamentos, fallbackResponsavel);
 
   const statusMap = {
     em_uso: { label: 'Em uso', bg: '#d4edda', color: '#155724' },
@@ -215,7 +252,7 @@ export function buildForm012Html(equipamentos, responsavel) {
 <table style="margin-bottom:4px;border:1.5px solid #555">
   <tr style="height:18px">
     <td class="lbl" style="width:180px">Responsável pela atualização</td>
-    <td style="padding:2px 6px">${responsavel || ''}</td>
+    <td style="padding:2px 6px">${responsavel}</td>
     <td class="lbl" style="width:90px">Atualizado em</td>
     <td style="padding:2px 6px;text-align:center;width:90px">${hoje}</td>
   </tr>
