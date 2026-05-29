@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Upload, Download, FileText, Loader2, Trash2, AlertCircle } from 'lucide-react';
+import { Upload, Download, FileText, Loader2, Trash2, AlertCircle, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatSize } from '@/utils/equipamentoHelpers';
@@ -123,6 +123,9 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
                 </p>
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => window.open(doc.url, '_blank')} aria-label={`Visualizar ${doc.nome}`} title="Visualizar">
+                  <Eye className="w-3.5 h-3.5" />
+                </Button>
                 <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => handleDownload(doc)} aria-label={`Baixar ${doc.nome}`} title="Download">
                   <Download className="w-3.5 h-3.5" />
                 </Button>
