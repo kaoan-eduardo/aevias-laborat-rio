@@ -29,6 +29,7 @@ export default function Verificacoes() {
   const cargo = user?.cargo || '';
   const CARGOS_GESTOR = ['Coordenadora Técnica', 'Encarregado', 'Auxiliar da Qualidade'];
   const isGestor = role === 'admin' || CARGOS_GESTOR.includes(cargo);
+  const isAnalistaCritica = role === 'admin' || ['Coordenadora Técnica', 'Encarregado'].includes(cargo);
 
   const load = async () => {
     setLoading(true);
@@ -57,7 +58,7 @@ export default function Verificacoes() {
     return (
       <VerificacaoDetalhe
         verificacao={selected}
-        isGestor={isGestor}
+        isGestor={isAnalistaCritica}
         onBack={() => { setView('lista'); load(); }}
         onSaved={(updated) => { setSelected(updated); load(); }}
       />

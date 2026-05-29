@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AnaliseCritica from '../AnaliseCritica';
 import EquipamentoSelectorStep from './EquipamentoSelectorStep';
 import EqReferenciaSection from './EqReferenciaSection';
+import { podeAnaliseCritica } from '@/business-rules/acessos';
 import {
   buildRegistrosTemperaturaIntermediaria,
   calcularVariacaoTemperaturaIntermediaria,
@@ -76,6 +77,7 @@ function TabelaTemperatura({ titulo, linhas, onChange, disabled }) {
 
 export default function NovaVerificacaoInterTemperatura({ onBack, onSaved }) {
   const { user } = useAuth();
+  const canAnaliseCritica = podeAnaliseCritica(user);
   const [step, setStep] = useState(1);
   const [equipamentos, setEquipamentos] = useState([]);
   const [loadingEq, setLoadingEq] = useState(true);
@@ -255,6 +257,7 @@ export default function NovaVerificacaoInterTemperatura({ onBack, onSaved }) {
         onDataChange={v => setDados(p => ({ ...p, analise_critica_principal: { ...p.analise_critica_principal, data: v } }))}
         rubricaUrl="" onRubricaConfirm={() => {}}
         nomeUsuario={user?.nome_exibicao || user?.full_name || ''}
+        disabled={!canAnaliseCritica}
       />
 
       <TabelaTemperatura
@@ -269,6 +272,7 @@ export default function NovaVerificacaoInterTemperatura({ onBack, onSaved }) {
         data={acData} onDataChange={setAcData}
         rubricaUrl={acRubricaUrl} onRubricaConfirm={setAcRubricaUrl}
         nomeUsuario={user?.nome_exibicao || user?.full_name || ''}
+        disabled={!canAnaliseCritica}
       />
 
       <div className="space-y-1.5 max-w-lg">

@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AnaliseCritica from '../AnaliseCritica';
 import EquipamentoSelectorStep from './EquipamentoSelectorStep';
 import EqReferenciaSection from './EqReferenciaSection';
+import { podeAnaliseCritica } from '@/business-rules/acessos';
 import {
   buildRegistrosBalancaIntermediaria,
   calcularVariacaoBalancaIntermediaria,
@@ -20,6 +21,7 @@ import { listarEquipamentosParaVerificacaoIntermediaria, listarPesosPadraoInterm
 
 export default function NovaVerificacaoInterBalanca({ onBack, onSaved }) {
   const { user } = useAuth();
+  const canAnaliseCritica = podeAnaliseCritica(user);
   const [step, setStep] = useState(1);
   const [equipamentos, setEquipamentos] = useState([]);
   const [loadingEq, setLoadingEq] = useState(true);
@@ -253,6 +255,7 @@ export default function NovaVerificacaoInterBalanca({ onBack, onSaved }) {
         data={acData} onDataChange={setAcData}
         rubricaUrl={acRubricaUrl} onRubricaConfirm={setAcRubricaUrl}
         nomeUsuario={user?.nome_exibicao || user?.full_name || ''}
+        disabled={!canAnaliseCritica}
       />
 
       <div className="flex justify-end gap-2 pb-6">

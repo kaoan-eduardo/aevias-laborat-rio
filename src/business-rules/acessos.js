@@ -61,6 +61,19 @@ export function podeEditar(user, recurso) {
   return (PODE_EDITAR[recurso] || []).includes(cargo);
 }
 
+// Cargos que podem fazer análise crítica
+const CARGOS_ANALISE_CRITICA = ['Coordenadora Técnica', 'Encarregado'];
+
+/**
+ * Retorna se o usuário pode realizar análise crítica.
+ * Admin sempre pode.
+ */
+export function podeAnaliseCritica(user) {
+  if (!user) return false;
+  if (user.role === 'admin') return true;
+  return CARGOS_ANALISE_CRITICA.includes(user.cargo);
+}
+
 /**
  * Retorna a página inicial adequada para o cargo do usuário.
  */
