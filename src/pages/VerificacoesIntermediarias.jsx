@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import NovaVerificacaoIntermediaria from '@/components/equipamentos/verificacoes/intermediarias/NovaVerificacaoIntermediaria';
+import VerificacaoInterDetalhe from '@/components/equipamentos/verificacoes/intermediarias/VerificacaoInterDetalhe';
 
 const RESULTADO_COLOR = {
   em_andamento: 'bg-yellow-100 text-yellow-700',
@@ -32,7 +33,8 @@ export default function VerificacoesIntermediarias() {
   const { user } = useAuth();
   const [verificacoes, setVerificacoes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState('lista'); // 'lista' | 'nova'
+  const [view, setView] = useState('lista'); // 'lista' | 'nova' | 'detalhe'
+  const [verificacaoAtiva, setVerificacaoAtiva] = useState(null);
 
   const isGestor = user?.role === 'admin' || CARGOS_GESTOR.includes(user?.cargo || '');
 
@@ -54,6 +56,16 @@ export default function VerificacoesIntermediarias() {
       <NovaVerificacaoIntermediaria
         onBack={() => { setView('lista'); load(); }}
         onSaved={() => { setView('lista'); load(); }}
+      />
+    );
+  }
+
+  if (view === 'detalhe' && verificacaoAtiva) {
+    return (
+      <VerificacaoInterDetalhe
+        verificacao={verificacaoAtiva}
+        onBack={() => { setVerificacaoAtiva(null); setView('lista'); load(); }}
+        onSaved={() => { setVerificacaoAtiva(null); setView('lista'); load(); }}
       />
     );
   }
@@ -116,7 +128,7 @@ export default function VerificacoesIntermediarias() {
                         <Button
                           variant="ghost" size="sm" className="text-xs gap-1.5"
                           aria-label={`Abrir verificação de ${v.equipamento_nome}`}
-                          onClick={() => {/* detalhe futuro */}}
+                          onClick={() => { setVerificacaoAtiva(v); setView('detalhe'); }}
                         >
                           <ClipboardCheck className="w-3.5 h-3.5" aria-hidden="true" />
                           Abrir
