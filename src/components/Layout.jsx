@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import {
   Users, FlaskConical, FileText, LayoutDashboard,
-  LogOut, Menu, UserCog, Package, Inbox, Wrench, ClipboardCheck, ChevronLeft, ChevronRight,
+  LogOut, Menu, UserCog, Package, Inbox, Wrench, ClipboardCheck, ClipboardList, ChevronLeft, ChevronRight,
   BookOpen, ChevronDown, ShieldCheck } from
 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -21,7 +21,8 @@ const NAV_ITEMS = [
 { path: '/fas', label: 'FAS', icon: FileText },
 { path: '/recebimento', label: 'Recebimento de Amostras', icon: Inbox },
 { path: '/equipamentos', label: 'Equipamentos', icon: Wrench },
-{ path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck }];
+{ path: '/verificacoes', label: 'Verificações Diárias', icon: ClipboardCheck },
+{ path: '/verificacoes-intermediarias', label: 'Verificações Intermediárias', icon: ClipboardList }];
 
 const BOTTOM_NAV_ITEMS = [
 { path: '/usuarios', label: 'Usuários', icon: UserCog, adminOnly: true },

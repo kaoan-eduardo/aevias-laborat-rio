@@ -22,6 +22,7 @@ import EquipamentoForm from '@/pages/EquipamentoForm';
 import Verificacoes from '@/pages/Verificacoes';
 import Auditoria from '@/pages/Auditoria';
 import EditarFAS from '@/pages/EditarFAS';
+import VerificacoesIntermediarias from '@/pages/VerificacoesIntermediarias';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -65,6 +66,7 @@ const AuthenticatedApp = () => {
         <Route path="/equipamentos/novo" element={<EquipamentoForm />} />
         <Route path="/equipamentos/:id/editar" element={<EquipamentoForm />} />
         <Route path="/verificacoes" element={<Verificacoes />} />
+        <Route path="/verificacoes-intermediarias" element={<VerificacoesIntermediarias />} />
         <Route path="/auditoria" element={<Auditoria />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
