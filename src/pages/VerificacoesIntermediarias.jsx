@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { formatMesAno } from '@/lib/dateUtils';
-import { Plus, ClipboardList, ClipboardCheck } from 'lucide-react';
+import { Plus, ClipboardList, ClipboardCheck, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -125,14 +125,28 @@ export default function VerificacoesIntermediarias() {
                         </Badge>
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <Button
-                          variant="ghost" size="sm" className="text-xs gap-1.5"
-                          aria-label={`Abrir verificação de ${v.equipamento_nome}`}
-                          onClick={() => { setVerificacaoAtiva(v); setView('detalhe'); }}
-                        >
-                          <ClipboardCheck className="w-3.5 h-3.5" aria-hidden="true" />
-                          Abrir
-                        </Button>
+                        <div className="flex items-center justify-center gap-1">
+                          {!v.analise_critica_responsavel && (
+                            <Button
+                              variant="ghost" size="sm" className="text-xs gap-1.5"
+                              aria-label={`Abrir verificação de ${v.equipamento_nome}`}
+                              onClick={() => { setVerificacaoAtiva(v); setView('detalhe'); }}
+                            >
+                              <ClipboardCheck className="w-3.5 h-3.5" aria-hidden="true" />
+                              Abrir
+                            </Button>
+                          )}
+                          {v.analise_critica_responsavel && (
+                            <Button
+                              variant="ghost" size="sm" className="text-xs gap-1.5"
+                              aria-label={`Imprimir verificação de ${v.equipamento_nome}`}
+                              onClick={() => { setVerificacaoAtiva(v); setView('detalhe'); }}
+                            >
+                              <Printer className="w-3.5 h-3.5" aria-hidden="true" />
+                              Imprimir
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
