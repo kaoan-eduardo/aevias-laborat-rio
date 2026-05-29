@@ -442,9 +442,9 @@ export default function EquipamentoForm() {
               </label>
             </div>
 
-            {(hasStatusChanged || !isEditing) && (
+            {(isEditing || !isEditing) && (
               <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
-                <p className="text-xs font-semibold">{isEditing ? 'Registrar alteração de status' : 'Data de cadastro'}</p>
+                <p className="text-xs font-semibold">{isEditing ? 'Registrar alteração' : 'Data de cadastro'}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Data da alteração *" htmlFor="status-data">
                     <Input id="status-data" type="date" value={statusChangeDate} onChange={e => setStatusChangeDate(e.target.value)} max={new Date().toISOString().split('T')[0]} required />

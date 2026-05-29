@@ -138,7 +138,7 @@ export function useEquipamentoForm() {
     !!form.identificacao_interna &&
     !!form.nome &&
     !!form.categoria &&
-    (!hasStatusChanged || !!statusChangeDate);
+    !!statusChangeDate;
 
   const handleSave = async () => {
     if (!isFormValid) return;
