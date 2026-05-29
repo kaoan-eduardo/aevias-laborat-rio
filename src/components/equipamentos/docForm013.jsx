@@ -272,7 +272,7 @@ ${(() => {
         ).join('');
         return `
     <tr style="font-size:7px">
-      <td style="border:1px solid #bbb;padding:2px 3px">${c.numero_certificado || ''}</td>
+      <td style="border:1px solid #bbb;text-align:center;padding:2px 3px">${c.numero_certificado || ''}</td>
       ${erroTds}
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${simNao(c.atende_especificado)}</td>
       <td style="border:1px solid #bbb;text-align:center;padding:2px">${c.periodicidade || ''}</td>
