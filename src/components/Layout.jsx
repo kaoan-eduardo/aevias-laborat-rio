@@ -113,7 +113,9 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
         {/* Demais itens (exceto Início) */}
         {visibleItems.filter((i) => i.path !== '/').map((item) => {
           const Icon = item.icon;
-          const active = location.pathname.startsWith(item.path);
+          const active = item.path === '/verificacoes'
+            ? location.pathname === '/verificacoes' || (location.pathname.startsWith('/verificacoes') && !location.pathname.startsWith('/verificacoes-intermediarias'))
+            : location.pathname.startsWith(item.path);
           return (
             <Link key={item.path} to={item.path} onClick={() => setMobileOpen(false)}
             className={cn("flex items-center gap-3 px-4 py-2.5 rounded-2xl font-small transition-all duration-150 text-xs",
