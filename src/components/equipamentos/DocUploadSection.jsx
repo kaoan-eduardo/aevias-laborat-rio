@@ -63,10 +63,10 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
   };
 
   return (
-    <div className="space-y-3">
+    <section className="space-y-3" aria-label={title}>
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-        <span className="text-xs text-muted-foreground">{docs.length} documento{docs.length !== 1 ? 's' : ''}</span>
+        <span className="text-xs text-muted-foreground" aria-live="polite">{docs.length} documento{docs.length !== 1 ? 's' : ''}</span>
       </div>
 
       {canEdit && (
@@ -123,11 +123,11 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
                 </p>
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => handleDownload(doc)} title="Download">
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => handleDownload(doc)} aria-label={`Baixar ${doc.nome}`} title="Download">
                   <Download className="w-3.5 h-3.5" />
                 </Button>
                 {canEdit && (
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => handleDelete(idx)} title="Remover">
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10" onClick={() => handleDelete(idx)} aria-label={`Remover ${doc.nome}`} title="Remover">
                     <Trash2 className="w-3 h-3" />
                   </Button>
                 )}
@@ -136,6 +136,6 @@ export default function DocUploadSection({ title, field, docs = [], equipamentoI
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

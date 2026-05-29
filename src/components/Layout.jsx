@@ -55,7 +55,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4" aria-label="Navegação principal">
         {/* Início */}
         {visibleItems.filter((i) => i.path === '/').map((item) => {
           const Icon = item.icon;
@@ -173,6 +173,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
               <button
               onClick={handleLogout}
               className="text-white/40 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
+              aria-label="Sair da conta"
               title="Sair">
               
                 <LogOut className="w-3.5 h-3.5" />
@@ -182,6 +183,7 @@ function SidebarContent({ collapsed, setMobileOpen, visibleItems, visibleBottomI
 
         <button
           onClick={handleLogout}
+          aria-label="Sair da conta"
           className="w-full flex justify-center text-white/40 hover:text-white transition-colors p-2 rounded-xl hover:bg-white/10">
           
             <LogOut className="w-4 h-4" />
@@ -228,8 +230,8 @@ export default function Layout() {
 
       {/* Mobile Overlay */}
       {mobileOpen &&
-      <div className="md:hidden fixed inset-0 z-40 flex">
-          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+      <div className="md:hidden fixed inset-0 z-40 flex" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} aria-hidden="true" />
           <aside className="relative z-50 w-64 flex flex-col">
             <SidebarContent {...sidebarProps} />
           </aside>
@@ -240,8 +242,8 @@ export default function Layout() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar (mobile) */}
         <header className="md:hidden flex items-center gap-3 px-4 py-3 bg-[#00233B] border-b border-white/10">
-          <button onClick={() => setMobileOpen(true)}>
-            <Menu className="w-10 h-10 text-white" />
+          <button onClick={() => setMobileOpen(true)} aria-label="Abrir menu de navegação">
+            <Menu className="w-10 h-10 text-white" aria-hidden="true" />
           </button>
           <img
             src="https://media.base44.com/images/public/69fdf070216c826565ee0876/2e0d01e80_AE-LogoHor_Negativo.png"
