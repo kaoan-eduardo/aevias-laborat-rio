@@ -14,10 +14,10 @@ function simNao(val) {
 }
 
 const VTH = (txt, extra = '') =>
-  `<th style="writing-mode:vertical-rl;transform:rotate(180deg);height:70px;min-width:26px;padding:2px;text-align:left;vertical-align:bottom;font-size:7px;${extra}">${txt}</th>`;
+  `<th style="writing-mode:vertical-rl;transform:rotate(180deg);height:70px;min-width:26px;padding:2px;text-align:center;vertical-align:mid;font-size:7px;${extra}">${txt}</th>`;
 
 const VTH_MAN = (txt, extra = '') =>
-  `<th style="writing-mode:vertical-rl;transform:rotate(180deg);height:60px;min-width:24px;padding:2px;text-align:left;vertical-align:bottom;font-size:7px;${extra}">${txt}</th>`;
+  `<th style="writing-mode:vertical-rl;transform:rotate(180deg);height:60px;min-width:24px;padding:2px;text-align:center;vertical-align:mid;font-size:7px;${extra}">${txt}</th>`;
 
 export function buildForm013Html(eq) {
   const hoje = new Date().toLocaleDateString('pt-BR');
