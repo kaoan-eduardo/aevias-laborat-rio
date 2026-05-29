@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { formatMesAno } from '@/lib/dateUtils';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ChevronLeft, Save, Printer } from 'lucide-react';
+import { openVerificacaoInterImpressao } from './docInter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -76,6 +77,10 @@ export default function VerificacaoInterDetalhe({ verificacao, onBack, onSaved }
           <Badge className={RESULTADO_COLOR[verificacao.resultado_geral]}>
             {RESULTADO_LABEL[verificacao.resultado_geral]}
           </Badge>
+          <Button variant="outline" onClick={() => openVerificacaoInterImpressao(verificacao)} className="gap-2">
+            <Printer className="w-4 h-4" />
+            Imprimir
+          </Button>
           <Button onClick={handleSave} disabled={saving} className="gap-2">
             <Save className="w-4 h-4" />
             {saving ? 'Salvando...' : 'Salvar'}

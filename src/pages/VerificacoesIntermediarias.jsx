@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { formatMesAno } from '@/lib/dateUtils';
 import { Plus, ClipboardList, ClipboardCheck, Printer } from 'lucide-react';
+import { openVerificacaoInterImpressao } from '@/components/equipamentos/verificacoes/intermediarias/docInter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -140,7 +141,7 @@ export default function VerificacoesIntermediarias() {
                             <Button
                               variant="ghost" size="sm" className="text-xs gap-1.5"
                               aria-label={`Imprimir verificação de ${v.equipamento_nome}`}
-                              onClick={() => { setVerificacaoAtiva(v); setView('detalhe'); }}
+                              onClick={() => openVerificacaoInterImpressao(v)}
                             >
                               <Printer className="w-3.5 h-3.5" aria-hidden="true" />
                               Imprimir
