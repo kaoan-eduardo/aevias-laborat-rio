@@ -51,6 +51,7 @@ export const COMMON_STYLES = BRAND_CSS + `
   td.lbl { background:#F2F1EF; font-weight:700; font-family:'Exo 2',Arial,sans-serif; color:#333; }
   .logo-box { border:1.5px solid #BFCF99; padding:4px 8px; display:inline-block; }
   @page { margin: 10mm; size: A4; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 `;
 
 export const docHeader = (titulo, form, emissao, revisao, mesAno) => `
