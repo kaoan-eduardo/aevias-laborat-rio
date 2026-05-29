@@ -171,23 +171,23 @@ export function buildForm012Html(equipamentos, fallbackResponsavel) {
     }
 
     return `
-    <tr style="font-size:7px;height:14px">
-      <td style="border:1px solid #bbb;padding:2px 4px;font-weight:600;white-space:nowrap">${eq.identificacao_interna || 'NA'}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px">${eq.nome || 'NA'}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;background:${st.bg};color:${st.color};white-space:nowrap">${st.label}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${certificado}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${fmt(dataCal)}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${periodoCal}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${proximaCal}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${periChecagem}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${ultimaChecagem}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${proximaChecagem}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${periDiaria}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${ultimaDiaria}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${proximaDiaria}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${ultimaManutencao}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${periManutencao}</td>
-      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center">${proximaManutencao}</td>
+    <tr style="font-size:7px;height:22px">
+      <td style="border:1px solid #bbb;padding:2px 4px;font-weight:600;white-space:nowrap;height:22px;vertical-align:middle">${eq.identificacao_interna || 'NA'}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;height:22px;vertical-align:middle">${eq.nome || 'NA'}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;background:${st.bg};color:${st.color};white-space:nowrap;height:22px;vertical-align:middle">${st.label}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${certificado}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${fmt(dataCal)}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${periodoCal}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${proximaCal}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${periChecagem}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${ultimaChecagem}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${proximaChecagem}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${periDiaria}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${ultimaDiaria}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${proximaDiaria}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${ultimaManutencao}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${periManutencao}</td>
+      <td style="border:1px solid #bbb;padding:2px 4px;text-align:center;height:22px;vertical-align:middle">${proximaManutencao}</td>
     </tr>`;
   }).join('');
 
