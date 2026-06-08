@@ -10,7 +10,7 @@ import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
 import { STATUS_EQUIPAMENTO, PERIODICIDADE_LABELS } from '@/utils/equipamentoHelpers';
 import { useEquipamentoForm } from '@/hooks/useEquipamentoForm';
 
-const CATEGORIAS = ['Vidraria','Soquete','Cilindros','Banho Maria','Estufa','Balança','Termômetro','Densímetro','Prensa','Peso Padrão','Outros'];
+const CATEGORIAS = ['Vidraria','Soquete','Cilindros','Banho Maria','Estufa','Balança','Termômetro','Densímetro','Prensa','Peso Padrão','Peneira','Outros'];
 
 const CERT_CHECK_FIELDS = [
   ['identificacao_lab',        'Identificação do lab.'],
