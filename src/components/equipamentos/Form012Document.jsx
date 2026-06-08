@@ -118,7 +118,13 @@ export function buildForm012Html(equipamentos, fallbackResponsavel) {
 
   const periMap = { quinzenal: 15, mensal: 30, trimestral: 90, semestral: 180, anual: 365 };
 
-  const rows = equipamentos.map(eq => {
+  const sorted = [...equipamentos].sort((a, b) => {
+    const ai = a.identificacao_interna || '';
+    const bi = b.identificacao_interna || '';
+    return ai.localeCompare(bi, undefined, { numeric: true, sensitivity: 'base' });
+  });
+
+  const rows = sorted.map(eq => {
     const st = statusMap[eq.status] || { label: eq.status || 'NA', bg: '#fff', color: '#000' };
     const { certificado } = getLastCalibracao(eq);
     
