@@ -181,7 +181,7 @@ export function buildForm013Html(eq) {
 </table>
 
 <div class="sec" style="margin-top:4px; background-color: #bfcf99;border: 1px solid #bbb">OBSERVAÇÕES</div>
-<table style="margin-bottom:0"><tr><td style="height:32px;font-size:8px;border: 1px solid #bbb">${eq.observacoes || ''}</td></tr></table>
+<table style="margin-bottom:0"><tr><td style="height:32px;font-size:8px;border: 1px solid #bbb;text-align:center;vertical-align:middle">${eq.observacoes || ''}</td></tr></table>
 
 <div class="sec" style="margin-top:6px; background-color: #bfcf99;border: 1px solid #bbb">CALIBRAÇÃO</div>
 
