@@ -145,7 +145,7 @@ export function useEquipamentoForm() {
     setIsSaving(true);
 
     const statusHistory = form.historico_status || [];
-    const newStatusHistory = hasStatusChanged
+    const newStatusHistory = isEditing
       ? [...statusHistory, { status: form.status, data: statusChangeDate, observacao: statusChangeNote.trim() }]
       : statusHistory;
 
