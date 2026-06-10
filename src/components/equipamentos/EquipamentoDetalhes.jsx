@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Pencil, AlertTriangle, CheckCircle, History, CheckSquare, Square, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +29,14 @@ const InfoRow = ({ label, value, mono }) => (
 
 export default function EquipamentoDetalhes({ equipamento: initialEquipamento, canEdit, onClose, onEdit, onOpenVerificacao }) {
   const [eq, setEq] = useState(initialEquipamento);
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   const status = STATUS_EQUIPAMENTO[eq.status] || STATUS_EQUIPAMENTO.em_uso;
   const vencida = isCalibracaoVencida(eq.validade_calibracao);
