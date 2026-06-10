@@ -51,6 +51,14 @@ export default function EquipamentoModal({ open, onClose, equipamento, onSaved }
     }
   }, [open, equipamento]);
 
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape' && open) onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [open, onClose]);
+
   const set = (field, value) => setForm(f => ({ ...f, [field]: value }));
 
   const statusMudou = form.status !== statusOriginal;
