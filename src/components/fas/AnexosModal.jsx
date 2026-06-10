@@ -1,8 +1,17 @@
+import { useEffect } from 'react';
 import { Paperclip, Download, X, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function AnexosModal({ fas, onClose }) {
   const anexos = fas.anexos || [];
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   const handleDownload = async (anexo) => {
     const response = await fetch(anexo.url);
